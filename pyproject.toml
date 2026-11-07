@@ -1,0 +1,19 @@
+[project]
+name = "ft-confere-gabarito"
+version = "0.1.0"
+description = "Fast Track: compara o cálculo da IA (saídas da esteira na Nekt) com o gabarito em PDF do PJe-Calc"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "pandas>=2.2",
+    "pdfplumber>=0.11",
+    "pyarrow>=17",
+    "deltalake>=0.24",
+    "nekt-sdk",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+nekt-sdk = { git = "https://github.com/nektcom/nekt-sdk-py.git" }

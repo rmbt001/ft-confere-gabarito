@@ -1,0 +1,9 @@
+# segredos e dados: nunca sobem
+.env
+.cache/
+casos/
+saidas/
+.venv/
+__pycache__/
+*.pyc
+*-EC2AMAZ-*
