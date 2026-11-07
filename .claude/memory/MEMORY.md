@@ -1,0 +1,60 @@
+- [Memória centralizada em Repos](memoria-centralizada-em-repos.md) — toda memória vai para `Repos/.claude/memory`, nunca por subprojeto
+- [PAUSA score/agente (29/10)](pausa-score-agente-2910.md) — com sem_score.flag: só PJC + assertividade; pós-rodada não lança agente/Jev/score/auditor
+- [Raíra — BT Créditos](usuario-raira-bt-creditos.md) — conduz o Fast Track (LIFT); português, Windows/PowerShell, docs em prosa explicativa
+- [Projeto Fast Track (ft)](projeto-fast-track-ft.md) — o que mede o acerto do cálculo trabalhista e as amarrações que quebram em silêncio
+- [Docs do Fast Track](docs-do-fast-track.md) — qual arquivo ler para cada pergunta, antes de varrer código
+- [Visual Guide LIFT](visual-guide-lift.md) — estilo dos docs da Raíra (manual_calculistas_lift.html): Onest/Sora, salmão #e26970, cover preta
+- [Investigação PJC × IA caso a caso](investigacao-divergencias-pjc-ia.md) — padrões de erro de prompt achados no 525 e furos do painel
+- [Ajustes de prompt: foco único e enxutos](ajustes-prompt-foco-unico-enxuto.md) — um problema por card; menor mudança; sem campo novo que nenhuma etapa lê
+- [Páginas só com a rodada mais recente](paginas-so-rodada-mais-recente.md) — hackathon/relatório usam só os processos rerodados (07–08/10); varrer CNJs fora da lista
+- [Correções do painel em 08/10](painel-correcoes-0810.md) — fora do principal, zerar negativo, teto BT050/BT040, honorários fora, HE somadas; mediana 69,7→78,8%
+- [Relatório de rodada linear](relatorio-de-rodada-linear.md) — fizemos → resultado → diagnóstico → foco no que não funcionou (era × ficou × por quê × ajuste); regressão primeiro
+- [Homol 09→10/10: veredito das famílias](homol-0910-familias-veredito.md) — o que entrou, o que quebrou; prioridade T23 + T07 (reflexos)
+- [Sobrecálculo primeiro](sobrecalculo-primeiro.md) — IA a mais pesa mais que IA a menos; separar e ordenar por isso
+- [Peças lidas e teste focado](esteira-pecas-lidas-e-teste-focado.md) — sem norma coletiva; teste mede só o campo que o passo muda
+- [Premissas de Cálculo BT](premissas-de-calculo-bt.md) — manual oficial é regra da casa; prescrição 5 anos é premissa; evitar overfitting; peças no TARS
+- [Lote 09/09 e a regressão de hora extra](lote-0909-regressao-hora-extra.md) — o lote subiu a distribuição e derrubou casos quase certos; hipótese cartão × jornada em aberto
+- [Agente noite 09→10/10: onde parou](agente-noite-0910-onde-parou.md) — reinício do PC em 10/10: lote de 65 com 26 gravados; 164 sem peças aguardam OK; íntegras pausadas
+- [Jornada mista = não calculável](jornada-mista-nao-calculavel.md) — trava do cartão é intencional; sem peças e sem analista nesses processos
+- [Frequência pelo cartão com jornada fixada](frequencia-cartao-jornada-fixada.md) — o time usa o cartão para os dias; o backend não (Ramo A ignora, Ramo B recusa)
+- [Score em 30/10: estado e como rodar](score-estado-3010.md) — regra nova dos valores não abatidos (holerite), score_2310.ps1, medições, prêmio 18.0 pendente
+- [Score: entrega para a engenharia (04/11)](score-entrega-engenharia-0411.md) — bt-prod-apps/ft/score_confianca; orquestrador + auditor OpenRouter + docs; não commitado
+- [Score de confiança do cálculo](score-confianca-calculo.md) — travas + riscos escolhidos em 14/10; "sem base" só em mês calculado; honorários fora; grat./comissão só se entram no cálculo
+- [Lote 07/10 e a fila que parou](lote-0710-fila-parou.md) — 54 execuções nunca rodaram; as três contagens (PROC/P10a/STATUS) que não se confundem
+- [Múltiplos contratos = inelegível](multiplos-contratos-inelegivel.md) — decisão de 14/10; hoje nenhuma regra faz isso; caso 0020998 (R$ 59 mil)
+- [Apresentação staff: assertividade](apresentacao-staff-assertividade.md) — meta 80% p/ produção, "aptos num conjunto de casos"; só código+prompt; slides 1h
+- [Rodadas do painel cópia](madrugada-1710-rodadas.md) — fluxo de 24/10 (checagem rápida, recorte e painel só do que mudou), 2/4/8/12/15/19h, PJC de todo processo novo, agente; retomar pelo log
+- [Madrugada 15/10: rodadas 1h/3h/6h](madrugada-1510-rodadas.md) — Nekt+painel agendados no Windows; agente só em comparável de 14/10+; retomar sozinho se a sessão cair
+- [BT062 não torna inapto](bt062-nao-torna-inapto.md) — decisão de 15/10, prod e homol; 287 casos com PJC viram aptos
+- [gerar_telas lento: causa e correção](gerar-telas-lento.md) — filtros quadráticos por caso; busca indexada em 15/10, saída idêntica; usar `_linhas`
+- [Painel de homol: não mexer no app de produção](painel-homol-nao-mexer-prod.md) — pedido de homol = só app_validacao_Calculos_homol; diagnóstico do agente no Resumo (15/10)
+- [Apto valor nos painéis](apto-valor.md) — apto com valor da IA entre R$ 50–200 mil; % ≥ 80% nos cards do Placar (15/10, prod e homol)
+- [Squad Precificação, não "LIFT"](nome-squad-precificacao.md) — em mensagem para outros times: Fast Track / squad Precificação; detalhar como checou
+- [Mensagens: título + corpo único](mensagens-titulo-e-corpo-unico.md) — thread para o time = um título e uma mensagem só, nunca várias
+- [Rodada 14/10 tarde (prêmio + HE 100%)](rodada-1410-tarde.md) — 50 processos; mudanças funcionaram no componente; total caiu por 0010154 e 0001233 (variação)
+- [Peças: só decisão e inicial](pecas-so-decisao-e-inicial.md) — robô do TARS baixa só sentença, acórdão, embargos e inicial
+- [Agente sempre atualizado](agente-sempre-atualizado.md) — caso rerodado ganha nova análise; nunca junto com o gerar_telas (aí espera ordem)
+- [Revisão do painel pendente](painel-revisao-ux-pendente.md) — depois de 19/10: menos abas, caso abre pela tabela; arquitetura em etapas (tabela PJC → conferência PDF → IA → comparativa → medidas → painel)
+- [Notebook de distribuições da assertividade](notebook-distribuicoes-assertividade.md) — ft_analises/ (uv próprio); não reaplicar score 16/10 se o JSON já tem; 1ª leitura 17/10
+- [Painel cópia enxuto (18/10)](painel-copia-enxuto-1810.md) — Rodada/Problemas/Premissas pelo agente; template próprio da cópia; backup em antes_redesenho_1810
+- [Deck 19/10 em PPTX](apresentacao-1910-pptx.md) — pasta apresentacao_assertividade_1910; resultado primeiro; gráfico de faixa (aba Verbas) como linguagem; gerador python-pptx sobre o modelo do board
+- [Deck 30/10 em PPTX](apresentacao-3010-pptx.md) — o de 19/10 com o painel de 23–30/10; monta_3010.py sobre a versão final dela; verbas consolidadas; slides 8 e 11 a conferir
+- [Perfil do reclamante × assertividade](perfil-reclamante-assertividade.md) — 21/10, pergunta do CCO: gerente de banco e cartão pesam; dentro da alta o perfil quase não separa
+- [Deck perfil × assertividade (21/10)](apresentacao-perfil-2110.md) — deck separado p/ o CCO, pasta apresentacao_perfil_2110; insight, não regra de score
+- [Cartão de ponto no código do back](cartao-ponto-codigo-back.md) — 21/10: motor antes do P9a (44h fixo), passthrough ignora quantidade fixada, abatimento de HE incondicional; falta conferir em caso
+- [Não usar "bater"](nao-usar-bater.md) — cessão de crédito: dizer "assertividade de 80% ou mais", nunca "bate/bateu"
+- [Lista única de restrições (22/10)](restricoes-lista-unica.md) — 40 regras do manual em jev_testes/restricoes.py; simulação; art. 62/Tema 300 largos demais; score ainda não mudou
+- [Notebook das réguas (23/10)](analise-reguas-notebook.md) — deck Réguas Abr26 × amostra 2025–26; base 3.0 = parte BT + parte mercado juntas; G +4 na fase 3 caiu p/ +2
+- [Páginas sem ambiente local, com CNJs](artefatos-sem-ambiente-local.md) — nada de pasta/script/arquivo/linha de prompt; lista de CNJs completos em cada problema
+- [Auditor via OpenRouter (27–28/10)](auditor-openrouter-2710.md) — prompt de 3 níveis, só "alto" tira da alta do apto valor: 78→87%; sim/não e média descartados; prêmio 18.0 = só natureza salarial
+- [PJC × PDF de cálculos diferentes (28/10)](pjc-pdf-calculos-diferentes.md) — 182 casos; ids divergem → fora da régua, salvo 3 com PDF conferido; 1000166 foi de −3.652% a 64,7%
+- [Refinamento BT089 (29/10)](refinamento-bt089-2910.md) — 1ª verba do refinamento; 8 famílias; cartão 27% × fixada 80%; proposta "cartão gerado da jornada fixada"
+- [Pareamento HE: uma linha por verba (29/10)](pareamento-he-uma-linha.md) — PJC fatia a HE e o painel casa uma fatia só; 100 aptos, mediana 16%→66% somando; correção aguarda ok
+- [.venv da VM quebrou o PC (06/11)](venv-onedrive-vm.md) — "uv trampoline" = venv recriado na VM pelo OneDrive; uv sync --frozen com cópia, sem Jupyter; .git do back com refs "-EC2AMAZ-" quebra o fetch
+- [VM: o que pedir à Infra](vm-pedido-infra.md) — login BT (Entra) no Chrome da VM p/ robôs Zeev e TARS; + cloud path do OneDrive e 32 GB RAM
+- [Bench Jusquant (nov/26)](bench-jusquant.md) — amostra 120, pasta, regras (dano moral fora, pareamento por família, BK sem férias), resultado 45 casos
+- [Súmula 85 aplicada = inapto](sumula-85-inapto.md) — decisão de 26/10; campo compensacao_jornada do editor v12; 72 processos, 3 aptos; ainda não aplicado no painel
+- [Lote 05–06/11: regressões](lote-0611-regressoes.md) — alta apto valor 82→75%; BT081, abatimento de diferença, mista; pensão→BT059 é esperado
+- [Auditor oscila (07/11)](auditor-oscila.md) — 12 de 20 "alto" não se repetem em 3 rodadas; deixar como está; opções guardadas; US$ 254 de 300
+- [Pareamento por família (07/11)](pareamento-familia-0711.md) — vetos novos no gerar_telas, não commitado; SOBREAVISO não é reflexo
+- [Repo confere gabarito](confere-gabarito-repo.md) — github rmbt001/ft-confere-gabarito; IA × PDF em lote na VM; .pjc da pasta é o da esteira

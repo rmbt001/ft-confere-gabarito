@@ -1,0 +1,1781 @@
+[
+ {
+  "id": "1.0-a",
+  "secao": "1.0 Arquivos - nomenclatura",
+  "regra": "O arquivo do cálculo é nomeado como: data - nome do reclamante - CNJ - tipo de cálculo - nome do calculista.",
+  "situacao": "processo_interno",
+  "onde": [],
+  "evidencia": "Regra de organização de arquivos do backoffice; não altera nenhum valor do cálculo.",
+  "falta": ""
+ },
+ {
+  "id": "2.0-a",
+  "secao": "2.0 Aplicações em que não realizamos cálculo",
+  "regra": "Sem os documentos essenciais (holerites ou cartões de ponto) não se calcula o que depende deles.",
+  "situacao": "enderecada",
+  "onde": [
+   "ROTEAMENTO v19 · PASSO 1 — Status de Calculabilidade",
+   "código: calculo_quantificador_mensais (CompetenciaSemHoleriteStrategy)"
+  ],
+  "evidencia": "P9a: 'nao_calculavel — documento necessário não fornecido'. Código: verba que dependia do salário e não tem holerite em nenhum mês sai da apuração.",
+  "falta": ""
+ },
+ {
+  "id": "2.0-b",
+  "secao": "2.0 Aplicações em que não realizamos cálculo",
+  "regra": "Com documentação parcial, calcula-se só o período documentado e deixa-se de fora o que não tem documento.",
+  "situacao": "enderecada",
+  "onde": [
+   "código: calculo_quantificador_mensais (CompetenciaSemHoleriteStrategy)",
+   "MENSAIS v15 · REGRA DO CARTÃO DE PONTO"
+  ],
+  "evidencia": "Mês sem holerite fica com base zerada e valor zero no principal; com cartão, só as competências cobertas pelo cartão são apuradas.",
+  "falta": ""
+ },
+ {
+  "id": "2.0-c",
+  "secao": "2.0 Aplicações em que não realizamos cálculo",
+  "regra": "Em julgamento à revelia, mesmo sem documentos, calcula-se com os parâmetros fixados na própria sentença.",
+  "situacao": "parcial",
+  "onde": [
+   "INFOS_DECISOES v13 · Princípios Fundamentais",
+   "código: calculo_quantificador_mensais (CompetenciaSemHoleriteStrategy)"
+  ],
+  "evidencia": "Os parâmetros da sentença são extraídos normalmente, mas o código zera a base salarial de todo mês sem holerite.",
+  "falta": "Não há tratamento de revelia: sem holerite a verba salarial é zerada mesmo quando a sentença fixa o salário ou os parâmetros. Nenhuma etapa identifica que houve revelia."
+ },
+ {
+  "id": "3.0-a",
+  "secao": "3.0 Adicional de periculosidade e insalubridade",
+  "regra": "Periculosidade e insalubridade não geram reflexo em DSR.",
+  "situacao": "enderecada",
+  "onde": [
+   "EDITOR_DECISOES v12 · Campos de Verba — reflexos"
+  ],
+  "evidencia": "'Parcela mensal não leva DSR. Em verba de valor mensal — adicional de periculosidade (BT035), adicional de insalubridade (BT036)... não inclua DSR'.",
+  "falta": ""
+ },
+ {
+  "id": "3.0-b",
+  "secao": "3.0 Adicional de periculosidade e insalubridade",
+  "regra": "A insalubridade é calculada sempre sobre o salário mínimo.",
+  "situacao": "enderecada",
+  "onde": [
+   "ROTEAMENTO v19 · PASSO 3 — Estratégia de Base de Cálculo (BT036)",
+   "MENSAIS v15 · 2.2 Base de Cálculo da Competência"
+  ],
+  "evidencia": "BT036: tipo 'salario_minimo_nacional' — 'Buscar no Input 4 o salário mínimo vigente na competência. Ignorar holerite e dados iniciais.'",
+  "falta": ""
+ },
+ {
+  "id": "3.0-c",
+  "secao": "3.0 Adicional de periculosidade e insalubridade",
+  "regra": "Periculosidade: para mensalista, base no salário-base; para horista, a base são as horas normais pagas mais o DSR pago sobre elas (sem apurar DSR como reflexo).",
+  "situacao": "parcial",
+  "onde": [
+   "ROTEAMENTO v19 · PASSO 3 — Estratégia de Base de Cálculo (BT035)"
+  ],
+  "evidencia": "BT035: 'salario_base_exclusivo — Usar apenas salario_base. Ignorar parcelas variáveis mesmo que integra_salario=true.'",
+  "falta": "Não distingue horista: a base do horista (horas normais pagas + DSR pago sobre elas) não é montada."
+ },
+ {
+  "id": "3.0-d",
+  "secao": "3.0 Adicional de periculosidade e insalubridade",
+  "regra": "Os adicionais só entram na base das horas extras se a decisão mandar expressamente (Súmula 264).",
+  "situacao": "parcial",
+  "onde": [
+   "ROTEAMENTO v19 · PASSO 3 — BT001, BT081, BT089 (Horas Extras)",
+   "HIST_SALARIAL_AGRUPAMENTO v5 · integra_salario",
+   "PRINCIPAL_MENSAIS v8 · 2.4 Padrão Restrito"
+  ],
+  "evidencia": "Base da HE expande com toda rubrica integra_salario=true do holerite; no glossário BT035/BT036 integram ('Sim'); no bancário o P9a inclui BT035/BT036 pagos.",
+  "falta": "O adicional pago entra na base da HE sem checar se a decisão citou Súmula 264/remuneração; e o adicional deferido nesta ação não é acrescentado quando a decisão manda."
+ },
+ {
+  "id": "3.0-e",
+  "secao": "3.0 Adicional de periculosidade e insalubridade",
+  "regra": "Os adicionais não entram na base de tempo de espera, intervalos (inter, intra, art. 384), horas in itinere e sobreaviso.",
+  "situacao": "parcial",
+  "onde": [
+   "ROTEAMENTO v19 · PASSO 3 — Demais verbas",
+   "INFOS_DECISOES v13 · Regra da Base de Cálculo (Nível 3)"
+  ],
+  "evidencia": "Na omissão, a base dessas verbas cai em salário-base ('componentes_fixos': salario_base), o que já deixa os adicionais de fora.",
+  "falta": "Não há exclusão explícita: se a decisão falar em 'remuneração' ou citar a Súmula 264, os adicionais entram na base dessas verbas."
+ },
+ {
+  "id": "3.0-f",
+  "secao": "3.0 Adicional de periculosidade e insalubridade",
+  "regra": "Eletricitário: se a sentença citar a Súmula 191, a base da periculosidade inclui todas as parcelas salariais (horas extras, adicional noturno etc.).",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "ROTEAMENTO v19 · PASSO 3 — BT035",
+   "INFOS_DECISOES v13 · Regra da Base de Cálculo (Cenário 2)"
+  ],
+  "evidencia": "O exemplo do P2 com 'Súmula 191' leva a base ao 'salário-base, sem o acréscimo de outras gratificações'; o P9a fixa BT035 em salário-base exclusivo.",
+  "falta": "Nenhuma regra para eletricitário; a Súmula 191 hoje leva ao resultado oposto (só salário-base)."
+ },
+ {
+  "id": "3.0-g",
+  "secao": "3.0 Adicional de periculosidade e insalubridade",
+  "regra": "Descontar as ausências do mês no cálculo dos adicionais.",
+  "situacao": "enderecada",
+  "onde": [
+   "PRINCIPAL_MENSAIS v8 · 2.1 Verbas de Salário-Condição (BT035/BT036)"
+  ],
+  "evidencia": "Competência proporcional: 'dias_devidos = total_dias_mes − dias de férias... depois subtraia os dias de afastamento ou falta do mês'.",
+  "falta": ""
+ },
+ {
+  "id": "3.0-h",
+  "secao": "3.0 Adicional de periculosidade e insalubridade",
+  "regra": "Periculosidade por armazenamento de inflamáveis em edifícios (vertical e horizontal) não é apurada (Tema 154 pendente).",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhum prompt ou código identifica a causa da periculosidade nem bloqueia esse cenário.",
+  "falta": "Identificar a causa (inflamáveis em edifício) e não apurar a BT035 nesse caso."
+ },
+ {
+  "id": "3.0-i",
+  "secao": "3.0 Adicional de periculosidade e insalubridade",
+  "regra": "Se os dois adicionais forem deferidos, calcular só o mais benéfico ao reclamante.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "código: calculo_quantificador_mensais (DeducaoCruzadaStrategy)"
+  ],
+  "evidencia": "O código só abate o adicional oposto já pago no holerite (não cumulação), não escolhe entre os dois deferidos.",
+  "falta": "Quando BT035 e BT036 são deferidos juntos, comparar e manter só o mais benéfico."
+ },
+ {
+  "id": "3.0-j",
+  "secao": "3.0 Adicional de periculosidade e insalubridade",
+  "regra": "Sempre deduzir os valores já pagos a mesmo título.",
+  "situacao": "enderecada",
+  "onde": [
+   "MENSAIS v15 · 2.4 Valores a Compensar",
+   "PRINCIPAL_MENSAIS v8 · 4. Consolidação da Competência",
+   "código: calculo_principal_mensais (PisoZeroDeducaoCruzadaStrategy)"
+  ],
+  "evidencia": "P9b lança em valores_a_compensar o pago com o mesmo código; P10a subtrai; o código trava em zero o mês em que o pago supera o devido.",
+  "falta": ""
+ },
+ {
+  "id": "4.0-a",
+  "secao": "4.0 Artigo 467 e 477",
+  "regra": "Multa do art. 467: se a decisão não disser a base, calcular sobre todas as verbas rescisórias, incluindo a multa de 40% do FGTS.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "ROTEAMENTO v19 · PASSO 2B.1 — Quantidade (Valor fixo único)"
+  ],
+  "evidencia": "BT060 é tratada como 'Multa de valor fixo único' em reais; não há regra para montar a base quando a decisão é omissa.",
+  "falta": "Regra de base padrão do art. 467 (todas as rescisórias + 40% do FGTS) na omissão."
+ },
+ {
+  "id": "4.0-b",
+  "secao": "4.0 Artigo 467 e 477",
+  "regra": "Multa do art. 477: base no último salário-base para salário fixo; média dos últimos 12 meses para comissionista puro.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "ROTEAMENTO v19 · PASSO 2B.1 — Quantidade",
+   "ROTEAMENTO v19 · 2B.2 — Base de Cálculo Rescisória"
+  ],
+  "evidencia": "BT061 entra como valor fixo único; a base rescisória do P9a usa a última remuneração do TRCT (não o salário-base).",
+  "falta": "Base própria da multa 477: último salário-base (fixo) ou média de 12 meses (comissionista puro)."
+ },
+ {
+  "id": "5.0-a",
+  "secao": "5.0 Ausências",
+  "regra": "Deduzir todas as ausências registradas nos cartões de ponto e na ficha de registro (folgas, licença médica, suspensões etc.).",
+  "situacao": "parcial",
+  "onde": [
+   "CALC_CALENDARIO v9 · Passo 2.1 — Apure as Deduções",
+   "DADOS_INICIAIS v9 · Histórico Funcional (datas_afastamentos)",
+   "código: cartao_ponto (apuração por batidas)"
+  ],
+  "evidencia": "Férias e afastamentos da ficha são descontados dos dias trabalhados; com cartão apurado, só contam os dias com batida.",
+  "falta": "Com jornada fixada, as faltas e folgas lançadas no cartão não são descontadas (o cartão só é usado quando a verba é apurada por ele)."
+ },
+ {
+  "id": "6.1-a",
+  "secao": "6.1 Auxílio refeição/alimentação",
+  "regra": "Valor: se a sentença for omissa, usar a CCT; sem contrato de um período, valor zero.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "BT076 (vale alimentação/refeição) torna o processo inapto ao Fast Track.",
+  "falta": ""
+ },
+ {
+  "id": "6.1-b",
+  "secao": "6.1 Auxílio refeição/alimentação",
+  "regra": "Método: refeição = valor diário × dias trabalhados (bancário: × 22 dias); alimentação = valor mensal da CCT.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "BT076 torna o processo inapto ao Fast Track.",
+  "falta": ""
+ },
+ {
+  "id": "6.1-c",
+  "secao": "6.1 Auxílio refeição/alimentação",
+  "regra": "Deduzir valores pagos; bancário não recebe refeição em faltas acima de 15 dias nem alimentação em faltas acima de 180 dias.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "BT076 torna o processo inapto ao Fast Track.",
+  "falta": ""
+ },
+ {
+  "id": "6.1-d",
+  "secao": "6.1 Auxílio refeição/alimentação",
+  "regra": "Integração ao salário limitada a 10/11/2017; para bancário não se aplica, salvo trânsito em julgado.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "BT076 torna o processo inapto ao Fast Track.",
+  "falta": ""
+ },
+ {
+  "id": "6.2-a",
+  "secao": "6.2 Diferenças de FGTS e multa de 40%",
+  "regra": "Prescrição do FGTS: quinquenal (5 anos), salvo se a decisão conceder expressamente a de 30 anos.",
+  "situacao": "fora_escopo",
+  "onde": [
+   "código: gerador_pjc (tela_parametros, tela_verbas)",
+   "código: calculo_reflexos (sem estratégia de FGTS)"
+  ],
+  "evidencia": "A esteira não apura FGTS: não há reflexo de FGTS e o gerador grava incidenciaFGTS=false em todas as verbas. A prescrição geral de 5 anos vale para todo o cálculo.",
+  "falta": ""
+ },
+ {
+  "id": "6.2-b",
+  "secao": "6.2 Diferenças de FGTS e multa de 40%",
+  "regra": "No PJe-Calc, o FGTS é sempre lançado como 'a depositar'.",
+  "situacao": "fora_escopo",
+  "onde": [
+   "código: gerador_pjc (tela_parametros)"
+  ],
+  "evidencia": "FGTS não é apurado pela esteira. Atenção: o gerador grava destinoDoFgts='PAGAR', o oposto da premissa.",
+  "falta": "Se o FGTS passar a ser apurado, trocar o destino do FGTS no arquivo do PJe-Calc para 'a depositar'."
+ },
+ {
+  "id": "6.2-c",
+  "secao": "6.2 Diferenças de FGTS e multa de 40%",
+  "regra": "A multa de 40% só é calculada quando concedida expressamente.",
+  "situacao": "fora_escopo",
+  "onde": [
+   "código: calculo_reflexos (sem estratégia de FGTS)"
+  ],
+  "evidencia": "A esteira não apura FGTS nem a multa de 40% (o reflexo 'FGTS + 40%' é registrado, mas não calculado).",
+  "falta": ""
+ },
+ {
+  "id": "6.3-a",
+  "secao": "6.3 Diferença salarial/equiparação salarial",
+  "regra": "Com vários paradigmas, na omissão, usar o de maior valor.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "BT017/BT018 (diferenças salariais e equiparação) tornam o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "6.3-b",
+  "secao": "6.3 Diferença salarial/equiparação salarial",
+  "regra": "Sempre proporcionalizar o pago e o devido e observar a irredutibilidade salarial.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "BT017/BT018/BT021 tornam o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "6.3-c",
+  "secao": "6.3 Diferença salarial/equiparação salarial",
+  "regra": "Nos afastamentos pelo INSS, só apurar se houver ordem de complemento do auxílio-doença; bancário limita o auxílio-doença a 24 meses.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "BT013 (complemento de auxílio-doença) e BT017/BT018 tornam o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "6.3-d",
+  "secao": "6.3 Diferença salarial/equiparação salarial",
+  "regra": "Diferenças surgidas a partir de 11/11/2017 são restritas; antes disso, apuráveis; se transitou, segue o julgado.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "BT017/BT018 tornam o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "6.4-a",
+  "secao": "6.4 PLR",
+  "regra": "PLR proporcional em pedido de demissão e justa causa: risco e recurso pendente seguem a norma coletiva; com trânsito, segue o julgado.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "BT028 (PLR) torna o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "6.4-b",
+  "secao": "6.4 PLR",
+  "regra": "Não apurar reflexos em PLR sobre verbas variáveis, salvo trânsito em julgado.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "BT028 torna o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "6.4-c",
+  "secao": "6.4 PLR",
+  "regra": "Bancário, base omissa: (base + gratificação) × 0,90 + parcela fixa, limitado ao teto, sem gratificação semestral; PLR proporcional só na dispensa sem justa causa ou com trânsito; só apura se a CCT foi juntada.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "BT028 torna o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "6.4-d",
+  "secao": "6.4 PLR",
+  "regra": "PLR sempre incide na base do IRRF, mesmo com trânsito em julgado.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "BT028 torna o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "6.4-e",
+  "secao": "6.4 PLR",
+  "regra": "A PLR paga não compõe a base de cálculo das horas extras.",
+  "situacao": "enderecada",
+  "onde": [
+   "HIST_SALARIAL_AGRUPAMENTO v5 · integra_salario",
+   "MENSAIS v15 · 2.2.1 Corte da Reforma: prêmio e remuneração por metas"
+  ],
+  "evidencia": "integra_salario vem da coluna 'Integra na remuneração das horas extras' do glossário (BT028 = 'Não'), e só rubricas integra_salario=true expandem a base da HE.",
+  "falta": ""
+ },
+ {
+  "id": "6.5-a",
+  "secao": "6.5 Vale-transporte",
+  "regra": "Sem o valor da passagem nos autos, pesquisar o valor do período e anexar a fonte.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhum prompt ou código trata vale-transporte (BT075) nem busca tarifa externa.",
+  "falta": "Fonte de tarifa por período ou regra de não calcular sem valor nos autos."
+ },
+ {
+  "id": "6.5-b",
+  "secao": "6.5 Vale-transporte",
+  "regra": "Deduzir a contribuição legal do reclamante (6% do salário-base) quando ele nunca recebeu o vale.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Não há dedução de 6% do salário-base em nenhum prompt ou código.",
+  "falta": "Dedução da cota de 6% do salário-base."
+ },
+ {
+  "id": "6.5-c",
+  "secao": "6.5 Vale-transporte",
+  "regra": "Apurar pelos dias efetivamente trabalhados nos cartões de ponto, salvo fixação na decisão; sem cartões, não apurar.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "MENSAIS v15 · BLOCO Q4 — Valor Fixo Mensal"
+  ],
+  "evidencia": "Valor mensal é proporcionalizado por dias corridos sobre 30, sem usar o cartão; o cartão de ponto não apura vale-transporte.",
+  "falta": "Contar os dias pelo cartão e não apurar quando não houver cartão nem fixação na decisão."
+ },
+ {
+  "id": "6.6-a",
+  "secao": "6.6 Lucros cessantes/complemento de INSS",
+  "regra": "Só apurar se houver documentação com os valores pagos.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "BT045 (lucros cessantes) e BT013 (complemento de auxílio-doença) tornam o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "6.6-b",
+  "secao": "6.6 Lucros cessantes/complemento de INSS",
+  "regra": "Casos com trânsito em julgado posterior a 13/08/2014 são restritos.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "BT045/BT013 tornam o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "7.1-a",
+  "secao": "7.1 Trânsito em julgado",
+  "regra": "Após o trânsito em julgado só se discutem os parâmetros de liquidação, não o que foi concedido; várias premissas mudam se o processo transitou ou tem recurso pendente.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "INFOS_DECISOES v13 · Hierarquia Decisória"
+  ],
+  "evidencia": "O P2 escolhe a decisão que prevalece por verba, mas nenhuma etapa registra se houve trânsito em julgado ou recurso pendente.",
+  "falta": "Extrair o status de trânsito; premissas como gerente geral (10.0), turno ininterrupto (11.0) e RR admitido no dano moral (9.0) dependem dele."
+ },
+ {
+  "id": "7.2-a",
+  "secao": "7.2 Matérias de ordem pública",
+  "regra": "Correção monetária e juros podem ser revistos a qualquer momento: aplica-se a regra da casa, mesmo após o trânsito.",
+  "situacao": "enderecada",
+  "onde": [
+   "código: calculo_principal_mensais (AtualizacaoMonetariaStrategy)",
+   "código: gerador_pjc (tela_parametros)"
+  ],
+  "evidencia": "IPCA-E e Selic são aplicados por código a todas as verbas, sem ler o critério de correção da decisão.",
+  "falta": ""
+ },
+ {
+  "id": "7.2-b",
+  "secao": "7.2 Matérias de ordem pública",
+  "regra": "Contribuições fiscais e previdenciárias são sempre apuradas pela regra legal.",
+  "situacao": "enderecada",
+  "onde": [
+   "código: calculo_inss (InssCalculoStrategy)",
+   "código: calculo_irrf (IrrfCalculoStrategy)"
+  ],
+  "evidencia": "Etapas próprias calculam INSS e IRRF a partir de integra_inss/integra_ir de cada verba.",
+  "falta": ""
+ },
+ {
+  "id": "7.2-c",
+  "secao": "7.2 Matérias de ordem pública",
+  "regra": "Sempre compensar valores já pagos (inclusive complemento de auxílio-doença).",
+  "situacao": "enderecada",
+  "onde": [
+   "MENSAIS v15 · 2.4 Valores a Compensar",
+   "PRINCIPAL_MENSAIS v8 · 4. Consolidação da Competência"
+  ],
+  "evidencia": "P9b busca no holerite o pago com o mesmo código (ou a rubrica nomeada na decisão) e o P10a subtrai. Complemento de auxílio-doença é BT013, inapto.",
+  "falta": ""
+ },
+ {
+  "id": "7.2-d",
+  "secao": "7.2 Matérias de ordem pública",
+  "regra": "A prescrição quinquenal é premissa interna: aplica-se sempre.",
+  "situacao": "enderecada",
+  "onde": [
+   "DADOS_INICIAIS v9 · Regras de Cálculo",
+   "CALC_CALENDARIO v9 · Passo 1"
+  ],
+  "evidencia": "'data_prescricao: subtraindo 5 anos da data_distribuicao'; o calendário só é montado no período não prescrito.",
+  "falta": ""
+ },
+ {
+  "id": "7.3-a",
+  "secao": "7.3 Preclusão",
+  "regra": "Definição de preclusão (temporal, lógica e consumativa): perda do direito de praticar um ato processual.",
+  "situacao": "processo_interno",
+  "onde": [],
+  "evidencia": "Conceito jurídico para a análise do calculista; não traz regra de cálculo.",
+  "falta": ""
+ },
+ {
+  "id": "7.4-a",
+  "secao": "7.4 Modalidade de rescisão",
+  "regra": "As verbas rescisórias devidas dependem da modalidade (sem justa causa, justa causa, pedido de demissão, acordo mútuo — ex.: 50% do aviso e multa de 20% no acordo).",
+  "situacao": "parcial",
+  "onde": [
+   "ROTEAMENTO v19 · PASSO 2B — Apuração de Verbas Consolidadas",
+   "DADOS_INICIAIS v9 · causa_afastamento"
+  ],
+  "evidencia": "As rescisórias são apuradas como a decisão deferiu (dias de aviso, avos); a causa do afastamento é extraída, mas não é usada no cálculo.",
+  "falta": "Não confere a tabela por modalidade (ex.: aviso pela metade no acordo mútuo) quando a decisão não detalha."
+ },
+ {
+  "id": "7.4-b",
+  "secao": "7.4 Modalidade de rescisão",
+  "regra": "Multa do art. 477: sempre o último salário-base (salário fixo) ou a média dos últimos 12 meses (comissionista puro).",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "ROTEAMENTO v19 · 2B.2 — Base de Cálculo Rescisória"
+  ],
+  "evidencia": "Mesma lacuna do item 4.0-b: a base rescisória usa a última remuneração do TRCT e a BT061 é tratada como valor fixo.",
+  "falta": "Base própria da multa 477."
+ },
+ {
+  "id": "7.5-a",
+  "secao": "7.5 Honorários advocatícios",
+  "regra": "Com justiça gratuita ao reclamante, registrar nos comentários do PJe-Calc o valor dos honorários devidos por ele, com juros.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "Honorários devidos ao advogado da reclamada (BT062) tornam o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "7.5-b",
+  "secao": "7.5 Honorários advocatícios",
+  "regra": "Honorários sobre o valor devido ao reclamante: sempre apurar; com parcelas vincendas, somar as 12 primeiras.",
+  "situacao": "fora_escopo",
+  "onde": [
+   "ROTEAMENTO v19 · PASSO 1 — dependente_de_valor_final"
+  ],
+  "evidencia": "BT063 é roteada para 'verbas_dependentes_valor_final' e nenhuma etapa a calcula; honorários ficam fora do total do Fast Track.",
+  "falta": ""
+ },
+ {
+  "id": "7.5-c",
+  "secao": "7.5 Honorários advocatícios",
+  "regra": "Honorários assistenciais do advogado do sindicato não são apurados.",
+  "situacao": "fora_escopo",
+  "onde": [
+   "INFOS_DECISOES v13 · Regras Gerais — Quem recebe decide se o valor é verba"
+  ],
+  "evidencia": "A esteira não calcula honorários; valor pago a sindicato/terceiro já é excluído da extração.",
+  "falta": ""
+ },
+ {
+  "id": "7.5-d",
+  "secao": "7.5 Honorários advocatícios",
+  "regra": "Com a justiça gratuita do reclamante indeferida, calcular os honorários devidos por ele e deduzi-los do crédito.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "Honorários devidos ao advogado da reclamada (BT062) tornam o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "8.0-a",
+  "secao": "8.0 Correção monetária e juros",
+  "regra": "A regra de correção e juros da casa é obrigatória e substitui o que a decisão disser.",
+  "situacao": "enderecada",
+  "onde": [
+   "código: calculo_principal_mensais (AtualizacaoMonetariaStrategy)",
+   "código: calculo_reflexos (JurosCorrecaoReflexosStrategy)",
+   "código: gerador_pjc (tela_parametros)"
+  ],
+  "evidencia": "Índices fixos no código (IPCA-E e Selic) para todas as verbas, sem leitura do critério da decisão.",
+  "falta": ""
+ },
+ {
+  "id": "8.0-b",
+  "secao": "8.0 Correção monetária e juros",
+  "regra": "Correção pelo IPCA-E até a data da propositura da ação.",
+  "situacao": "enderecada",
+  "onde": [
+   "código: calculo_principal_mensais (AtualizacaoMonetariaStrategy)",
+   "código: gerador_pjc (tela_parametros)"
+  ],
+  "evidencia": "'indice = coef_distribuicao / coef_competencia'; no PJe-Calc o índice troca de IPCA-E para 'Sem Correção' na data de distribuição.",
+  "falta": ""
+ },
+ {
+  "id": "8.0-c",
+  "secao": "8.0 Correção monetária e juros",
+  "regra": "Juros pela Selic a partir da data de ajuizamento (o manual escreve 'data do depósito').",
+  "situacao": "enderecada",
+  "onde": [
+   "código: calculo_principal_mensais (AtualizacaoMonetariaStrategy)",
+   "código: gerador_pjc (tela_parametros)"
+  ],
+  "evidencia": "'Juros: soma simples dos percentuais Selic do mês de distribuição até o mês de elaboração'; PJe-Calc: Selic a partir do dia seguinte à distribuição.",
+  "falta": ""
+ },
+ {
+  "id": "9.0-a",
+  "secao": "9.0 Dano moral",
+  "regra": "Limitar o dano moral pela extensão: leve 3×, média 5×, grave 20×, gravíssima 50× o último salário; na omissão, 50×.",
+  "situacao": "parcial",
+  "onde": [
+   "código: calculo_principal_rescisorias (TetoDanosMoraisStrategy)"
+  ],
+  "evidencia": "Teto fixo TETO_DANOS_MORAIS = R$ 5.000 para BT052/BT050/BT040, igual para qualquer caso.",
+  "falta": "O teto não usa a extensão do dano nem o último salário; nenhuma etapa extrai a gravidade do dano."
+ },
+ {
+  "id": "9.0-b",
+  "secao": "9.0 Dano moral",
+  "regra": "Com recurso de revista admitido para reduzir a indenização e sem novo valor fixado, não calcular.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhuma etapa identifica RR admitido nem recurso pendente sobre a indenização.",
+  "falta": "Detectar RR admitido contra o valor do dano moral e não calcular a verba."
+ },
+ {
+  "id": "9.0-c",
+  "secao": "9.0 Dano moral",
+  "regra": "Se a causa de pedir do dano moral for previdência privada ou complemento de aposentadoria, restringir.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "BT012 deferida torna o processo inapto, mas um dano moral com essa causa de pedir, sozinho, segue normalmente.",
+  "falta": "Ler a causa de pedir do dano moral e restringir quando ligada a previdência privada/complemento de aposentadoria."
+ },
+ {
+  "id": "9.0-d",
+  "secao": "9.0 Dano moral",
+  "regra": "Atualizar o dano moral a partir da data do arbitramento (não do ajuizamento); isso não vale para danos materiais nem pensões.",
+  "situacao": "parcial",
+  "onde": [
+   "código: calculo_principal_rescisorias (JurosIndenizatoriaStrategy)",
+   "INFOS_DECISOES v13 · data_deferimento"
+  ],
+  "evidencia": "Selic contada da data_deferimento (data da decisão que fixou o valor) para toda verba indenizatória.",
+  "falta": "A mesma regra é aplicada a danos materiais (BT051) e demais indenizatórias, que a premissa exclui."
+ },
+ {
+  "id": "9.0-e",
+  "secao": "9.0 Dano moral",
+  "regra": "No PJe-Calc, a opção 'Juros - Aplicar Súmula 439 do TST' deve ficar em NÃO.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "código: gerador_pjc (tela_parametros)"
+  ],
+  "evidencia": "O gerador do arquivo PJe-Calc não escreve essa opção; fica o que vier no template.",
+  "falta": "Gravar explicitamente a Súmula 439 = NÃO no arquivo."
+ },
+ {
+  "id": "10.0-a",
+  "secao": "10.0 Horas extras bancário",
+  "regra": "Base da hora extra do bancário: salário-base + comissão de cargo (gratificação de função) + ATS (anuênio).",
+  "situacao": "parcial",
+  "onde": [
+   "ROTEAMENTO v19 · PASSO 3 — Hora extra de bancário com cargo de confiança afastado",
+   "código: calculo_quantificador_roteamento (MarcacaoBaseHorasExtrasStrategy)",
+   "código: calculo_quantificador_mensais (ComposicaoBaseHorasExtrasStrategy)"
+  ],
+  "evidencia": "Reclamada da lista de bancos: gratificação de função (BT025) e anuênio (BT049) do holerite são acrescentados à base da HE.",
+  "falta": "Além do previsto, o código acrescenta gratificação de caixa (BT026) e o P9a inclui adicional noturno, periculosidade e insalubridade pagos."
+ },
+ {
+  "id": "10.0-b",
+  "secao": "10.0 Horas extras bancário",
+  "regra": "A gratificação semestral nunca entra na base das horas extras.",
+  "situacao": "parcial",
+  "onde": [
+   "ROTEAMENTO v19 · PASSO 3 — Hora extra de bancário com cargo de confiança afastado"
+  ],
+  "evidencia": "'Comissões, remuneração variável, prêmios e gratificação semestral só entram se a decisão os nomear na base da hora extra.'",
+  "falta": "A premissa exclui sempre; o prompt ainda a inclui quando a decisão a nomeia."
+ },
+ {
+  "id": "10.0-c",
+  "secao": "10.0 Horas extras bancário",
+  "regra": "Dedução da gratificação de função na 7ª e 8ª hora: ação ajuizada até 31/12/2018 deduz só a partir de 09/2018; ajuizada depois, deduz em todo o período.",
+  "situacao": "parcial",
+  "onde": [
+   "ROTEAMENTO v19 · Regra BT025 — preenchimento obrigatório (Súmula 109/TST)",
+   "MENSAIS v15 · 2.2 Regra BT025",
+   "código: calculo_quantificador_mensais (CompensacaoGratificacaoStrategy)"
+  ],
+  "evidencia": "'a gratificação é abatida em todas as competências apuradas da BT081, qualquer que seja a data de distribuição'.",
+  "falta": "Para ações ajuizadas até 31/12/2018, a dedução deveria começar só em 09/2018; hoje abate em todo o período."
+ },
+ {
+  "id": "10.0-d",
+  "secao": "10.0 Horas extras bancário",
+  "regra": "Zerar valor negativo na 7ª/8ª hora depois da dedução da gratificação.",
+  "situacao": "enderecada",
+  "onde": [
+   "PRINCIPAL_MENSAIS v8 · 4. Consolidação da Competência (Regra de sinal)",
+   "código: gerador_pjc (tela_parametros)"
+  ],
+  "evidencia": "'SE a verba for BT081 E os valores_a_compensar contiverem BT025 → valor_final_competencia = max(0.0, resultado)'; PJe-Calc: zeraValorNegativo=true.",
+  "falta": ""
+ },
+ {
+  "id": "10.0-e",
+  "secao": "10.0 Horas extras bancário",
+  "regra": "A hora extra além da 8ª pode ficar negativa no resumo, desde que a 7ª/8ª fique positiva.",
+  "situacao": "parcial",
+  "onde": [
+   "PRINCIPAL_MENSAIS v8 · 4. Consolidação da Competência (Regra de sinal)"
+  ],
+  "evidencia": "'PARA TODAS AS DEMAIS VERBAS: valor_final_competencia = resultado (pode ser negativo)'.",
+  "falta": "Não confere se a 7ª/8ª ficou positiva antes de manter o negativo da HE além da 8ª."
+ },
+ {
+  "id": "10.0-f",
+  "secao": "10.0 Horas extras bancário",
+  "regra": "Horas extras pré-contratadas de valor fixo: incluir na base das horas extras e deduzir da 7ª/8ª (na omissão), limitando ao percentual.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhum prompt ou código reconhece pré-contratação de horas extras.",
+  "falta": "Identificar a rubrica de HE pré-contratada, pô-la na base e deduzi-la da 7ª/8ª."
+ },
+ {
+  "id": "10.0-g",
+  "secao": "10.0 Horas extras bancário",
+  "regra": "Quando houver equiparação salarial, deduzir a gratificação do paradigma.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "BT018 (equiparação salarial) torna o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "10.0-h",
+  "secao": "10.0 Horas extras bancário",
+  "regra": "Gerente geral de agência ou superintendente: não calcular horas extras, salvo decisão final irrecorrível.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "EDITOR_DECISOES v12 · Exclusão por Art. 62 da CLT"
+  ],
+  "evidencia": "O P4 só deixa de gerar HE quando a decisão aplicou o art. 62; se a decisão deferiu, a HE do gerente geral é calculada.",
+  "falta": "Identificar o cargo de gerente geral/superintendente e o trânsito em julgado; sem trânsito, não calcular."
+ },
+ {
+  "id": "10.0-i",
+  "secao": "10.0 Horas extras bancário",
+  "regra": "Gerente geral: verificar se registrava ponto — sem registro e com salário alto não se apura; com registro, apura.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhuma etapa cruza cargo, registro de ponto e nível salarial.",
+  "falta": "Regra de decisão por registro de ponto e salário para gerente geral."
+ },
+ {
+  "id": "11.0-a",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Acordo de compensação/banco de horas nulo, ou Súmula 85 determinada: apurar pela Súmula 85 (só o adicional sobre as horas compensadas).",
+  "situacao": "parcial",
+  "onde": [
+   "ROTEAMENTO v19 · PASSO 6 — flags_sumulas (aplica_s85)"
+  ],
+  "evidencia": "'aplica_s85... Esta flag só registra o fato; não muda a forma de calcular a verba.'",
+  "falta": "Nenhuma etapa separa horas compensadas (só adicional) das excedentes (hora + adicional)."
+ },
+ {
+  "id": "11.0-b",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Usar o cartão de ponto paralelo em Excel interno na compensação de jornada.",
+  "situacao": "processo_interno",
+  "onde": [],
+  "evidencia": "Ferramenta de trabalho do backoffice; a esteira tem motor próprio de leitura do cartão.",
+  "falta": ""
+ },
+ {
+  "id": "11.0-c",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Adicional de horas extras: o deferido (ou o convencional); sem convenção do período ou na omissão, 50%.",
+  "situacao": "enderecada",
+  "onde": [
+   "EDITOR_DECISOES v12 · Resolução de Parâmetros Condicionais (Adicionais)"
+  ],
+  "evidencia": "Percentual fixo da decisão; 'no mínimo de 50%' → piso; 'adicional legal' sem percentual → 50% (o sistema não consulta norma coletiva).",
+  "falta": ""
+ },
+ {
+  "id": "11.0-d",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Intervalo do art. 384: limitado a 10/11/2017.",
+  "situacao": "enderecada",
+  "onde": [
+   "código: calculo_quantificador_mensais (Art384PosReformaStrategy)",
+   "PRINCIPAL_MENSAIS v8 · 3. Instrução Especial: BT003"
+  ],
+  "evidencia": "'Mantém na BT003 só as competências anteriores a 11/2017, mesmo que a decisão defira o intervalo no contrato todo.'",
+  "falta": ""
+ },
+ {
+  "id": "11.0-e",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Art. 384: aplicar o critério do art. 58 (só há direito se a jornada extra passar de 10 minutos).",
+  "situacao": "parcial",
+  "onde": [
+   "código: cartao_ponto (Art384Strategy, CalculadoraFicta)"
+  ],
+  "evidencia": "Com cartão, o intervalo só é apurado se o excedente do dia passar da tolerância de 10 min.",
+  "falta": "Sem cartão (jornada fixada), não há o corte dos 10 minutos."
+ },
+ {
+  "id": "11.0-f",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Art. 384: aplicar adicional de 50%, mesmo quando a decisão fala em 100%.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "EDITOR_DECISOES v12 · Resolução de Parâmetros Condicionais (Adicionais)"
+  ],
+  "evidencia": "O percentual da BT003 é copiado da decisão; não há regra que force 50%.",
+  "falta": "Fixar 50% na BT003 independentemente do percentual da decisão."
+ },
+ {
+  "id": "11.0-g",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Intervalos (arts. 71, 72, 66/67, digitador e análogos): natureza salarial só até 10/11/2017.",
+  "situacao": "enderecada",
+  "onde": [
+   "código: calculo_reflexos (CODIGOS_INTERVALO_REFORMA)",
+   "código: cartao_ponto (IntrajornadaStrategy)"
+  ],
+  "evidencia": "BT003/BT004/BT007/BT034/BT080 não geram reflexo a partir de 11/2017; intrajornada pós-Reforma paga só o tempo suprimido.",
+  "falta": ""
+ },
+ {
+  "id": "11.0-h",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Intervalos: na omissão, adicional de 50% (dias normais, domingos e feriados) antes da Reforma; depois da Reforma, sempre 50%.",
+  "situacao": "parcial",
+  "onde": [
+   "EDITOR_DECISOES v12 · Resolução de Parâmetros Condicionais (Adicionais)"
+  ],
+  "evidencia": "Na omissão aplica 50% pelo piso constitucional.",
+  "falta": "Depois de 11/11/2017 não força 50% quando a decisão fixa outro percentual."
+ },
+ {
+  "id": "11.0-i",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Intervalos: não incluir periculosidade nem insalubridade na base.",
+  "situacao": "parcial",
+  "onde": [
+   "ROTEAMENTO v19 · PASSO 3 — Demais verbas",
+   "código: calculo_quantificador_mensais (ComposicaoBaseHorasExtrasStrategy)"
+  ],
+  "evidencia": "Na omissão a base é salário-base; o código mexe só em gratificação/anuênio na base dos intervalos.",
+  "falta": "Não há exclusão explícita dos adicionais quando a decisão manda usar a remuneração (mesma lacuna do 3.0-e)."
+ },
+ {
+  "id": "11.0-j",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Verificar se foi deferido o art. 67 (descanso semanal de 24h) e ajustar no PJe-Calc.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "código: cartao_ponto (EntrejornadasStrategy)"
+  ],
+  "evidencia": "O cartão apura só as 11h entre jornadas (art. 66); o descanso de 24h do art. 67 não é apurado nem marcado no arquivo.",
+  "falta": "Apurar o art. 67 (11h + 24h) quando deferido e marcar no PJe-Calc."
+ },
+ {
+  "id": "11.0-k",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Base das horas extras (Súmula 264): se a decisão citar, usa a remuneração; se for omissa, só o salário-base.",
+  "situacao": "parcial",
+  "onde": [
+   "INFOS_DECISOES v13 · Princípio do Conservadorismo Absoluto",
+   "EDITOR_DECISOES v12 · Base de Cálculo (Prioridades 1-3)",
+   "PRINCIPAL_MENSAIS v8 · 2.3 e 2.4",
+   "código: calculo_quantificador_mensais (ComposicaoBaseHorasExtrasStrategy)"
+  ],
+  "evidencia": "P2/P4 caem em salário-base na omissão; P10a soma tudo só com Súmula 264; código retira gratificação/anuênio sem gancho (não bancário).",
+  "falta": "O P9a ainda expande a base pelas rubricas integra_salario do holerite e o P10a 2.4 mantém as parcelas fixas (ex.: adicionais pagos), mesmo sem Súmula 264."
+ },
+ {
+  "id": "11.0-l",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Não considerar o DSR na base de cálculo das horas extras.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhuma regra retira da base da HE a rubrica de DSR paga no holerite (ex.: DSR sobre comissões).",
+  "falta": "Excluir rubricas de DSR da base das horas extras."
+ },
+ {
+  "id": "11.0-m",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Súmula 340 nas horas extras fictas (intervalos): se expressa, aplicar; se omissa, não aplicar e tirar comissões e seus DSRs da base.",
+  "situacao": "parcial",
+  "onde": [
+   "ROTEAMENTO v19 · PASSO 6 — flags_sumulas (aplica_s340)",
+   "PRINCIPAL_MENSAIS v8 · 2.2 Súmula 340"
+  ],
+  "evidencia": "aplica_s340 só é ligada quando a decisão cita a Súmula 340; o P10a só usa o divisor da 340 nesse caso.",
+  "falta": "Na omissão, as comissões e seus DSRs não são retirados explicitamente da base dos intervalos."
+ },
+ {
+  "id": "11.0-n",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Súmula 340 nas horas extras normais: se expressa, aplicar; se omissa, incluir comissões e prêmios na base (Súmula 264), sem os DSRs das comissões.",
+  "situacao": "parcial",
+  "onde": [
+   "ROTEAMENTO v19 · PASSO 6 — flags_sumulas (aplica_s340)",
+   "PRINCIPAL_MENSAIS v8 · 2.4 Padrão Restrito",
+   "MENSAIS v15 · 2.2.1 Corte da Reforma"
+  ],
+  "evidencia": "Súmula 340 expressa é aplicada (base fixa ÷ divisor; variável ÷ divisor_s340). Sem ela, o P10a 2.4 soma só as parcelas fixas.",
+  "falta": "Na omissão, comissões (variáveis) ficam fora da base pelo P10a 2.4, e prêmios saem a partir de 11/2017 — o oposto da premissa."
+ },
+ {
+  "id": "11.0-o",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "OJ 394 (reflexo do DSR majorado nas demais verbas): na omissão, não apurar; se deferido, não apurar até 19/03/2023 e apurar a partir de 20/03/2023.",
+  "situacao": "parcial",
+  "onde": [
+   "código: calculo_reflexos (DecimoTerceiroReflexoStrategy, FeriasReflexoStrategy, AvisoPrevioReflexoStrategy)"
+  ],
+  "evidencia": "Os reflexos em 13º, férias e aviso não incluem o DSR, o que atende a omissão.",
+  "falta": "Quando a decisão defere o reflexo do DSR majorado, não há apuração a partir de 20/03/2023."
+ },
+ {
+  "id": "11.0-p",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Horas in itinere: limitadas a 10/11/2017.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "código: cartao_ponto (InItinereStrategy)",
+   "código: calculo_reflexos (CODIGOS_INTERVALO_REFORMA)"
+  ],
+  "evidencia": "A BT087 é apurada por minutos/dia × dias trabalhados, sem corte de data; ela não está na lista de cortes da Reforma.",
+  "falta": "Cortar a BT087 (e seus reflexos) a partir de 11/11/2017."
+ },
+ {
+  "id": "11.0-q",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Adicional noturno só entra na base das horas extras se a decisão deferir (OJ 97).",
+  "situacao": "parcial",
+  "onde": [
+   "HIST_SALARIAL_AGRUPAMENTO v5 · integra_salario",
+   "ROTEAMENTO v19 · PASSO 3 — Hora extra de bancário com cargo de confiança afastado"
+  ],
+  "evidencia": "No glossário a BT037 'depende do deferimento' → integra_salario=false, então por padrão fica fora; no bancário o P9a inclui a BT037 paga.",
+  "falta": "Nenhuma regra acrescenta o adicional noturno quando a OJ 97 é deferida; no bancário entra sem checar a decisão."
+ },
+ {
+  "id": "11.0-r",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Com jornada fixada, sempre observar a frequência pelos cartões juntados, ficha financeira e ficha de registro.",
+  "situacao": "parcial",
+  "onde": [
+   "EDITOR_DECISOES v12 · Regra de Exceção para Automação: Horário Fixo com Frequência",
+   "CALC_CALENDARIO v9 · Passo 2.1"
+  ],
+  "evidencia": "Férias e afastamentos da ficha reduzem os dias; o cartão só define a frequência quando a decisão remete aos registros (Ramo B).",
+  "falta": "No Ramo A (dias fixos na decisão) os cartões juntados não são usados para os dias; no Ramo B a jornada mista fica não calculável."
+ },
+ {
+  "id": "11.0-s",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Escala 12x36 com HE além da 8ª: se a reclamada alegou o Tema 296 do IRR na contestação, apurar só o que passar da 12ª hora diária.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "ROTEAMENTO v19 · PRIORIDADE 5 — Escala 12x36"
+  ],
+  "evidencia": "O limite da 12x36 vem do horário do regime; a contestação não é lida e o Tema 296 não aparece em nenhuma etapa.",
+  "falta": "Ler a contestação (ou outra fonte) para o Tema 296 e usar limite de 12h nesses casos."
+ },
+ {
+  "id": "11.0-t",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Trabalho externo (art. 62, qualquer segmento) é restrito quando: trânsito há menos de 2 anos, norma coletiva com art. 62 ou sem controle de jornada, contrato/ficha com art. 62, ou sem norma coletiva nos autos.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "EDITOR_DECISOES v12 · Exclusão por Art. 62 da CLT"
+  ],
+  "evidencia": "O P4 só exclui a HE quando a decisão aplicou o art. 62; deferida a HE, ela é calculada.",
+  "falta": "Nenhum dos gatilhos de restrição (trânsito < 2 anos, norma coletiva, ficha) é verificado."
+ },
+ {
+  "id": "11.0-u",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Trabalho externo com possibilidade de controle indireto (Tema 300): restrito.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "O Tema 300 não aparece em nenhum prompt ou código.",
+  "falta": "Identificar o cenário de controle indireto e restringir."
+ },
+ {
+  "id": "11.0-v",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Prorrogação do adicional noturno após as 5h só se deferida (Súmula 60).",
+  "situacao": "parcial",
+  "onde": [
+   "MENSAIS v15 · BLOCO Q1 — Passo 3",
+   "código: cartao_ponto (NoturnoStrategy)"
+  ],
+  "evidencia": "Hora noturna é contada só entre 22h e 5h, o que atende o caso sem deferimento.",
+  "falta": "Quando a Súmula 60 é deferida, as horas após as 5h não são tratadas como noturnas."
+ },
+ {
+  "id": "11.0-w",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Sobreaviso: 1/3 do salário normal, sem periculosidade e insalubridade na base.",
+  "situacao": "parcial",
+  "onde": [
+   "código: cartao_ponto (ExportadorApuracaoCartao — ADIC_DEFAULT_POR_CODIGO)"
+  ],
+  "evidencia": "Com cartão, a BT002 sai com adicional padrão de 33%.",
+  "falta": "O P10a não tem fórmula própria para pagar só 1/3 da hora; sem cartão não há regra; não há exclusão dos adicionais da base."
+ },
+ {
+  "id": "11.0-x",
+  "secao": "11.0 Horas extras e adicional noturno",
+  "regra": "Turno ininterrupto: mesmo com HE além da 6ª deferida, observar a CCT/ACT que alonga a jornada (não vale para transitados).",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "INFOS_DECISOES v13 · Regra 1: Horas Extras de Jornada Reduzida"
+  ],
+  "evidencia": "Turno de revezamento vira 'HE excedentes à 6ª'; a esteira não lê norma coletiva nem o status de trânsito.",
+  "falta": "Consultar a jornada elastecida da norma coletiva e checar o trânsito antes de apurar além da 6ª."
+ },
+ {
+  "id": "12.0-a",
+  "secao": "12.0 Horas extras motoristas",
+  "regra": "Antes de calcular horas extras de motorista, conferir os acordos coletivos juntados, porque eles podem excluir cálculos mesmo com a sentença deferindo.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "EDITOR_DECISOES v12 · Resolução de Parâmetros Condicionais (Adicionais)"
+  ],
+  "evidencia": "O único registro sobre norma coletiva é a nota 'o sistema não realiza consulta a normas coletivas'. A esteira não lê ACT/CCT.",
+  "falta": "Nenhuma etapa lê acordo coletivo; uma exclusão prevista em ACT não chega ao cálculo."
+ },
+ {
+  "id": "12.0-b",
+  "secao": "12.0 Horas extras motoristas",
+  "regra": "Se houver cartão de ponto válido, as horas extras são apuradas pelo cartão.",
+  "situacao": "enderecada",
+  "onde": [
+   "CALC_QUANTIFICADOR_ROTEAMENTO v19 · PASSO 1 — Status de Calculabilidade ('calculavel' via cartão apurado)",
+   "código: cartao_ponto (motor de apuração das batidas)"
+  ],
+  "evidencia": "Com entrada da verba na Apuração do Cartão, ela é 'calculavel' com fonte_apuracao 'cartao' e a quantidade vem das batidas reais.",
+  "falta": ""
+ },
+ {
+  "id": "12.0-c",
+  "secao": "12.0 Horas extras motoristas",
+  "regra": "Se a jornada foi fixada pelo juiz porque os cartões foram considerados inválidos, as horas extras são apuradas pela jornada fixada.",
+  "situacao": "enderecada",
+  "onde": [
+   "EDITOR_DECISOES v12 · Regra de Exceção para Automação: Horário Fixo com Frequência (Ramo A)"
+  ],
+  "evidencia": "Horário e dias fixados na decisão: regime 'fixo_diario', tipo_jornada 'fixada', jornada imediatamente calculável.",
+  "falta": ""
+ },
+ {
+  "id": "12.0-d",
+  "secao": "12.0 Horas extras motoristas",
+  "regra": "Se a jornada foi fixada porque faltavam os cartões (e não porque eram inválidos), não se apuram horas extras do motorista.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "EDITOR_DECISOES v12 · Regra de Exceção para Automação: Horário Fixo com Frequência"
+  ],
+  "evidencia": "O prompt trata toda jornada fixada como calculável; não distingue fixação por invalidade de fixação por ausência dos cartões, nem a categoria motorista.",
+  "falta": "Regra que identifique motorista com jornada fixada por falta de cartões e não apure as horas extras."
+ },
+ {
+  "id": "12.0-e",
+  "secao": "12.0 Horas extras motoristas",
+  "regra": "Tempo de espera incluído na jornada: abater da apuração as horas extras e o tempo de espera já pagos.",
+  "situacao": "parcial",
+  "onde": [
+   "CALC_QUANTIFICADOR_ROTEAMENTO v19 · PASSO 3 — Estratégia de Base de Cálculo (Dedução escrita como a decisão escreveu)",
+   "HIST_SALARIAL_FILTRO v7 · Regras de Filtragem (item 1)"
+  ],
+  "evidencia": "A dedução segue a forma da decisão, ex.: 'dedução do tempo de espera quitado'; a rubrica a deduzir entra no histórico filtrado.",
+  "falta": "Só abate quando a decisão manda deduzir. A premissa manda abater sempre que o tempo de espera estiver dentro da jornada."
+ },
+ {
+  "id": "12.0-f",
+  "secao": "12.0 Horas extras motoristas",
+  "regra": "Tempo de espera deferido à parte, com parâmetros omissos: apurar a 30% do salário-hora, sem adicional, numa verba separada das horas extras.",
+  "situacao": "parcial",
+  "onde": [
+   "código: cartao_ponto (ocorrencias_strategy, exportador_apuracao_cartao: BT010 com 30%)",
+   "CALC_QUANTIFICADOR_ROTEAMENTO v19 · INPUTS (Input 6)"
+  ],
+  "evidencia": "O motor do cartão soma as ocorrências de espera em BT010 com 30%, mas o P9a só usa o cartão para BT001, BT081, BT089, BT011, BT007, BT004, BT003 e BT037 — 'nenhuma outra'.",
+  "falta": "A BT010 do cartão não é consumida pelo roteamento, e sem cartão não há regra dos 30% sem adicional. Falta ligar a BT010 ao cálculo."
+ },
+ {
+  "id": "13.0-a",
+  "secao": "13.0 Limitação na inicial",
+  "regra": "Limitar a condenação aos valores da petição inicial só quando houver ordem judicial expressa ou quando o Recurso de Revista da reclamada tiver sido recebido.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhum prompt nem código trata limitação ao valor do pedido, nem a admissão de RR.",
+  "falta": "Identificar a determinação de limitação (ou o RR recebido) e acionar o teto."
+ },
+ {
+  "id": "13.0-b",
+  "secao": "13.0 Limitação na inicial",
+  "regra": "A limitação vale pedido a pedido, não para o total do caso: valor do pedido dividido pelo número de meses, separando o FGTS + 40% se ele estiver no total do pedido.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Não há extração dos valores por pedido da inicial nem teto mensal por verba.",
+  "falta": "Extrair o valor de cada pedido da inicial, ratear por mês, separar o FGTS + 40% e aplicar o teto a cada verba."
+ },
+ {
+  "id": "14.1",
+  "secao": "14.0 Pensão mensal — 14.1 Processos antes do acórdão / pendentes de ED ou RO",
+  "regra": "Em processos ainda sem acórdão ou com ED/RO pendentes, apurar só as parcelas vencidas da pensão, mesmo que fixada em parcela única.",
+  "situacao": "fora_escopo",
+  "onde": [
+   "código: resources/glossario.json (BT059 Pensão Vitalícia)"
+  ],
+  "evidencia": "Pensão mensal/vitalícia é a BT059, verba que torna o processo inapto ao Fast Track.",
+  "falta": ""
+ },
+ {
+  "id": "14.2",
+  "secao": "14.0 Pensão mensal — 14.2 Laudo pericial",
+  "regra": "Mesmo com pensão deferida, se o laudo pericial for negativo não apurar, salvo se já transitou em julgado.",
+  "situacao": "fora_escopo",
+  "onde": [
+   "código: resources/glossario.json (BT059 Pensão Vitalícia)"
+  ],
+  "evidencia": "Tema de pensão (BT059), que torna o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "14.3",
+  "secao": "14.0 Pensão mensal — 14.3 Nexo causal/concausal",
+  "regra": "Nexo causal: apurar como deferido. Nexo concausal: aplicar ao percentual de incapacidade o percentual de culpa da reclamada (ex.: 30% x 40% = 12%); se a decisão for omissa, usar 50%.",
+  "situacao": "fora_escopo",
+  "onde": [
+   "código: resources/glossario.json (BT059 Pensão Vitalícia)"
+  ],
+  "evidencia": "Tema de pensão (BT059), que torna o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "14.4",
+  "secao": "14.0 Pensão mensal — tabela de cenários (vencidas, vincendas, redutor)",
+  "regra": "Tabela por cenário (ativo, desligado, afastado, incapacidade temporária ou permanente, parcela única ou mensal): vencidas até a atualização, vincendas com redutor de 30% e meses a deduzir conforme a fase recursal.",
+  "situacao": "fora_escopo",
+  "onde": [
+   "código: resources/glossario.json (BT059 Pensão Vitalícia)"
+  ],
+  "evidencia": "Tema de pensão (BT059), que torna o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "15.0-a",
+  "secao": "15.0 Período de cálculo",
+  "regra": "Contrato ativo e decisão omissa: calcular até a data de distribuição da ação.",
+  "situacao": "enderecada",
+  "onde": [
+   "DADOS_INICIAIS v9 · Regras de Cálculo (Período Não Prescrito)",
+   "CALC_CALENDARIO v9 · calendário mestre do período não prescrito"
+  ],
+  "evidencia": "Fim do período = a data mais antiga entre data_demissao e data_distribuicao; o calendário só vai até esse fim.",
+  "falta": ""
+ },
+ {
+  "id": "15.0-b",
+  "secao": "15.0 Período de cálculo",
+  "regra": "Parcelas vincendas só quando houver determinação, verificando se o reclamante está afastado ou reintegrado.",
+  "situacao": "parcial",
+  "onde": [
+   "DADOS_INICIAIS v9 · Regras de Cálculo (Período Não Prescrito)"
+  ],
+  "evidencia": "O período sempre termina na demissão ou na distribuição, então nunca se apuram vincendas — nem quando a decisão as determina.",
+  "falta": "Calcular as vincendas quando determinadas, verificando afastamento ou reintegração. Hoje elas nunca entram, nem quando devidas."
+ },
+ {
+  "id": "15.0-c",
+  "secao": "15.0 Período de cálculo",
+  "regra": "Observar só o período de responsabilidade da reclamada-alvo.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "código: gerador_pjc (montador_caso: reclamada-alvo só para nome e CNPJ)"
+  ],
+  "evidencia": "A reclamada-alvo da Zeev é usada só para identificar nome e CNPJ no PJC; nenhuma etapa recorta o período por responsabilidade.",
+  "falta": "Extrair o período de responsabilidade de cada reclamada e limitar a apuração ao da reclamada-alvo."
+ },
+ {
+  "id": "15.0-d",
+  "secao": "15.0 Período de cálculo",
+  "regra": "Sem documentação de todo o período, limitar a apuração até a data do último documento juntado.",
+  "situacao": "parcial",
+  "onde": [
+   "CALC_QUANTIFICADOR_MENSAIS v15 · REGRA DO CARTÃO DE PONTO",
+   "CALC_QUANTIFICADOR_MENSAIS v15 · 2.2 — Base de Cálculo da Competência"
+  ],
+  "evidencia": "Nas verbas do cartão, 'o cartão é a autoridade sobre o período que ele cobre'. Nas demais, sem holerite a base vem da lista_salarios e o mês continua apurado.",
+  "falta": "Nas verbas que não usam cartão, cortar a apuração no último documento em vez de completar os meses com a lista de salários."
+ },
+ {
+  "id": "16.0-a",
+  "secao": "16.0 Previdência privada",
+  "regra": "Restringir casos de complementação de aposentadoria ou previdência privada (PREVI e outras), incluindo diferenças por horas extras de processos anteriores integradas ao salário de participação.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "Complementação de aposentadoria (BT012) torna o processo inapto ao Fast Track.",
+  "falta": ""
+ },
+ {
+  "id": "16.0-b",
+  "secao": "16.0 Previdência privada",
+  "regra": "Verbas principais com reflexos e incidência em previdência privada podem ser calculadas.",
+  "situacao": "parcial",
+  "onde": [
+   "código: gerador_pjc (tela_reflexos: incidenciaPrevidenciaPrivada=false)"
+  ],
+  "evidencia": "As verbas principais seguem o cálculo normal, mas o PJC sai sempre com incidenciaPrevidenciaPrivada false.",
+  "falta": "A incidência em previdência privada, quando deferida, nunca é calculada."
+ },
+ {
+  "id": "17.1",
+  "secao": "17.1 Plano de Cargos e Salários (PCS) – Bancários",
+  "regra": "Protocolo do PCS: não calcular se distribuído após 11/11/2017; grade e zona mínimas; só reajustes contratuais; regras Santander/Banco Real; dedução da gratificação de função.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "PCS (BT022) torna o processo inapto ao Fast Track.",
+  "falta": ""
+ },
+ {
+  "id": "17.2-a",
+  "secao": "17.2 Terceirização e responsabilidade subsidiária",
+  "regra": "Responsabilidade subsidiária com períodos definidos por réu: limitar o cálculo ao período da ré-alvo.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhuma etapa extrai a responsabilidade nem o período de cada ré.",
+  "falta": "Extrair o tipo de responsabilidade e os períodos por réu e recortar a apuração no período da ré-alvo."
+ },
+ {
+  "id": "17.2-b",
+  "secao": "17.2 Terceirização e responsabilidade solidária",
+  "regra": "Com responsabilidade solidária e grupo econômico reconhecidos, calcular normalmente, sem restrição de período.",
+  "situacao": "parcial",
+  "onde": [
+   "CALC_QUANTIFICADOR_MENSAIS v15 · ETAPA 2 — Loop por Competência"
+  ],
+  "evidencia": "Sem período próprio na verba, a apuração cobre todo o período imprescrito: o resultado coincide por padrão.",
+  "falta": "Não há leitura do tipo de responsabilidade. O resultado só coincide porque nunca se recorta o período."
+ },
+ {
+  "id": "17.2-c",
+  "secao": "17.2 Terceirização — casos restritos",
+  "regra": "Não calcular vínculo/terceirização ilícita sem trânsito em julgado, pejotização (mesmo transitada) nem reconhecimento entre reclamadas com a mesma atividade-fim.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "Terceirização e vínculo (BT071) tornam o processo inapto ao Fast Track.",
+  "falta": ""
+ },
+ {
+  "id": "17.3-a",
+  "secao": "17.3 Casos de enquadramento",
+  "regra": "Critérios do TST para caracterizar atividade financeira (concede crédito, assume risco, administra cartões); nos casos de financiário, acionar a equipe interna.",
+  "situacao": "processo_interno",
+  "onde": [],
+  "evidencia": "Análise jurídica e acionamento da equipe interna, fora de um cálculo automático.",
+  "falta": ""
+ },
+ {
+  "id": "17.3-b",
+  "secao": "17.3 Casos de enquadramento",
+  "regra": "Empresas que a BT não considera financeiras: apurar só as parcelas fora do enquadramento (ex.: periculosidade, danos morais).",
+  "situacao": "parcial",
+  "onde": [
+   "INFOS_DECISOES v13 · jornada_legal_horas"
+  ],
+  "evidencia": "Diferenças por enquadramento (BT017) tornam o processo inapto, mas o P2 põe jornada legal de 6h 'para bancário e financiário' sem filtro de empresa.",
+  "falta": "Horas extras da 7ª e 8ª que só existem pelo enquadramento como financiário seguem calculadas se vierem sem a BT017."
+ },
+ {
+  "id": "17.3-c",
+  "secao": "17.3 Casos de enquadramento",
+  "regra": "Adobe/Crefisa: não apurar nenhuma verba ligada ao enquadramento como financiário, nem o pedido sucessivo de horas extras, salvo sucessivo já julgado pelo TST ou sem discussão de vínculo com a Crefisa.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhuma regra por reclamada (Adobe/Crefisa) nos prompts nem no código.",
+  "falta": "Identificar a reclamada e bloquear as horas extras e demais verbas do enquadramento."
+ },
+ {
+  "id": "17.4",
+  "secao": "17.4 Gratificação especial – Banco Santander",
+  "regra": "Restringir totalmente a gratificação especial do Santander, com desconto integral (não apurar), exceto dispensa antes de 2012 ou trânsito em julgado no processo principal; incide IRRF.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhum prompt nem código trata a gratificação especial do Santander. O Santander só aparece como regra de rótulo de salário base.",
+  "falta": "Identificar a verba no Santander e não apurá-la (com as exceções de dispensa antes de 2012 e trânsito em julgado)."
+ },
+ {
+  "id": "17.5-a",
+  "secao": "17.5 Professores",
+  "regra": "Professores: observar as CCTs e as férias letivas, geralmente em janeiro e julho.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "A esteira não lê CCT e o calendário não tem tratamento de férias letivas.",
+  "falta": "Descontar as férias letivas no calendário dos professores."
+ },
+ {
+  "id": "17.5-b",
+  "secao": "17.5 Professores",
+  "regra": "Professores: DSR de 1/6 e mês de 4,5 semanas.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Não há regra de categoria professor no DSR nem no divisor.",
+  "falta": "Aplicar DSR de 1/6 e mês de 4,5 semanas quando o reclamante for professor."
+ },
+ {
+  "id": "17.5-c",
+  "secao": "17.5 Professores",
+  "regra": "Professores: horas extras com adicional de 50%.",
+  "situacao": "parcial",
+  "onde": [
+   "EDITOR_DECISOES v12 · Resolução de Parâmetros Condicionais (Adicionais)"
+  ],
+  "evidencia": "Com 'adicional legal' sem percentual, o P4 aplica o piso de 50%. Se a decisão fixar outro percentual, vale o da decisão.",
+  "falta": "Não há regra própria para professor: 50% sai só quando a decisão é omissa."
+ },
+ {
+  "id": "18.0-a",
+  "secao": "18.0 Prêmios",
+  "regra": "Prêmios só têm natureza salarial até 10/11/2017: depois disso não entram na base de outras verbas nem geram reflexos.",
+  "situacao": "parcial",
+  "onde": [
+   "CALC_QUANTIFICADOR_MENSAIS v15 · 2.2.1 — Corte da Reforma: prêmio e remuneração por metas",
+   "EDITOR_DECISOES v12 · Campos de Verba (reflexos: prêmio por metas sem reflexos depois de 11/11/2017)",
+   "código: calculo_reflexos (CODIGOS_PREMIO_REFORMA = BT031)"
+  ],
+  "evidencia": "A partir de 2017-11, o prêmio sai da base da hora e a integração fica zerada. O P4 zera os reflexos se o período começa em 11/11/2017 ou depois; o código corta os reflexos do BT031.",
+  "falta": "Prêmio de metas lançado em outro código (ex.: BT024/PIV) cujo período atravessa 11/2017 mantém os reflexos depois do marco: o corte em código é só do BT031."
+ },
+ {
+  "id": "18.0-b",
+  "secao": "18.0 Prêmios",
+  "regra": "Se já transitou em julgado, seguir o que foi deferido para o prêmio.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "CALC_QUANTIFICADOR_MENSAIS v15 · 2.2.1 — Corte da Reforma"
+  ],
+  "evidencia": "O corte vale 'mesmo que a decisão nomeie o prêmio na base'; nenhuma etapa identifica o trânsito em julgado.",
+  "falta": "Identificar o trânsito em julgado e não aplicar o corte nesses casos."
+ },
+ {
+  "id": "18.0-c",
+  "secao": "18.0 Prêmios",
+  "regra": "A restrição vale para qualquer parcela de metas ou produtividade, seja qual for o nome (SRV, PPR, AGIR e semelhantes).",
+  "situacao": "enderecada",
+  "onde": [
+   "CALC_QUANTIFICADOR_MENSAIS v15 · 2.2.1 — Corte da Reforma: prêmio e remuneração por metas"
+  ],
+  "evidencia": "Vale para toda parcela de prêmio, bônus ou remuneração variável por metas, 'qualquer que seja o código ou o nome da rubrica' (PIV, AGIR, SRV, PPR...).",
+  "falta": ""
+ },
+ {
+  "id": "19.1",
+  "secao": "19.1 Banco Santander – Gratificação especial",
+  "regra": "Restringir a gratificação especial do Santander, exceto com trânsito em julgado ou dispensa antes de 2012.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Mesma lacuna do 17.4: nenhuma regra para essa verba ou reclamada.",
+  "falta": "Identificar a verba no Santander e não apurá-la, com as exceções."
+ },
+ {
+  "id": "19.2-a",
+  "secao": "19.2 Banco Bradesco – Verba de representação",
+  "regra": "Verba de representação do Bradesco antes do acórdão: não apurar (a restrição não vale se já transitou em julgado).",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "CALC_QUANTIFICADOR_ROTEAMENTO v19 · PASSO 1 — REGRA PRÉVIA (verba que serve de base para reflexos)"
+  ],
+  "evidencia": "O P9a manda calcular a verba de representação como base dos reflexos deferidos, sem olhar reclamada nem fase do processo.",
+  "falta": "Identificar Bradesco + verba de representação + fase anterior ao acórdão e não apurar."
+ },
+ {
+  "id": "19.2-b",
+  "secao": "19.2 Banco Bradesco – Verba de representação",
+  "regra": "Depois do acórdão, calcular só se o paradigma tiver o mesmo ano de demissão, a mesma função, o mesmo departamento e salário equivalente.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhuma etapa extrai nem confere os dados do paradigma.",
+  "falta": "Extrair o paradigma e checar as quatro condições."
+ },
+ {
+  "id": "19.2-c",
+  "secao": "19.2 Banco Bradesco – Verba de representação",
+  "regra": "Se o valor foi deferido, apurar conforme deferido.",
+  "situacao": "enderecada",
+  "onde": [
+   "CALC_QUANTIFICADOR_ROTEAMENTO v19 · PASSO 2B — Apuração de Verbas Consolidadas (Valor fixo único)",
+   "código: calculo_reflexos (BT082 reflete pela média)"
+  ],
+  "evidencia": "Valor declarado na decisão segue como valor fixo em reais; a BT082 tem regra própria de reflexo.",
+  "falta": ""
+ },
+ {
+  "id": "19.3-a",
+  "secao": "19.3 Banco Itaú",
+  "regra": "No Itaú, a PLR não integra o salário.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "PLR (BT028) torna o processo inapto ao Fast Track.",
+  "falta": ""
+ },
+ {
+  "id": "19.3-b",
+  "secao": "19.3 Banco Itaú",
+  "regra": "Restringir a diferença salarial RP 52 do Itaú, salvo se transitou em julgado.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhuma regra para RP 52. Se for classificada como diferença por norma/enquadramento (BT017), o processo fica inapto, mas não há regra explícita.",
+  "falta": "Identificar a RP 52 do Itaú e restringir quando não houver trânsito em julgado."
+ },
+ {
+  "id": "19.4-a",
+  "secao": "19.4 Pirelli/Prometeon (TRT 4)",
+  "regra": "Horas extras: apurar só o excedente da 8ª hora, mesmo que deferido o excedente da 6ª, nomeando a verba pelo excedente apurado (ex.: 8/44).",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhuma regra por reclamada no roteamento: o limite sai da decisão (Fase 2 do P9a).",
+  "falta": "Forçar o limite de 8h para Pirelli/Prometeon no TRT 4."
+ },
+ {
+  "id": "19.4-b",
+  "secao": "19.4 Pirelli/Prometeon (TRT 4)",
+  "regra": "Intrajornada: considerar sempre 30 minutos de intervalo e apurar só se os 30 minutos não foram gozados.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "CALC_QUANTIFICADOR_ROTEAMENTO v19 · 5.3 Supressão de Intervalo"
+  ],
+  "evidencia": "O intervalo devido abaixo do legal só é usado 'quando a decisão (ou a norma coletiva que ela aplica)' o fixa; não há regra para essa reclamada.",
+  "falta": "Fixar 30 minutos como intervalo devido para Pirelli/Prometeon."
+ },
+ {
+  "id": "19.4-c",
+  "secao": "19.4 Pirelli/Prometeon (TRT 4)",
+  "regra": "Adicional noturno: considerar 45%.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "O adicional noturno sai da decisão ou do padrão de 20% do motor do cartão; não há regra para essa reclamada.",
+  "falta": "Aplicar 45% para Pirelli/Prometeon."
+ },
+ {
+  "id": "19.4-d",
+  "secao": "19.4 Pirelli/Prometeon (TRT 4)",
+  "regra": "Se o título executivo deferir diferenças, manter a condenação separando os valores pagos com o Excel interno.",
+  "situacao": "processo_interno",
+  "onde": [],
+  "evidencia": "Depende de planilha interna do backoffice.",
+  "falta": ""
+ },
+ {
+  "id": "19.5",
+  "secao": "19.5 Petrobras – RMNR",
+  "regra": "Não calcular nada ligado ao RMNR, mesmo com trânsito em julgado; os outros prêmios do caso são calculados, desconsiderando totalmente o RMNR.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhuma menção a RMNR ou Petrobras nos prompts nem no código. Só cairia como inapto se classificada como diferença por norma coletiva (BT017).",
+  "falta": "Bloquear a verba RMNR e tirar o RMNR das bases dos demais cálculos."
+ },
+ {
+  "id": "19.6-a",
+  "secao": "19.6 Comissão – Bancário",
+  "regra": "Diferença de comissão que já aparece no holerite pode ser apurada.",
+  "situacao": "enderecada",
+  "onde": [
+   "HIST_SALARIAL_FILTRO v7 · Regras de Filtragem (item 1)",
+   "CALC_QUANTIFICADOR_MENSAIS v15 · 2.2 — Base de Cálculo da Competência"
+  ],
+  "evidencia": "A verba deferida (BT024) entra no histórico filtrado e é apurada com os valores do holerite pelo fluxo normal.",
+  "falta": ""
+ },
+ {
+  "id": "19.6-b",
+  "secao": "19.6 Comissão – Bancário",
+  "regra": "Pedido de comissões por venda de produtos, ou de reflexos das comissões em qualquer verba, não se apura; nos processos com mais de 2 anos de trânsito, apura-se normalmente.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Não há regra para comissão de venda de produtos de bancário; as comissões seguem na base e nos reflexos. O trânsito em julgado não é identificado.",
+  "falta": "Identificar comissão de venda de produtos em banco e não apurar a verba nem os reflexos, salvo trânsito há mais de 2 anos."
+ },
+ {
+  "id": "20.0-a",
+  "secao": "20.0 Reintegração",
+  "regra": "Sem documentos, apurar a reintegração até a data da decisão.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "DADOS_INICIAIS v9 · Regras de Cálculo (Período Não Prescrito)"
+  ],
+  "evidencia": "O período sempre termina na demissão ou na distribuição; não há termo final pela data da decisão.",
+  "falta": "Estender a apuração das verbas de reintegração até a data da decisão."
+ },
+ {
+  "id": "20.0-b",
+  "secao": "20.0 Reintegração",
+  "regra": "Sempre deduzir as rescisórias e a multa do FGTS já pagas (pode ficar negativo); sem documento para a dedução, não apurar a verba.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhuma regra de dedução das rescisórias ou da multa fundiária nas verbas de reintegração, nem trava por falta do documento.",
+  "falta": "Deduzir TRCT e multa de 40% pagos e marcar como não calculável quando não houver o documento."
+ },
+ {
+  "id": "21.1-a",
+  "secao": "21.1 Responsabilidade subsidiária",
+  "regra": "Se o juízo definiu períodos para as subsidiárias, apurar só o período da reclamada-alvo.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "código: gerador_pjc (reclamada-alvo só para nome e CNPJ)"
+  ],
+  "evidencia": "Nenhuma etapa extrai a responsabilidade nem o período de cada ré.",
+  "falta": "Extrair os períodos das subsidiárias e recortar a apuração no da reclamada-alvo."
+ },
+ {
+  "id": "21.1-b",
+  "secao": "21.1 Responsabilidade subsidiária — reconhecimento de vínculo",
+  "regra": "No reconhecimento de vínculo: não apurar se houver relação comercial; seguir só se a função do contratado for diferente da atividade da reclamada (ex.: bancário terceirizado em banco não segue).",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "Terceirização e vínculo (BT071) tornam o processo inapto ao Fast Track.",
+  "falta": ""
+ },
+ {
+  "id": "21.2",
+  "secao": "21.2 Responsabilidade solidária",
+  "regra": "Com responsabilidade solidária e grupo econômico reconhecidos, os valores do reconhecimento podem ser apurados normalmente.",
+  "situacao": "parcial",
+  "onde": [
+   "CALC_QUANTIFICADOR_MENSAIS v15 · ETAPA 2 — Loop por Competência"
+  ],
+  "evidencia": "O cálculo cobre todo o período imprescrito por padrão; reconhecimento de vínculo (BT071) é inapto.",
+  "falta": "Não há leitura do tipo de responsabilidade. O resultado só coincide porque nunca se recorta o período."
+ },
+ {
+  "id": "23.0-a",
+  "secao": "23.0 Tipos e metodologias de cálculo",
+  "regra": "Observar o andamento processual e o tipo de execução (definitiva ou provisória, com ou sem homologação) para escolher a metodologia.",
+  "situacao": "processo_interno",
+  "onde": [],
+  "evidencia": "Triagem do backoffice; a esteira não recebe nem classifica a fase de execução.",
+  "falta": ""
+ },
+ {
+  "id": "23.0-b",
+  "secao": "23.0 Tipos e metodologias de cálculo",
+  "regra": "Com cálculo pericial ou homologado: analisar o cálculo do perito e a impugnação da reclamada, retificar se a reclamada tiver razão e copiar erro material que reduz o valor.",
+  "situacao": "processo_interno",
+  "onde": [],
+  "evidencia": "Revisão de cálculo de terceiros; a esteira não lê laudo contábil nem impugnação para esse fim.",
+  "falta": ""
+ },
+ {
+  "id": "23.0-c",
+  "secao": "23.0 Tipos e metodologias de cálculo",
+  "regra": "Diretrizes principais: verificar decisões modificativas, trânsito em julgado e matéria de ordem pública.",
+  "situacao": "parcial",
+  "onde": [
+   "INFOS_DECISOES v13 · Princípios Fundamentais de Análise (Hierarquia Decisória)"
+  ],
+  "evidencia": "'Acórdão (TRT/TST) > Embargos de Declaração > Sentença', verba por verba, quando a decisão superior altera a verba.",
+  "falta": "As decisões modificativas são seguidas, mas nenhuma etapa identifica o trânsito em julgado nem trata matéria de ordem pública."
+ },
+ {
+  "id": "23.0-d",
+  "secao": "23.0 Tipos e metodologias de cálculo",
+  "regra": "Aplicar a ADC 58 (IPCA-E na fase pré-judicial e Selic a partir do ajuizamento).",
+  "situacao": "enderecada",
+  "onde": [
+   "código: calculo_principal_mensais (atualizacao_monetaria_strategy)",
+   "código: calculo_reflexos (juros_correcao_reflexos_strategy)"
+  ],
+  "evidencia": "Verbas mensais e reflexos recebem IPCA-E por competência + Selic a partir da distribuição.",
+  "falta": ""
+ },
+ {
+  "id": "23.0-e",
+  "secao": "23.0 Tipos e metodologias de cálculo",
+  "regra": "Considerar o FGTS a depositar entre as diretrizes principais.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Não há tratamento específico de FGTS a depositar (separado do pago em espécie) nos prompts nem no código.",
+  "falta": "Separar o FGTS a depositar do FGTS a pagar ao reclamante."
+ },
+ {
+  "id": "23.0-f",
+  "secao": "23.0 Tipos e metodologias de cálculo",
+  "regra": "Execução provisória sem homologação: aplicar as premissas de redução de risco.",
+  "situacao": "parcial",
+  "onde": [
+   "DADOS_INICIAIS v9 · Regras de Cálculo",
+   "CALC_QUANTIFICADOR_MENSAIS v15 · 2.2.1 — Corte da Reforma"
+  ],
+  "evidencia": "A esteira aplica parte das premissas (prescrição de 5 anos, fim na distribuição, corte do prêmio pós-Reforma).",
+  "falta": "Várias premissas de redução de risco do manual não estão implementadas (ver os demais itens)."
+ },
+ {
+  "id": "23.0-g",
+  "secao": "23.0 Tipos e metodologias de cálculo",
+  "regra": "Não se limitar aos pedidos cadastrados na Zeev: calcular tudo o que foi deferido.",
+  "situacao": "enderecada",
+  "onde": [
+   "INFOS_DECISOES v13 · Regras Gerais de Extração e Formatação (Foco Exclusivo em Condenações)"
+  ],
+  "evidencia": "As verbas vêm da leitura das decisões ('identificar todas as verbas deferidas'), não da lista de pedidos da Zeev.",
+  "falta": ""
+ },
+ {
+  "id": "23.0-h",
+  "secao": "23.0 Tipos e metodologias de cálculo",
+  "regra": "Cálculo do reclamante com concordância ou sem manifestação da parte contrária: analisar se segue o julgado e as diretrizes e refazer aplicando as premissas.",
+  "situacao": "processo_interno",
+  "onde": [],
+  "evidencia": "Conferência de cálculo de terceiros pelo backoffice.",
+  "falta": ""
+ },
+ {
+  "id": "24.0-a",
+  "secao": "24.0 Temas críticos",
+  "regra": "Ações civis públicas: restringir se não transitou; se transitou, observar o ajuizamento do cumprimento de sentença e a prescrição.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhuma etapa identifica ação civil pública ou cumprimento de sentença coletiva.",
+  "falta": "Identificar ACP e bloquear, ou aplicar a regra de prescrição do cumprimento."
+ },
+ {
+  "id": "24.0-b",
+  "secao": "24.0 Temas críticos",
+  "regra": "Adicional de transferência: restringir se não transitou; se transitou, seguir o julgado.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "código: resources/glossario.json (BT077 Adicional de transferência)"
+  ],
+  "evidencia": "A BT077 existe no glossário e segue o cálculo normal; não há restrição nem leitura do trânsito.",
+  "falta": "Restringir a BT077 quando não houver trânsito em julgado."
+ },
+ {
+  "id": "24.0-c",
+  "secao": "24.0 Temas críticos",
+  "regra": "ATS (adicional/bônus por tempo de serviço): restringir se não transitou; se transitou, seguir o julgado.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "código: resources/glossario.json (BT049)"
+  ],
+  "evidencia": "A BT049 é verba normal do glossário e ainda entra na base da hora extra; não há restrição quando é deferida.",
+  "falta": "Restringir a BT049 deferida quando não houver trânsito em julgado."
+ },
+ {
+  "id": "24.0-d",
+  "secao": "24.0 Temas críticos",
+  "regra": "Sempre considerar a base de INSS do reclamante.",
+  "situacao": "enderecada",
+  "onde": [
+   "HIST_SALARIAL_FILTRO v7 · Regras de Filtragem (BT091 entra sempre)",
+   "código: calculo_inss (calculo_inss_service, salário de contribuição BT091 / base reconstruída)"
+  ],
+  "evidencia": "'BT091 (Salário Contribuição - INSS) entra sempre: é a série que o cálculo de INSS lê'; os buracos da série são reconstruídos pelo BT090.",
+  "falta": ""
+ },
+ {
+  "id": "24.0-e",
+  "secao": "24.0 Temas críticos",
+  "regra": "Casos de PCS ajuizados após 11/11/2017: restritos, mesmo com trânsito.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "PCS (BT022) torna o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "24.0-f",
+  "secao": "24.0 Temas críticos",
+  "regra": "Complemento de previdência privada (PREVI, FUNCEF etc.) e cálculo atuarial: sempre restringir.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "Complementação de aposentadoria (BT012) torna o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "24.0-g",
+  "secao": "24.0 Temas críticos",
+  "regra": "CTVA da Caixa Econômica: restringir se não transitou; se transitou, seguir o julgado.",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "CALC_QUANTIFICADOR_MENSAIS v15 · 2.2.1 — Corte da Reforma"
+  ],
+  "evidencia": "A única menção trata o CTVA como 'parte da gratificação de função' na base; não há restrição da verba.",
+  "falta": "Identificar o CTVA deferido e restringi-lo quando não houver trânsito em julgado."
+ },
+ {
+  "id": "24.0-h",
+  "secao": "24.0 Temas críticos",
+  "regra": "Deduzir os alvarás e os deferimentos de liberação de valores.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhuma etapa lê alvarás nem abate valores já liberados.",
+  "falta": "Extrair os alvarás e liberações e abatê-los do total."
+ },
+ {
+  "id": "24.0-i",
+  "secao": "24.0 Temas críticos",
+  "regra": "Juntar a atualização e o relatório dos alvarás no mesmo arquivo.",
+  "situacao": "processo_interno",
+  "onde": [],
+  "evidencia": "Organização de arquivo do backoffice.",
+  "falta": ""
+ },
+ {
+  "id": "24.0-j",
+  "secao": "24.0 Temas críticos",
+  "regra": "Enquadramento com legislação brasileira (trabalhadores de cruzeiro e similares): sempre restringir.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhuma regra identifica trabalho em navio de cruzeiro ou a aplicação da lei brasileira a contrato no exterior.",
+  "falta": "Identificar esses casos e bloqueá-los."
+ },
+ {
+  "id": "24.0-k",
+  "secao": "24.0 Temas críticos",
+  "regra": "Diferença salarial: manter a irredutibilidade salarial, salvo limitação direta na condenação.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "Diferenças salariais (BT017, BT018, BT021, BT064) tornam o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "24.0-l",
+  "secao": "24.0 Temas críticos",
+  "regra": "Diferença salarial RP 52 do Itaú: restringir se não transitou; se transitou, seguir o julgado.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Mesma lacuna do 19.3-b: não há regra para RP 52.",
+  "falta": "Identificar a RP 52 e restringi-la sem trânsito em julgado."
+ },
+ {
+  "id": "24.0-m",
+  "secao": "24.0 Temas críticos",
+  "regra": "Férias em dobro: só na verba principal, nunca nos reflexos.",
+  "situacao": "enderecada",
+  "onde": [
+   "CALC_QUANTIFICADOR_ROTEAMENTO v19 · 2B.1 — Quantidade (BT044)",
+   "código: calculo_reflexos (ferias_reflexo_strategy)"
+  ],
+  "evidencia": "A BT044 'em dobro' recebe os avos já dobrados; o reflexo em férias aplica só avos x 1/3 (FATOR_TERCO), sem dobra.",
+  "falta": ""
+ },
+ {
+  "id": "24.0-n",
+  "secao": "24.0 Temas críticos",
+  "regra": "FGTS no saldo remanescente: não se aplica antes do trânsito; depois do trânsito, deduzir só se o valor estiver especificado, senão considerar tudo no principal.",
+  "situacao": "parcial",
+  "onde": [],
+  "evidencia": "A esteira nunca deduz FGTS depositado e sempre lança tudo no principal, o que coincide com o padrão da premissa.",
+  "falta": "Com trânsito em julgado e valor de FGTS especificado, a dedução não é feita."
+ },
+ {
+  "id": "24.0-o",
+  "secao": "24.0 Temas críticos",
+  "regra": "Integração de vale-alimentação ou cheque-rancho: sempre restringir.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "Vale-alimentação/refeição (BT076) e cesta básica (BT078) tornam o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "24.0-p",
+  "secao": "24.0 Temas críticos",
+  "regra": "PDV/PDI: incide IRRF quando não transitou; se transitou, seguir o julgado.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "O glossário não tem verba de PDV/PDI e o IRRF não tem regra para ela.",
+  "falta": "Identificar o PDV/PDI e aplicar IRRF sobre ele."
+ },
+ {
+  "id": "24.0-q",
+  "secao": "24.0 Temas críticos",
+  "regra": "POM/reintegração (reclamada WMS): restringir sempre; se houver outras verbas deferidas no processo, restringir integralmente.",
+  "situacao": "nao_enderecada",
+  "onde": [],
+  "evidencia": "Nenhuma regra por reclamada WMS nem para POM; as verbas de reintegração (BT056/BT057) seguem o fluxo normal.",
+  "falta": "Identificar WMS + POM/reintegração e bloquear o processo."
+ },
+ {
+  "id": "24.0-r",
+  "secao": "24.0 Temas críticos",
+  "regra": "Quebra de caixa: restringir se não transitou; se transitou, seguir o julgado.",
+  "situacao": "fora_escopo",
+  "onde": [],
+  "evidencia": "Quebra de caixa (BT026) torna o processo inapto.",
+  "falta": ""
+ },
+ {
+  "id": "24.0-s",
+  "secao": "24.0 Temas críticos",
+  "regra": "Recurso de Revista: adequar o cálculo aos pontos admitidos do recurso da reclamada (antes do trânsito).",
+  "situacao": "nao_enderecada",
+  "onde": [
+   "INFOS_DECISOES v13 · Princípios Fundamentais de Análise (Hierarquia Decisória)"
+  ],
+  "evidencia": "A hierarquia aplica decisões já proferidas (acórdão > ED > sentença); recurso admitido e ainda não julgado não é considerado.",
+  "falta": "Ler o despacho de admissibilidade do RR e restringir as verbas atacadas."
+ },
+ {
+  "id": "24.0-t",
+  "secao": "24.0 Temas críticos",
+  "regra": "Reflexos das verbas principais: se o reclamante não recebia a verba no holerite, não apurar (antes do trânsito); se transitou, seguir o julgado.",
+  "situacao": "parcial",
+  "onde": [
+   "CALC_QUANTIFICADOR_ROTEAMENTO v19 · PASSO 1 — Status de Calculabilidade ('nao_calculavel'; REGRA PRÉVIA)"
+  ],
+  "evidencia": "A integração de parcela paga usa o valor do holerite; 'componente da base que não existe no holerite' leva a 'nao_calculavel'.",
+  "falta": "Não há regra geral: reflexos de verba deferida que nunca constou do holerite seguem calculados, e o trânsito não é identificado."
+ }
+]

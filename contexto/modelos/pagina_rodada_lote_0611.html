@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lote de ajustes de 5 e 6 de novembro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Sora:wght@600;700&display=swap">
+<style>
+/* Layout: coluna de leitura de 880px no sistema visual LIFT; capa preta, história linear em seções numeradas, regressões como cards */
+:root {
+  --bg: #f5f3f3; --surface: #ffffff; --border: #e9e9e9; --ink: #161616; --ink-muted: #595959;
+  --accent: #e26970; --accent-lt: #fdf0f1; --warn: #be6565; --ok: #2a6b44; --ok-lt: #e6f2eb;
+  --tag-bg: #f0edee; --zebra: #faf8f8; --cover-bg: #161616;
+  --f-body: "Onest", "Segoe UI", system-ui, sans-serif;
+  --f-display: "Sora", "Segoe UI", system-ui, sans-serif;
+  --radius: 10px; --radius-lg: 16px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #141213; --surface: #1d1a1b; --border: #322d2f; --ink: #efeaeb; --ink-muted: #a9a1a3;
+    --accent: #ee868c; --accent-lt: #332224; --warn: #e08a8a; --ok: #7fc39a; --ok-lt: #1f2e25;
+    --tag-bg: #2a2527; --zebra: #221e1f; --cover-bg: #0b0a0a;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #141213; --surface: #1d1a1b; --border: #322d2f; --ink: #efeaeb; --ink-muted: #a9a1a3;
+  --accent: #ee868c; --accent-lt: #332224; --warn: #e08a8a; --ok: #7fc39a; --ok-lt: #1f2e25;
+  --tag-bg: #2a2527; --zebra: #221e1f; --cover-bg: #0b0a0a;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.7 var(--f-body); }
+.page { max-width: 880px; margin: 0 auto; padding-block: 40px 72px; padding-inline: 20px; display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--f-display); line-height: 1.25; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+.cover { position: relative; overflow: hidden; background: var(--cover-bg); color: #f5f3f3; border-radius: var(--radius-lg); padding: 40px 36px 34px; display: grid; gap: 14px; }
+.cover::before, .cover::after { content: ""; position: absolute; border-radius: 50%; }
+.cover::before { width: 260px; height: 260px; right: -70px; top: -90px; background: #e26970; opacity: .18; }
+.cover::after { width: 160px; height: 160px; right: 90px; bottom: -80px; background: #be6565; opacity: .14; }
+.cover > * { position: relative; }
+.cover-label { font: 600 12px var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: #e26970; }
+.cover h1 { font-size: 34px; }
+.cover h1 span { color: #e26970; }
+.cover .sub { color: #c9c3c4; max-width: 64ch; }
+nav.sum { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13.5px; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+section { display: grid; gap: 14px; }
+.sec-head { display: flex; align-items: center; gap: 12px; }
+.sec-num { width: 32px; height: 32px; border-radius: 8px; background: var(--accent); color: #fff; display: grid; place-items: center; font: 700 15px var(--f-display); flex: none; }
+h2 { font-size: 21px; }
+h4 { font: 600 15px var(--f-display); margin: 6px 0 0; }
+.lead { max-width: 70ch; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px 28px; display: grid; gap: 14px; }
+.nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+.nums div { display: grid; gap: 2px; align-content: start; }
+.nums b { font: 700 24px var(--f-display); font-variant-numeric: tabular-nums; }
+.nums span { color: var(--ink-muted); font-size: 13px; }
+.fam { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px 26px; display: grid; gap: 10px; scroll-margin-top: 16px; }
+.fam header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; }
+.fam h3 { font-size: 17px; }
+.etapa { font: 600 11px var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); }
+.fig { color: var(--ink-muted); font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.fig b { color: var(--ink); font-family: var(--f-display); font-weight: 600; }
+.fig b.mais, .mais { color: var(--warn); }
+.ok-t { color: var(--ok); }
+.tag { background: var(--ok-lt); color: var(--ok); border-radius: 6px; padding: 1px 7px; font-size: 12px; }
+.tag.hip { background: var(--tag-bg); color: var(--ink-muted); }
+.rank { background: var(--accent-lt); color: var(--accent); border-radius: 6px; padding: 1px 7px; margin-right: 8px; letter-spacing: 0; text-transform: none; font-size: 11.5px; }
+.meta { display: grid; gap: 8px; margin: 0; }
+.meta div { display: grid; grid-template-columns: 130px 1fr; gap: 12px; }
+.meta dt { font: 600 11px var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); padding-top: 3px; }
+.meta dd { margin: 0; font-size: 14px; }
+.rot { font: 600 11px var(--f-display); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px 8px; }
+.chips span { background: var(--tag-bg); border-radius: 6px; padding: 2px 8px; font-size: 12.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.callout { border-left: 4px solid var(--accent); background: var(--accent-lt); border-radius: var(--radius); padding: 14px 18px; display: grid; gap: 6px; font-size: 14.5px; }
+.tabela { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; line-height: 1.5; }
+th { text-align: left; font: 600 11px var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); border-bottom: 1px solid var(--border); padding: 8px 10px; }
+td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tbody tr:nth-child(even) td { background: var(--zebra); }
+.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cnj { white-space: nowrap; font-variant-numeric: tabular-nums; font-weight: 500; }
+.mut { color: var(--ink-muted); font-size: 13px; }
+details { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 22px; }
+.fam details { border: 0; padding: 0; background: transparent; }
+summary { cursor: pointer; font: 600 15px var(--f-display); }
+.fam summary { font-size: 14px; color: var(--accent); }
+details[open] summary { margin-bottom: 12px; }
+ol.passos, ul.lista { margin: 0; padding-left: 20px; display: grid; gap: 8px; max-width: 72ch; }
+@media (max-width: 620px) { .cover { padding: 30px 22px; } .cover h1 { font-size: 27px; } .fam, .card { padding: 18px; } .meta div { grid-template-columns: 1fr; gap: 2px; } }
+</style></head>
+<body>
+<main class="page">
+  <header class="cover">
+    <p class="cover-label">Fast Track · squad Precificação · produção</p>
+    <h1>Lote de ajustes de 5 e 6 de novembro<br><span>o que piorou, o que melhorou e onde mexer</span></h1>
+    <p class="sub">Entre 05/11 15h29 e 06/11 07h45, 1.119 processos que já tinham uma execução anterior e PJC rodaram de novo com os ajustes novos da esteira. Esta página compara cada um com a execução anterior e junta o que o agente analista achou nos 127 processos de apto valor que estavam ou ficaram na alta confiança.</p>
+  </header>
+
+  <nav class="sum"><a href="#fizemos">O que mudou</a><a href="#resultado">Resultado</a><a href="#regressoes">Regressões</a><a href="#melhorou">O que melhorou</a><a href="#agente">O que o agente achou</a><a href="#score">Score de confiança</a><a href="#painel">Painel</a><a href="#passos">Próximos passos</a></nav>
+
+  <section id="fizemos">
+    <div class="sec-head"><span class="sec-num">1</span><h2>O que mudou na esteira</h2></div>
+    <p class="lead">A comparação é processo a processo: a execução do lote contra a execução anterior do mesmo processo, com o mesmo PJC. Não buscamos PJC novo nesta rodada. Entre as duas execuções, o que mudou depende de quando o processo tinha rodado antes. Para todos os 1.119, os ajustes de 05/11 são novidade.</p>
+    <div class="tabela"><table>
+      <thead><tr><th>Quando</th><th>O que mudou</th><th>Verbas que mexe</th><th>Sentido esperado</th></tr></thead>
+      <tbody>
+        <tr><td class="num">05/11 14h27</td><td><b>Base da hora extra pelo tipo que a decisão fixa</b> (leitura da decisão v14 e composição da base em código): lista da decisão, mesma base de outra HE, base expandida pela Súmula 264, base fechada do bancário na 7ª e 8ª, ou só salário-base quando a decisão é omissa.</td><td>BT001, BT003, BT004, BT007, BT011, BT081, BT089</td><td>baixar, na maioria</td></tr>
+        <tr><td class="num">05/11 14h27</td><td><b>Escala e regime ocasional na leitura da decisão</b>; a frequência pelo cartão passa a seguir a escala real; "INSS" no cartão vira afastamento.</td><td>HE e intervalo da jornada fixada com cartão</td><td>baixar</td></tr>
+        <tr><td class="num">04/11</td><td><b>Glossário da pensão</b>: pensão por incapacidade permanente ou morte, com prazo ou em parcela única, passa a ser BT059. Atualizado direto na tabela.</td><td>BT045, BT051, BT059</td><td>a verba muda de código</td></tr>
+        <tr><td class="num">30/10 18h49</td><td><b>Dedução do que já foi pago</b>: desconto do TRCT nas rescisórias e recomposição, mês a mês, do pago a compensar por equivalência de rubricas. Dados iniciais v8, leitura da decisão v13 e roteamento v13.</td><td>rescisórias, PLR, mensais com abatimento</td><td>baixar</td></tr>
+        <tr><td class="num">29/10 12h21</td><td><b>Gemini direto no lugar do OpenRouter.</b> O modelo é o mesmo. Mudam o envio dos PDFs, o cache e a nova tentativa quando a resposta falha.</td><td>todas</td><td>incerto</td></tr>
+      </tbody></table></div>
+    <p class="mut">Números da Nekt de 07/11/2026. Os percentuais são a assertividade de cada processo: o total da IA contra o total do PJC.</p>
+  </section>
+
+  <section id="resultado">
+    <div class="sec-head"><span class="sec-num">2</span><h2>Resultado</h2></div>
+    <div class="card">
+      <div class="nums">
+        <div><b>1.119</b><span>rodaram de novo, com PJC</span></div>
+        <div><b class="mais">190</b><span>pioraram 5 pontos ou mais</span></div>
+        <div><b class="ok-t">163</b><span>melhoraram 5 pontos ou mais</span></div>
+        <div><b class="mais">180</b><span>deixaram de ser aptos</span></div>
+      </div>
+    </div>
+    <p class="lead">Nos 934 processos que ficaram aptos nas duas execuções, a mediana caiu de 77,4% para 75,0%, e os processos com 80% ou mais caíram de 47,3% para 44,6%. Os casos com IA a mais subiram de 230 para 245. No apto valor da alta confiança, a régua que vai para a compra, a parcela com 80% ou mais caiu de 82% para 75%.</p>
+    <div class="tabela"><table>
+      <thead><tr><th>Painel</th><th class="num">Aptos</th><th class="num">Alta</th><th class="num">Alta com 80% ou mais</th><th class="num">Alta apto valor</th><th class="num">Apto valor com 80% ou mais</th></tr></thead>
+      <tbody>
+        <tr><td>Antes do lote (mesmos processos)</td><td class="num">1.114</td><td class="num">249</td><td class="num">79%</td><td class="num">114</td><td class="num">82%</td></tr>
+        <tr><td>Depois do lote (painel de 03/11)</td><td class="num">934</td><td class="num">207</td><td class="num">77%</td><td class="num">81</td><td class="num mais">75%</td></tr>
+      </tbody></table></div>
+    <p class="lead"><b>A conta piorou mais do que o score.</b> A parcela de IA a mais dentro da alta ficou estável, em 12% a 13%. O que caiu foi o cálculo, e ele caiu por poucas causas, quase todas ligadas aos ajustes de 05/11. A seção 3 traz uma por uma. Parte da perda de aptos é esperada: 64 processos com pensão passaram ao código certo e saíram da régua (seção 4).</p>
+    <h4>Por que 180 deixaram de ser aptos</h4>
+    <div class="tabela"><table>
+      <thead><tr><th>Motivo</th><th class="num">Processos</th><th class="num">Tinham 80% ou mais</th><th>Onde está</th></tr></thead>
+      <tbody>
+        <tr><td>Pensão passou ao código certo (BT059), verba inelegível</td><td class="num">64</td><td class="num">39</td><td><a href="#R3">Esperado (seção 4)</a></td></tr>
+        <tr><td>Verba deferida que ficou sem valor</td><td class="num">49</td><td class="num">23</td><td><a href="#R7">Regressão 6</a></td></tr>
+        <tr><td>Trava do cartão de ponto (jornada mista e outras)</td><td class="num">39</td><td class="num">5</td><td><a href="#R4">Regressão 3</a></td></tr>
+        <tr><td>Execução parou antes do cálculo ou não calculou nenhuma verba</td><td class="num">21</td><td class="num">7</td><td><a href="#R6">Regressão 5</a></td></tr>
+        <tr><td>Verba de cálculo crítico e tipo de cálculo</td><td class="num">7</td><td class="num">5</td><td>regras de produto</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <section id="regressoes">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Regressões, uma por uma</h2></div>
+    <p class="lead">O que a execução anterior calculava e a do lote passou a errar. A ordem vai do que põe a IA a mais (vira proposta de compra) para o que só tira caso da régua. Cada card diz o que acontece, um exemplo, por quê, o ajuste proposto e o que não muda.</p>
+
+    <article class="fam" id="R1">
+      <header><h3>BT081 sem a compensação da gratificação de função</h3><span class="etapa"><span class="rank">1 · urgente · IA a mais</span>composição da base da hora extra (código)</span></header>
+      <p class="fig"><b class="mais">IA a mais R$ 1,67 mi</b> em 19 processos · 25 processos perderam a compensação · 82 dos 107 com BT081 seguem compensando · <span class="tag">confirmado nos dados</span></p>
+      <p>Quando a decisão afasta o cargo de confiança do bancário e defere a 7ª e 8ª horas, ela manda compensar a gratificação de função já paga. Antes do lote a IA compensava e ficava perto do calculista. No lote, em 25 processos, a compensação foi a zero e a hora extra saiu cheia. Horas, divisor e base não mudaram. Em 19 deles a BT081 passou de R$ 34 mil para R$ 1,77 mi, contra R$ 96 mil do calculista.</p>
+      <p class="rot">Os casos que mais pesam</p>
+      <div class="tabela"><table><thead><tr><th>CNJ</th><th class="num">Antes</th><th class="num">Agora</th><th>O que mudou</th></tr></thead><tbody>
+        <tr><td class="cnj">0011546-79.2024.5.15.0095</td><td class="num">85,0%</td><td class="num mais">−1.048%</td><td>BT081 de R$ 0 para R$ 55.170</td></tr>
+        <tr><td class="cnj">1000397-05.2025.5.02.0707</td><td class="num">83,1%</td><td class="num mais">−158,7%</td><td>BT081 de R$ 256 para R$ 168.966 (calculista: R$ 257)</td></tr>
+        <tr><td class="cnj">0017631-73.2023.5.16.0003</td><td class="num">90,5%</td><td class="num mais">−75,4%</td><td>BT081 de R$ 534 para R$ 60.013</td></tr>
+        <tr><td class="cnj">0000278-68.2017.5.21.0010</td><td class="num">—</td><td class="num mais">—</td><td>BT081 de R$ 2.887 para R$ 125.734 (calculista: R$ 0)</td></tr>
+        <tr><td class="cnj">0000574-89.2019.5.10.0022</td><td class="num">—</td><td class="num mais">—</td><td>BT081 de R$ 3.915 para R$ 139.883 (calculista: R$ 0)</td></tr>
+      </tbody></table></div>
+      <details><summary>Exemplo, por quê, ajuste e os 25 processos</summary>
+        <dl class="meta">
+          <div><dt>Exemplo</dt><dd>No 1000397-05.2025.5.02.0707 a decisão diz: "fica determinada a compensação do valor percebido a título de gratificação de função com as 7ª e 8ª horas extras deferidas". Em 01/2021, antes e depois: 17,93 h sobre base de R$ 11.558,74, bruto de R$ 1.727,39. Antes a IA compensava R$ 1.777,31 de comissão de cargo e o mês fechava em zero, como no calculista. Agora compensa R$ 0,00.</dd></div>
+          <div><dt>Por quê</dt><dd>É código. A compensação só é lançada quando o próprio código acrescenta a gratificação à base. Quando o modelo já devolve a gratificação na base, o código não acrescenta e, por isso, não compensa: fica dependendo de o modelo ter preenchido o campo de valores a compensar. Antes ele preenchia em 104 dos 107 processos; no lote deixou de preencher em 25. O prompt dessa etapa não mudou; mudou a entrada que ele recebe (a base nova e a leitura da decisão v14). Não é a troca para o Gemini.</dd></div>
+          <div><dt>Ajuste</dt><dd>Com dupla imputação na BT081, lançar a gratificação em valores a compensar em toda competência em que ela está na base, também quando foi o modelo que a pôs lá. A checagem que já existe evita lançar duas vezes. A compensação continua limitada ao valor da hora extra do mês.</dd></div>
+          <div><dt>O que não muda</dt><dd>Os 82 processos que já compensam; BT081 sem dupla imputação; as demais verbas de hora, que não compensam gratificação.</dd></div>
+        </dl>
+        <p class="rot">Processos</p>
+        <div class="chips"><span>0000041-24.2023.5.10.0012</span><span>0000097-54.2023.5.11.0004</span><span>0000278-68.2017.5.21.0010</span><span>0000484-23.2022.5.17.0009</span><span>0000574-89.2019.5.10.0022</span><span>0000675-31.2020.5.10.0010</span><span>0000930-27.2025.5.17.0007</span><span>0001182-36.2018.5.10.0018</span><span>0001190-83.2022.5.10.0014</span><span>0001305-65.2017.5.10.0019</span><span>0011546-79.2024.5.15.0095</span><span>0011717-63.2016.5.09.0651</span><span>0012996-50.2017.5.15.0015</span><span>0017631-73.2023.5.16.0003</span><span>1000016-89.2024.5.02.0720</span><span>1000098-37.2020.5.02.0017</span><span>1000144-06.2023.5.02.0701</span><span>1000397-05.2025.5.02.0707</span><span>1000499-28.2024.5.02.0039</span><span>1000536-50.2024.5.02.0073</span><span>1000931-25.2023.5.02.0090</span><span>1001049-22.2024.5.02.0007</span><span>1001510-11.2018.5.02.0037</span><span>1001516-65.2019.5.02.0010</span><span>1001847-08.2023.5.02.0010</span></div>
+      </details>
+    </article>
+
+    <article class="fam" id="R2">
+      <header><h3>Diferença com valor mensal fixado zerada pelo abatimento</h3><span class="etapa"><span class="rank">2 · urgente · vai a negativo</span>abatimento do pago, mês a mês</span></header>
+      <p class="fig"><b>IA a menos</b> em 14 verbas de diferença · 30 verbas foram a zero por abatimento em 27 processos · <span class="tag hip">causa provável, falta conferir no código</span></p>
+      <p>A decisão fixa a diferença em valor por mês (R$ 950, R$ 1.000), que já é o que faltou pagar. Nesta rodada a IA abateu desse valor tudo o que o holerite pagou com o mesmo nome (comissões, remuneração variável, salário). O principal ficou negativo, o painel zerou, e os reflexos saíram negativos e abateram o resto da condenação. Na execução anterior esses processos estavam quase iguais ao PJC.</p>
+      <p class="rot">Os casos que mais pesam</p>
+      <div class="tabela"><table><thead><tr><th>CNJ</th><th class="num">Antes</th><th class="num">Agora</th><th>O que mudou</th></tr></thead><tbody>
+        <tr><td class="cnj">0011577-56.2023.5.15.0056</td><td class="num">99,8%</td><td class="num mais">−42,2%</td><td>Diferenças de comissões de R$ 50.843 para R$ 0; abateu R$ 179 mil de comissões pagas; total da IA −R$ 31.540</td></tr>
+        <tr><td class="cnj">0000636-58.2023.5.17.0002</td><td class="num">92,0%</td><td class="num mais">−2,1%</td><td>Diferenças de comissões de R$ 41.167 para R$ 0; abateu R$ 46 mil</td></tr>
+        <tr><td class="cnj">0011149-19.2023.5.15.0139</td><td class="num">87,4%</td><td class="num mais">21,2%</td><td>Diferenças de remuneração variável zeradas</td></tr>
+        <tr><td class="cnj">0010300-06.2023.5.03.0099</td><td class="num">92,7%</td><td class="num mais">42,7%</td><td>Diferenças salariais (reajuste da CCT) zeradas</td></tr>
+        <tr><td class="cnj">0020094-82.2019.5.04.0028</td><td class="num">92,3%</td><td class="num mais">40,6%</td><td>Diferenças de remuneração variável zeradas</td></tr>
+        <tr><td class="cnj">1001083-27.2023.5.02.0073</td><td class="num">96,2%</td><td class="num mais">61,3%</td><td>Diferenças de remuneração variável zeradas</td></tr>
+      </tbody></table></div>
+      <details><summary>Exemplo, por quê, ajuste e os processos</summary>
+        <dl class="meta">
+          <div><dt>Exemplo</dt><dd>No 0011577-56.2023.5.15.0056 o acórdão defere R$ 950,00 por mês de diferença de comissões. A IA abateu, mês a mês, todas as comissões pagas no holerite (R$ 179.121,56 no período). Na execução de 30/10 o processo ficava R$ 184 abaixo do PJC.</dd></div>
+          <div><dt>Por quê</dt><dd>A causa provável é a recomposição do pago a compensar por equivalência de rubricas (30/10): a rubrica "comissões" do holerite é tratada como o pago da verba "diferença de comissões". Quando a decisão fixa a diferença líquida por mês, não há nada a abater. Ainda falta confirmar no código; o agente confirmou o efeito nos dois primeiros casos.</dd></div>
+          <div><dt>Ajuste</dt><dd>Quando a decisão fixa o valor mensal da diferença, não abater o pago. Abater só quando a decisão manda apurar "devido menos pago". E um piso: o total de uma verba de diferença nunca abate as outras verbas.</dd></div>
+          <div><dt>O que não muda</dt><dd>Diferenças em que a decisão manda calcular o devido e descontar o pago. Nelas o abatimento novo melhorou: 0001000-22.2024.5.12.0006 foi de 45% para 96%, 1000193-10.2024.5.02.0023 de 74% para 91%.</dd></div>
+        </dl>
+        <p class="rot">Verbas de diferença zeradas por abatimento</p>
+        <div class="chips"><span>0011577-56.2023.5.15.0056</span><span>0000636-58.2023.5.17.0002</span><span>0011149-19.2023.5.15.0139</span><span>0010300-06.2023.5.03.0099</span><span>0020094-82.2019.5.04.0028</span><span>1001083-27.2023.5.02.0073</span><span>0010379-52.2024.5.03.0033</span><span>0010375-94.2022.5.15.0083</span><span>0020588-91.2021.5.04.0022</span><span>0011471-90.2024.5.03.0057</span><span>0000707-92.2024.5.21.0041</span><span>0001260-17.2021.5.12.0035</span><span>0010746-59.2022.5.15.0018</span><span>1001125-72.2025.5.02.0084</span></div>
+        <p class="rot">Horas extras zeradas por abatimento (a conferir junto)</p>
+        <div class="chips"><span>1001100-53.2023.5.02.0044</span><span>0010915-03.2023.5.03.0032</span><span>0100301-24.2024.5.01.0013</span><span>0010747-44.2021.5.03.0008</span><span>1000198-65.2023.5.02.0088</span><span>0011011-82.2019.5.15.0142</span><span>0020918-47.2019.5.04.0026</span><span>0100083-47.2023.5.01.0266</span></div>
+      </details>
+    </article>
+
+    <article class="fam" id="R4">
+      <header><h3>Jornada fixada com dias pelo cartão escrita como mista</h3><span class="etapa"><span class="rank">3 · perde aptos</span>leitura da decisão v14 → cartão de ponto</span></header>
+      <p class="fig"><b>25 dos 31</b> aptos que passaram a travar · <b>3</b> tinham 80% ou mais antes · 5 são jornada mista de verdade · <span class="tag">confirmado nos dados</span></p>
+      <p>A decisão fixa o horário e manda contar os dias trabalhados pelos cartões, ou manda usar o cartão e diz o que fazer no mês sem cartão. A leitura da decisão v14 passou a escrever isso como dois regimes, um fixo e um documental, e a marcar a jornada como mista. O cartão de ponto trava toda jornada mista, e o processo para antes do cálculo. Na execução anterior os mesmos processos saíam como jornada fixada e eram calculados.</p>
+      <details><summary>Exemplo, por quê, ajuste e os processos</summary>
+        <dl class="meta">
+          <div><dt>Exemplo</dt><dd>No 0001122-42.2019.5.12.0028 a sentença fixou a jornada de segunda a sexta, das 7h30 às 17h30, com 40 minutos de intervalo, mandando "observar os dias de efetiva prestação de serviços, conforme frequência dos cartões de ponto". Antes: jornada fixada, BT089, BT007 e BT003 calculadas, 86%. No lote: o mesmo regime fixo mais um regime documental para a frequência, no mesmo período; o cartão travou.</dd></div>
+          <div><dt>Por quê</dt><dd>Contradição entre o prompt e o código. O prompt manda escrever "horário fixado + frequência do cartão" como mista; o código trava toda mista; o modo frequência do cartão (23/10) só vale para jornada fixada sem regime documental. Com a escala e o regime ocasional da v14, o modelo passou a seguir essa instrução com mais frequência.</dd></div>
+          <div><dt>Ajuste</dt><dd>No prompt: escrever a jornada como fixada, sem o regime documental, porque o modo frequência já usa o cartão para os dias; trocar o exemplo de saída por uma mista de verdade (períodos diferentes). No código, como trava de segurança: mista em que o regime documental não tem horário e cobre o mesmo período do fixo vai para o modo frequência, e não para a trava.</dd></div>
+          <div><dt>O que não muda</dt><dd>A trava da mista de verdade, um período fixado e outro pelo cartão: 0000558-10.2022.5.09.0071, 0000643-72.2023.5.09.0002, 0000825-58.2017.5.09.0652, 1001142-43.2025.5.02.0041 e 0011651-98.2022.5.03.0050.</dd></div>
+        </dl>
+        <p class="rot">Horário fixado e dias pelo cartão (assertividade antes)</p>
+        <div class="chips"><span>0001122-42.2019.5.12.0028 · 86%</span><span>0010591-47.2024.5.03.0171 · 82%</span><span>1001392-09.2024.5.02.0204 · 77%</span><span>0010001-43.2018.5.03.0054 · 76%</span><span>0001268-23.2019.5.17.0003 · 73%</span><span>0000301-61.2024.5.11.0005 · 69%</span><span>0010315-52.2019.5.03.0054 · 68%</span><span>0011278-23.2020.5.03.0055 · 68%</span><span>0010900-12.2024.5.15.0017 · 45%</span><span>0011661-25.2016.5.09.0006 · 35%</span><span>0020081-47.2019.5.04.0234 · 34%</span><span>0001143-96.2023.5.09.0016 · 30%</span><span>0000890-53.2017.5.09.0652 · 21%</span><span>0000636-66.2017.5.10.0001 · 5%</span><span>0101234-19.2022.5.01.0481 · 2%</span><span>0010028-81.2021.5.15.0120 · −3%</span><span>1001148-16.2019.5.02.0088 · −74%</span></div>
+        <p class="rot">Cartão com regra para o mês sem cartão</p>
+        <div class="chips"><span>0010416-80.2022.5.03.0023 · 91%</span><span>0000292-71.2023.5.06.0103 · 68%</span><span>1000799-21.2024.5.02.0255 · 57%</span><span>0002174-26.2025.5.21.0024 · 53%</span><span>1000464-68.2024.5.02.0718 · 36%</span><span>0010127-18.2024.5.15.0097 · 32%</span><span>0000599-86.2020.5.11.0007 · 20%</span><span>0010416-27.2024.5.15.0007 · 17%</span></div>
+      </details>
+    </article>
+
+    <article class="fam" id="R5">
+      <header><h3>Base da hora extra vazia pela "lista da decisão"</h3><span class="etapa"><span class="rank">4 · verba zerada</span>composição da base da hora extra (código)</span></header>
+      <p class="fig"><b>IA a menos R$ 243 mil</b> em 7 verbas · 6 processos · BT089, BT003, BT007 e BT081 · <span class="tag">confirmado nos dados</span></p>
+      <p>Quando a decisão lista o que entra na base, o ajuste deixa na base só as rubricas que a lista nomeia. Em 6 processos a base saiu vazia em todos os meses, sem nem o salário-base, e a verba foi a zero onde o calculista apurou valor.</p>
+      <details><summary>Exemplo, por quê, ajuste e os processos</summary>
+        <dl class="meta">
+          <div><dt>Exemplo</dt><dd>No 1000201-47.2020.5.02.0016 a decisão fixa: "Base de cálculo: O somatório de todas as verbas salariais fixas, observada a evolução salarial do período, conforme cláusula oitava das CCTs e Súmula 264". A lista foi registrada como "verbas salariais fixas". Nenhuma rubrica do holerite foi reconhecida, o salário-base também saiu, e a BT089 foi de R$ 50.956 para R$ 0 (calculista: R$ 47.710).</dd></div>
+          <div><dt>Por quê</dt><dd>É código. Listas genéricas ("verbas salariais fixas", "ordenado") não casam com nenhuma rubrica, e o salário-base só é mantido quando a lista o nomeia.</dd></div>
+          <div><dt>Ajuste</dt><dd>Manter sempre o salário-base e o complemento; reconhecer "ordenado" como salário-base; lista genérica vira base expandida. Trava geral: se o filtro esvaziar a base num mês que tinha base, manter a base anterior e gravar um alerta.</dd></div>
+          <div><dt>O que não muda</dt><dd>Listas que nomeiam rubricas específicas e as encontram no holerite.</dd></div>
+        </dl>
+        <p class="rot">Processos</p>
+        <div class="chips"><span>0001654-68.2017.5.09.0028</span><span>0010915-03.2023.5.03.0032</span><span>1000201-47.2020.5.02.0016</span><span>1000865-58.2019.5.02.0713</span><span>0012183-49.2023.5.15.0003</span><span>0010640-55.2025.5.03.0106</span></div>
+      </details>
+    </article>
+
+    <article class="fam" id="R6">
+      <header><h3>Execução que para antes do cálculo</h3><span class="etapa"><span class="rank">5 · perde aptos</span>orquestração e chamada ao modelo</span></header>
+      <p class="fig"><b>21 aptos</b> ficaram sem cálculo · 13 travados antes do P10 e 8 sem nenhuma verba calculada · <span class="tag hip">causa confirmada em 2</span></p>
+      <p>A execução parou no histórico salarial ou na leitura da decisão, e a IA ficou com R$ 0. Nos dois casos que o agente abriu, a chamada ao modelo falhou no histórico salarial e não houve nova tentativa. O agente achou o mesmo erro em 8 casos da rodada.</p>
+      <details><summary>Exemplo, por quê, ajuste e os processos</summary>
+        <dl class="meta">
+          <div><dt>Exemplo</dt><dd>0000589-29.2024.5.07.0002: falha na chamada ao modelo no histórico salarial; estabilidade da CIPA, horas extras e reflexos não calculados (R$ 111.782 a menos). 0010251-40.2017.5.15.0131: parou no agrupamento do histórico; dano material e dano moral não calculados (R$ 85.000 a menos).</dd></div>
+          <div><dt>Por quê</dt><dd>Desde a troca para o Gemini (29/10), a nova tentativa só acontece pela orquestração, não dentro da etapa. Uma resposta vazia ou com erro encerra a execução.</dd></div>
+          <div><dt>Ajuste</dt><dd>Nova tentativa dentro da etapa quando a resposta vem vazia ou com erro, e registro do motivo. Reenviar esses 21 processos à esteira.</dd></div>
+          <div><dt>O que não muda</dt><dd>As travas intencionais (jornada mista de verdade, verba inelegível).</dd></div>
+        </dl>
+        <p class="rot">Processos</p>
+        <div class="chips"><span>0000189-14.2023.5.09.0028</span><span>0000271-90.2023.5.10.0004</span><span>0000313-03.2021.5.17.0009</span><span>0000589-29.2024.5.07.0002</span><span>0000691-80.2022.5.19.0004</span><span>0000925-66.2022.5.11.0010</span><span>0001945-19.2017.5.09.0594</span><span>0010574-47.2022.5.15.0106</span><span>0010643-55.2023.5.03.0049</span><span>0011508-87.2024.5.03.0067</span><span>0011642-08.2022.5.15.0114</span><span>1000094-16.2024.5.02.0031</span><span>1000769-41.2022.5.02.0712</span><span>0000324-12.2024.5.17.0014</span><span>0000364-84.2022.5.20.0012</span><span>0000411-98.2021.5.08.0118</span><span>0001150-31.2023.5.21.0024</span><span>0011095-86.2025.5.03.0181</span><span>0011121-21.2024.5.03.0084</span><span>0011190-29.2019.5.03.0084</span><span>1000788-87.2024.5.02.0385</span></div>
+      </details>
+    </article>
+
+    <article class="fam" id="R7">
+      <header><h3>Verba deferida que deixou de ter valor</h3><span class="etapa"><span class="rank">6 · a abrir</span>roteamento v13 e base nova</span></header>
+      <p class="fig"><b>49 aptos</b> ficaram inaptos por verba sem valor · <b>23</b> tinham 80% ou mais · <span class="tag hip">causas misturadas, 3 confirmadas</span></p>
+      <p>Uma verba que a execução anterior calculava ficou sem valor, e o processo saiu dos aptos. Parte é efeito das regressões acima (base vazia, abatimento). O agente confirmou mais três causas, todas novas nesta rodada.</p>
+      <details><summary>Casos confirmados e os 49 processos</summary>
+        <div class="tabela"><table><thead><tr><th>CNJ</th><th>O que aconteceu</th><th class="num">IA</th></tr></thead><tbody>
+          <tr><td class="cnj">0000347-35.2024.5.11.0010</td><td>Estabilidade acidentária não calculada; com o roteamento v12 saía igual ao PJC</td><td class="num">− R$ 127.009</td></tr>
+          <tr><td class="cnj">0000122-06.2024.5.10.0022</td><td>Acúmulo de função não calculado</td><td class="num">− R$ 80.971</td></tr>
+          <tr><td class="cnj">1001387-26.2021.5.02.0613</td><td>Adicional de HE sobre comissões (Súmula 340) zerado: a rubrica "Remuneração Variável" caiu no corte de prêmio pós-Reforma, embora o holerite traga "DSR Comissão" e a sentença mande calcular sobre comissões</td><td class="num">− R$ 4.904</td></tr>
+        </tbody></table></div>
+        <p class="mut">Próximo passo: rodar o agente nos 49 para separar a causa de cada um antes de propor ajuste.</p>
+        <p class="rot">Processos</p>
+        <div class="chips"><span>0000104-08.2021.5.21.0014</span><span>0000122-06.2024.5.10.0022</span><span>0000347-35.2024.5.11.0010</span><span>0000432-09.2022.5.05.0511</span><span>0000444-32.2025.5.23.0021</span><span>0000534-83.2022.5.09.0005</span><span>0000574-89.2019.5.10.0022</span><span>0000724-96.2023.5.05.0013</span><span>0000731-91.2021.5.10.0022</span><span>0000930-27.2025.5.17.0007</span><span>0001233-37.2023.5.09.0006</span><span>0001406-18.2024.5.09.0009</span><span>0001462-65.2024.5.09.0069</span><span>0001476-87.2024.5.22.0004</span><span>0010155-80.2025.5.03.0033</span><span>0010228-96.2023.5.03.0138</span><span>0010255-95.2022.5.03.0047</span><span>0010259-13.2021.5.03.0001</span><span>0010265-37.2024.5.03.0026</span><span>0010624-43.2023.5.03.0148</span><span>0010798-22.2024.5.15.0071</span><span>0010800-60.2023.5.15.0092</span><span>0010832-55.2020.5.03.0108</span><span>0010879-33.2023.5.15.0094</span><span>0010938-70.2024.5.03.0142</span><span>0010958-94.2019.5.03.0026</span><span>0011090-27.2023.5.03.0022</span><span>0011454-50.2025.5.03.0144</span><span>0011483-71.2023.5.15.0133</span><span>0011772-42.2019.5.15.0004</span><span>0020200-88.2021.5.04.0411</span><span>0020527-16.2020.5.04.0234</span><span>0020781-60.2022.5.04.0123</span><span>0020926-95.2021.5.04.0012</span><span>0021306-92.2017.5.04.0551</span><span>0100302-55.2025.5.01.0245</span><span>0100409-75.2019.5.01.0030</span><span>0100987-11.2024.5.01.0047</span><span>0101037-82.2025.5.01.0053</span><span>1000574-15.2023.5.02.0391</span><span>1000680-94.2023.5.02.0255</span><span>1000848-78.2018.5.02.0059</span><span>1000854-21.2022.5.02.0035</span><span>1000861-91.2024.5.02.0342</span><span>1000865-58.2019.5.02.0713</span><span>1001010-73.2024.5.02.0088</span><span>1001604-71.2024.5.02.0061</span><span>1001673-65.2024.5.02.0203</span><span>1001929-94.2017.5.02.0383</span></div>
+      </details>
+    </article>
+  </section>
+
+  <section id="melhorou">
+    <div class="sec-head"><span class="sec-num">4</span><h2>O que melhorou</h2></div>
+    <article class="fam" id="R3">
+      <header><h3>Pensão no código certo: 64 processos saíram da régua, como esperado</h3><span class="etapa">glossário → regra de aptidão</span></header>
+      <p class="fig"><b>64 aptos</b> ficaram inaptos · 39 tinham 80% ou mais · <span class="tag">efeito esperado do ajuste</span></p>
+      <p>O glossário passou a classificar como BT059 a pensão por incapacidade permanente ou morte, inclusive a paga em parcela única, como manda a Premissa 14.0. Pensão é inelegível no Fast Track, então esses processos saem dos aptos. Antes eles só eram aptos porque a pensão estava no código de danos materiais (BT051). Era a família 1ª em sobrecálculo da rodada de 23 a 27/10. Não é regressão: a régua ficou mais correta, mesmo perdendo processos em que o valor da pensão estava certo, como o 0020475-54.2023.5.04.0512.</p>
+      <details><summary>Os 64 processos</summary>
+        <div class="chips"><span>0000078-15.2023.5.11.0015</span><span>0000154-41.2023.5.05.0133</span><span>0000207-49.2022.5.05.0006</span><span>0000334-05.2023.5.09.0567</span><span>0000370-92.2024.5.09.0670</span><span>0000525-19.2022.5.13.0003</span><span>0000530-67.2023.5.11.0001</span><span>0000554-92.2023.5.11.0002</span><span>0000619-52.2021.5.11.0004</span><span>0000781-65.2022.5.11.0019</span><span>0000861-49.2023.5.10.0010</span><span>0001016-40.2023.5.11.0005</span><span>0010080-51.2025.5.15.0148</span><span>0010251-40.2017.5.15.0131</span><span>0010304-41.2022.5.15.0003</span><span>0010403-38.2021.5.15.0070</span><span>0010480-66.2022.5.15.0117</span><span>0010682-43.2019.5.15.0151</span><span>0010745-53.2021.5.15.0101</span><span>0010874-28.2022.5.15.0132</span><span>0010934-48.2024.5.15.0126</span><span>0011088-73.2024.5.15.0059</span><span>0011155-14.2022.5.15.0122</span><span>0011397-29.2024.5.03.0027</span><span>0011427-13.2024.5.15.0033</span><span>0011706-28.2021.5.15.0122</span><span>0011749-55.2020.5.15.0071</span><span>0011823-29.2024.5.15.0020</span><span>0012008-21.2024.5.15.0003</span><span>0012336-45.2022.5.15.0059</span><span>0012493-43.2014.5.15.0109</span><span>0016114-32.2025.5.16.0013</span><span>0020277-96.2024.5.04.0733</span><span>0020289-72.2020.5.04.0791</span><span>0020310-97.2024.5.04.0406</span><span>0020375-34.2020.5.04.0406</span><span>0020381-41.2020.5.04.0406</span><span>0020475-54.2023.5.04.0512</span><span>0020486-56.2022.5.04.0791</span><span>0020520-67.2021.5.04.0661</span><span>0020553-51.2021.5.04.0372</span><span>0020608-02.2021.5.04.0663</span><span>0020793-37.2019.5.04.0234</span><span>0020858-93.2022.5.04.0406</span><span>0020936-72.2022.5.04.0411</span><span>0021245-80.2024.5.04.0231</span><span>0021560-42.2022.5.04.0211</span><span>0022557-93.2016.5.04.0030</span><span>0101184-86.2024.5.01.0007</span><span>1000310-52.2021.5.02.0040</span><span>1000430-55.2019.5.02.0464</span><span>1000507-76.2024.5.02.0468</span><span>1000534-02.2025.5.02.0411</span><span>1000640-83.2020.5.02.0040</span><span>1000702-41.2022.5.02.0465</span><span>1000713-33.2023.5.02.0466</span><span>1000729-58.2021.5.02.0465</span><span>1001185-19.2023.5.02.0471</span><span>1001298-12.2023.5.02.0264</span><span>1001489-61.2017.5.02.0363</span><span>1001549-37.2022.5.02.0467</span><span>1001649-93.2024.5.02.0055</span><span>1002351-08.2017.5.02.0468</span><span>1002415-52.2016.5.02.0468</span></div>
+      </details>
+    </article>
+    <p class="lead">Os ajustes também acertaram: 163 processos melhoraram 5 pontos ou mais. A base pelo tipo da decisão melhorou BT001, BT007, BT004 e BT002 no saldo; a BT089 ficou empatada (101 pioraram, 82 melhoraram). A dedução do pago resolveu PDV, equiparação e prêmios que a IA pagava sem abater.</p>
+    <div class="tabela"><table><thead><tr><th>CNJ</th><th class="num">Antes</th><th class="num">Agora</th><th>O que mudou</th></tr></thead><tbody>
+      <tr><td class="cnj">0000578-80.2020.5.23.0006</td><td class="num">7,7%</td><td class="num ok-t">100%</td><td>PDV de R$ 253.342 abatido; antes era o 1º caso de "abatimento do que já foi pago"</td></tr>
+      <tr><td class="cnj">1002167-22.2021.5.02.0271</td><td class="num">−98,4%</td><td class="num ok-t">86,9%</td><td>Equiparação de R$ 93.900 para R$ 0, como no PJC</td></tr>
+      <tr><td class="cnj">0001198-19.2024.5.07.0032</td><td class="num">−6,7%</td><td class="num ok-t">91,5%</td><td>Diferenças de remuneração variável de R$ 42.267 para R$ 0</td></tr>
+      <tr><td class="cnj">0101467-89.2017.5.01.0481</td><td class="num">−14,5%</td><td class="num ok-t">83,6%</td><td>Horas extras 100% de R$ 431.263 para R$ 66.572</td></tr>
+      <tr><td class="cnj">0001471-86.2022.5.09.0654</td><td class="num">−9,3%</td><td class="num ok-t">85,9%</td><td>Horas extras de R$ 0 para R$ 49.350</td></tr>
+      <tr><td class="cnj">0001305-65.2017.5.10.0019</td><td class="num">0,0%</td><td class="num ok-t">81,0%</td><td>BT081 de R$ 0 para R$ 112.402</td></tr>
+      <tr><td class="cnj">0010606-56.2022.5.03.0051</td><td class="num">−68,9%</td><td class="num ok-t">74,2%</td><td>Diferenças de ATS de R$ 0 para R$ 76.033</td></tr>
+      <tr><td class="cnj">0010312-66.2024.5.15.0126</td><td class="num">30,4%</td><td class="num ok-t">95,9%</td><td>Indenização de R$ 70.597 para R$ 37.729</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section id="agente">
+    <div class="sec-head"><span class="sec-num">5</span><h2>O que o agente achou nos apto valor</h2></div>
+    <p class="lead">O agente analista leu 127 processos de apto valor: os 81 que estão na alta confiança do painel de 03/11 e os 46 que estavam na alta antes do lote e saíram. Para cada diferença ele registrou o que o PJC fez, o que a IA fez, em que etapa nasce e quanto vale.</p>
+    <div class="tabela"><table>
+      <thead><tr><th>Tipo de diferença</th><th class="num">Diferenças</th><th class="num">Processos</th><th class="num">IA a mais</th><th class="num">IA a menos</th></tr></thead>
+      <tbody>
+        <tr><td>Erro da IA</td><td class="num">280</td><td class="num">96</td><td class="num mais">R$ 654.570</td><td class="num">R$ 1.635.546</td></tr>
+        <tr><td>Premissa que a esteira ainda não trata</td><td class="num">16</td><td class="num">16</td><td class="num mais">R$ 173.975</td><td class="num">R$ 202.814</td></tr>
+        <tr><td>Documento que a esteira não lê ou não recebeu</td><td class="num">30</td><td class="num">20</td><td class="num mais">R$ 133.924</td><td class="num">R$ 240.982</td></tr>
+        <tr><td>Gabarito questionável</td><td class="num">132</td><td class="num">75</td><td class="num mais">R$ 430.312</td><td class="num">R$ 385.143</td></tr>
+        <tr><td>Regra da casa ou método do painel</td><td class="num">128</td><td class="num">79</td><td class="num mais">R$ 83.908</td><td class="num">R$ 144.242</td></tr>
+        <tr><td>Causa não confirmada</td><td class="num">101</td><td class="num">59</td><td class="num mais">R$ 34.873</td><td class="num">R$ 91.558</td></tr>
+      </tbody></table></div>
+    <h4>Erros da IA e premissas, por família</h4>
+    <p class="lead">Ordem do que mais põe a IA a mais. Os valores somam o impacto de cada diferença no componente que ela mexe.</p>
+    <div class="tabela"><table>
+      <thead><tr><th>Família</th><th class="num">Processos</th><th class="num">IA a mais</th><th class="num">IA a menos</th><th>Casos que mais pesam</th></tr></thead>
+      <tbody>
+        <tr><td><b>Abatimento do que já foi pago</b></td><td class="num">17</td><td class="num mais">R$ 279.910</td><td class="num">R$ 241.227</td><td>BT081 sem compensar (1000397-05.2025.5.02.0707, 0101219-62.2023.5.01.0401); diferença arbitrada abatida (0011577-56.2023.5.15.0056); rubrica que o acórdão mandou não deduzir (0100305-95.2024.5.01.0034)</td></tr>
+        <tr><td><b>Quantidade e adicional</b></td><td class="num">60</td><td class="num mais">R$ 169.910</td><td class="num">R$ 301.215</td><td>estabilidade não calculada (0000347-35.2024.5.11.0010); intervalo depois da Reforma (0000561-85.2020.5.17.0014); meia hora de almoço como HE (0000612-53.2021.5.08.0001)</td></tr>
+        <tr><td><b>Período da verba</b></td><td class="num">23</td><td class="num mais">R$ 132.827</td><td class="num">R$ 30.933</td><td>HE no período de trabalho remoto que a sentença indeferiu (1000746-70.2024.5.02.0051, R$ 84 mil); últimos 6,5 meses que o acórdão excluiu (0020104-75.2017.5.04.0003); período do art. 62 (0000299-77.2025.5.06.0011)</td></tr>
+        <tr><td><b>Composição da base</b></td><td class="num">52</td><td class="num mais">R$ 88.476</td><td class="num">R$ 375.240</td><td>prêmio e insalubridade fora da base da HE (0020613-51.2023.5.04.0405, 0020044-37.2020.5.04.0023); auxílio-refeição fora da estabilidade (0000792-78.2022.5.08.0019)</td></tr>
+        <tr><td><b>Reflexos (código, DSR, 13º, férias)</b></td><td class="num">49</td><td class="num mais">R$ 80.497</td><td class="num">R$ 444.155</td><td>repouso das HE sem o sábado (1000256-47.2021.5.02.0441, 1000993-64.2023.5.02.0446, 0100257-14.2024.5.01.0301); periculosidade sobre HE paga (0011368-20.2022.5.15.0122)</td></tr>
+        <tr><td><b>Identificação da verba</b></td><td class="num">11</td><td class="num mais">R$ 9.960</td><td class="num">R$ 248.558</td><td>HE além da 6ª apurada como além da 8ª (1000016-57.2025.5.02.0008); acúmulo de função (0000122-06.2024.5.10.0022); sentença líquida copiada (0100275-60.2022.5.01.0283)</td></tr>
+        <tr><td><b>Execução interrompida</b></td><td class="num">5</td><td class="num">—</td><td class="num">R$ 196.782</td><td>0000589-29.2024.5.07.0002, 0010251-40.2017.5.15.0131</td></tr>
+      </tbody></table></div>
+    <div class="callout"><b>Sentença líquida copiada, um caso que vale olhar.</b> No 0100275-60.2022.5.01.0283 a sentença traz cada verba em reais, os mesmos valores da inicial, e avisa que são estimativas a refazer na liquidação. A leitura da decisão tratou tudo como valor pronto e nenhuma etapa fez conta: IA R$ 62.451 contra PJC R$ 27.338 (−28%). O agente acha esse padrão em 5 processos da base e sugere só monitorar. O caso está na alta confiança (ver seção 6).</div>
+  </section>
+
+  <section id="score">
+    <div class="sec-head"><span class="sec-num">6</span><h2>Score de confiança</h2></div>
+    <p class="lead">Dos processos do lote, 79 saíram da alta e 37 entraram. Dos 26 que foram para a baixa, 6 caíram porque a conta piorou de verdade (o score acertou). Os outros 20 caíram só pelo auditor de sobrecálculo, que respondeu "alto" na execução nova.</p>
+    <ul class="lista">
+      <li><b>O auditor oscila de uma execução para outra.</b> Dos 20, 13 continuam com 80% ou mais (0010379-73.2023.5.15.0091 com 97,9%, 0020104-75.2017.5.04.0003 com 96,9%, 0000208-73.2019.5.09.0088 com 95,8%), e só 10 estão de fato com IA a mais que o PJC.</li>
+      <li><b>Ele aponta premissas que nem a esteira nem o PJC aplicam hoje</b>: comissão ou prêmio na base da HE depois de 11/2017 (Premissa 18.0, 5 casos), gratificação ou quebra de caixa na base da HE bancária (3), HE afastando o art. 62 sem trânsito (2).</li>
+      <li><b>Um caso com −28% ficou na alta</b>: a sentença líquida do 0100275-60.2022.5.01.0283. Como a IA não fez conta, os riscos não tinham o que medir, e o auditor deu "médio".</li>
+    </ul>
+    <p class="mut">Opções em aberto: só tirar da alta pelo auditor quando o motivo não for uma premissa que a esteira ainda não aplica; e uma trava para verba principal tratada como valor pronto, sem conta mensal, fora de dano moral e multas arbitradas.</p>
+  </section>
+
+  <section id="painel">
+    <div class="sec-head"><span class="sec-num">7</span><h2>Painel</h2></div>
+    <p class="lead">O pareamento das verbas da IA com as do PJC estava trocando famílias quando a linha da IA não tinha código: intervalo pareado com "HORAS EXTRAS 50%", multa do art. 467 com a do 477, saldo de salário com 13º, salário por fora com salário retido. Em outros casos a mesma verba ficava como "só IA" e "só PJC" sem se juntar. Eram 107 processos, 4 deles na alta apto valor. As horas de sobreaviso também apareciam como reflexo, porque "SOBREAVISO" contém "SOBRE".</p>
+    <p class="lead">Corrigido em 07/11 e o painel foi regerado inteiro. <b>A assertividade não muda</b>, porque ela compara total com total; o que muda é a tabela por verba e o gráfico de faixa das verbas.</p>
+  </section>
+
+  <section id="passos">
+    <div class="sec-head"><span class="sec-num">8</span><h2>Próximos passos</h2></div>
+    <ol class="passos">
+      <li><b>Subir as duas regressões de código</b>: a compensação da BT081 (regressão 1) e a base vazia pela lista da decisão (regressão 4).</li>
+      <li><b>Conferir no código o abatimento das diferenças com valor mensal fixado</b> (regressão 2) e subir o ajuste.</li>
+      <li><b>Corrigir a leitura da jornada fixada com dias pelo cartão</b> (regressão 3), no prompt da leitura da decisão e na trava do cartão.</li>
+      <li><b>Nova tentativa dentro da etapa quando o modelo falha</b>, e reenviar os 21 processos que pararam antes do cálculo (regressão 5).</li>
+      <li><b>Rodar o agente nos 49 processos</b> em que uma verba deixou de ter valor (regressão 6).</li>
+      <li><b>Rever a regra do auditor</b> no score antes da próxima rodada.</li>
+    </ol>
+  </section>
+</main>
+</body></html>

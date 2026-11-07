@@ -1,0 +1,727 @@
+Backoffice Operacional
+PREMISSAS DE CÁLCULO
+<<<PÁGINA 1>>>
+SUMÁRIO
+1.0 ARQUIVOS - NOMENCLATURA ............................................................................................................................................................................... 4
+2.0 APLICAÇÕES EM QUE NÃO REALIZAMOS CÁLCULO ............................................................................................................................................... 4
+3.0 ADICIONAL DE PERICULOSIDADE E INSALUBRIDADE ............................................................................................................................................. 4
+4.0 ARTIGO 467 E 477 .................................................................................................................................................................................................. 5
+5.0 AUSÊNCIAS ........................................................................................................................................................................................................... 5
+6.0 BENEFÍCIOS, SUBSÍDIOS E OUTROS GANHOS ........................................................................................................................................................ 5
+6.1 Auxílio Refeição/Alimentação ................................................................................................................................................................. 5
+6.2 Diferenças de FGTS e Multa 40% ............................................................................................................................................................. 5
+6.3 Diferença Salarial/Equiparação Salarial .................................................................................................................................................. 6
+6.4 PLR ........................................................................................................................................................................................................ 6
+6.5 Vale Transporte ...................................................................................................................................................................................... 6
+6.6 Lucros Cessantes/Complemento de INSS ............................................................................................................................................... 6
+7.0 CONCEITOS BÁSICOS ........................................................................................................................................................................................... 7
+7.1 Trânsito em Julgado ................................................................................................................................................................................ 7
+7.2 Matérias de ordem pública ..................................................................................................................................................................... 7
+7.3 Preclusão .............................................................................................................................................................................................. 7
+7.4 Modalidade de Rescisão ......................................................................................................................................................................... 7
+7.5 Honorários Advocatícios ........................................................................................................................................................................ 7
+8.0 CORREÇÃO MONETÁRIA E JUROS .......................................................................................................................................................................... 8
+9.0 DANO MORAL ........................................................................................................................................................................................................ 8
+10.0 HORAS EXTRAS BANCÁRIO .................................................................................................................................................................................. 8
+11.0 HORAS EXTRAS E ADICIONAL NOTURNO .............................................................................................................................................................. 9
+12.0 HORAS EXTRAS MOTORISTAS ............................................................................................................................................................................. 10
+13.0 LIMITAÇÃO NA INICIAL ....................................................................................................................................................................................... 10
+14.0 PENSÃO MENSAL ............................................................................................................................................................................................... 10
+14.1 Processos anterior ao acórdão/ pendente de e.d. ou r.o......................................................................................................................... 10
+14.2 Laudo pericial ...................................................................................................................................................................................... 10
+14.3 Nexo causal/concausal ........................................................................................................................................................................ 10
+15.0 PERÍODO DE CÁLCULO ...................................................................................................................................................................................... 12
+16.0 PREVIDENCIA PRIVADA ...................................................................................................................................................................................... 12
+17.0 PROTOCOLOS PARA CENÁRIOS ESPECÍFICOS ................................................................................................................................................... 12
+17.1 Plano de Cargos e Salários (PCS) - Bancários ........................................................................................................................................ 12
+17.2 Terceirização e Responsabilidade Subsidiária ....................................................................................................................................... 13
+17.3 Casos de Enquadramento .................................................................................................................................................................... 13
+17.4 Gratificação Especial – BANCO SANTANDER ......................................................................................................................................... 14
+17.5 PROFESSORES ..................................................................................................................................................................................... 14
+18.0 PRÊMIOS ........................................................................................................................................................................................................... 14
+19.0 RECLAMADAS ESPECÍFICAS ............................................................................................................................................................................... 14
+19.1 Banco Santander – GRATIFICAÇÃO ESPECIAL ....................................................................................................................................... 14
+19.2 Banco Bradesco – VERBA DE REPRESENTAÇÃO .................................................................................................................................... 14
+19.3 Banco ITAU .......................................................................................................................................................................................... 14
+19.4 Pirelli/Prometeon(TRT 4) – HORAS EXTRAS, INTRAJORNADA E ADICIONAL NOTURNO ............................................................................ 15
+19.5 Petrobrás – RMNR ................................................................................................................................................................................ 15
+19.6 Comissão – Bancário ............................................................................................................................................................................ 15
+20.0 REINTEGRAÇÃO................................................................................................................................................................................................. 15
+21.0 RESPONSABILIDADE SUBSIDIÁRIA E SOLIDÁRIA ................................................................................................................................................. 16
+21.1 SUBSIDIÁRIA ....................................................................................................................................................................................... 16
+21.2 SOLIDÁRIA .......................................................................................................................................................................................... 16
+<<<PÁGINA 2>>>
+23.0 TIPOS E METODOLOGIAS DE CÁLCULO .............................................................................................................................................................. 16
+24.0 TEMAS CRÍTICOS ............................................................................................................................................................................................... 17
+Ações Civis Públicas ........................................................................................................................................................................................ 17
+Adicional de Transferência ............................................................................................................................................................................... 17
+ATS - Bônus por Tempo de Serviço .................................................................................................................................................................... 17
+Base INSS reclamante ..................................................................................................................................................................................... 17
+Casos PCS ajuizados após 11/11/2017 ............................................................................................................................................................. 17
+Complemento de Previdência Privada (PREVI, FUNCEF, etc.) e cálculo atuarial ................................................................................................. 17
+CTVA – Caixa Econômica ................................................................................................................................................................................. 17
+Dedução de ALVARÁS ...................................................................................................................................................................................... 17
+Enquadramento com legislação BR (casos de cruzeiro e congêneres) ................................................................................................................ 17
+Diferença salarial ............................................................................................................................................................................................ 17
+Diferença Salarial RP52-ITAU ........................................................................................................................................................................... 17
+Férias em dobro ............................................................................................................................................................................................... 17
+FGTS no Saldo REMANESCENTE ....................................................................................................................................................................... 17
+Integração Vale Alimentação/Cheque Rancho .................................................................................................................................................. 17
+PDV/PDI .......................................................................................................................................................................................................... 17
+POM/ REINTREGRAÇÃO (OBS: Caso haja mais verbas deferidas no processo restringir integralmente) - RECLAMDA WMS .................................. 17
+Quebra de caixa............................................................................................................................................................................................... 17
+Recurso de Revista .......................................................................................................................................................................................... 17
+Reflexos das verbas principais ......................................................................................................................................................................... 17
+<<<PÁGINA 3>>>
+1.0 ARQUIVOS - NOMENCLATURA
+• Estrutura: data - nome reclamante – CNJ – Tipo de Cálculo – seu nome
+• Exemplo: 07.02.2025 - ELISEU APOLONIO XAVIER - 1000919-28.2020.5.02.0086 – RISCO REAL –
+FULANO
+2.0 APLICAÇÕES EM QUE NÃO REALIZAMOS CÁLCULO
+• Ausência de documentos essenciais
+Boletos de pagamento ou cartões de ponto, que são necessários para fundamentar a análise.
+• Exceção para Documentação Parcial
+calcular os ganhos documentados, excluindo claramente as partes que carecem de documentação
+suficiente.
+• Julgamentos à revelia (Revelia)
+a documentação pode não estar disponível, os cálculos podem prosseguir adotando os parâmetros e
+o raciocínio especificados na própria sentença.
+3.0 ADICIONAL DE PERICULOSIDADE E INSALUBRIDADE
+PERICULOSIDADE INSALUBRIDADE
+não aplica reflexo em DSR não aplica reflexo em DSR
+MENSALISTAS
+a base deve incluir horas normais pagas + DSR pago sobre Sempre pelo salário mínimo.
+HORISTAS essas horas
+• no entanto NÃO APURAR DSR como reflexo
+NA BASE DAS HORAS Apenas se expressamente deferida Sum. 264 Apenas se expressamente deferida Sum. 264
+EXTRAS
+• Tempo de espera • Tempo de espera
+• Interjornada/intrajornada/art 384 • Interjornada/intrajornada/art 384
+NÃO CONSIDERAR
+• In itinere • In itinere
+NA BASE
+• Sobreaviso • Sobreaviso
+Se a Súmula 191 for citada na sentença, a base de cálculo
+do pagamento de periculosidade deve incluir todos os
+ELETRICITÁRIO
+ganhos baseados no salário, como horas extras e
+pagamento noturno. Não há.
+Descontar ausências Descontar ausências
+AUSÊNCIAS
+ARMAZENAMENTO
+DE LÍQUIDOS
+INFLAMÁVEIS EM
+Não apurar Não há.
+EDIFÍCIOS
+(o Tema 154 ainda aguarda julgamento e coloca em
+(DIMENSÃO
+discussão a própria viabilidade do pedido de
+VERTICAL E
+periculosidade nessas hipóteses.)
+HORIZONTAL).
+se houver deferimento dos dois adicionais, observar o mais benéfico
+sempre deduzir valores pagos a mesmo título
+<<<PÁGINA 4>>>
+4.0 ARTIGO 467 E 477
+• ARTIGO 467
+Em caso de omissão da base de cálculo, calcule sobre todas as verbas rescisórias, incluindo a multa de
+40% do FGTS
+• ARTIGO 477
+Com base no último SALÁRIO BASE – funcionários com salário fixo
+Com base na média dos ganhos dos ÚLTIMOS 12 MESES – comissionista puro
+5.0 AUSÊNCIAS
+Deduzir todas as ausências registradas nos registros e cartões de ponto e ficha de registro do funcionário.
+• Isso inclui dias de folga, licença médica, suspensões etc.
+6.0 BENEFÍCIOS, SUBSÍDIOS E OUTROS GANHOS
+6.1 Auxílio Refeição/Alimentação
+• VALOR
+o Se omisso na sentença, considerar cct
+o Se os contratos de um determinado período estiverem ausentes, deixe o valor desse período
+como zero
+• MÉTODO DE CÁLCULO
+o Valor diário x dias trabalhados – REFEIÇÃO
+o BANCÁRIOS: valor diário x 22 dias (independente dos dias laborados)
+o Valor informado na CCT (mensal) - ALIMENTAÇÃO
+• DEDUÇÕES
+o Sempre deduzir valores pagos
+o BANCÁRIOS: não calcule o subsídio de auxílio refeição para faltas superiores a 15 dias o e para
+faltas superiores a 180 dias para auxílio alimentação.
+• INTEGRAÇÃO AO SALÁRIO
+o Limitada a 10/11/2017
+o BANCÁRIOS: não se aplica, pois, esse benefício não é considerado salário (exceto se houve
+trânsito em julgado)
+6.2 Diferenças de FGTS e Multa 40%
+• PRESCRIÇÃO
+o Considerar a quinquenal (5 anos)
+o a menos que a prescrição de 30 anos seja explicitamente concedida
+• DEPÓSITO
+o Sempre considerar “a depositar” no PJE CALC E-mail Consultivo -07/03/2025
+• MULTA 40%
+o é aplicada somente quando explicitamente concedida
+<<<PÁGINA 5>>>
+6.3 Diferença Salarial/Equiparação Salarial
+• Com vários paradigmas – observar o de maior valor (em caso de omissão)
+• Sempre proporcionalizar pago e devido
+• Sempre observar a irredutibilidade salarial
+• Em casos de AFASTAMENTOS por INSS – somente apurar se houver determinação para complemento de
+auxílio-doença
+• Diferenças salariais que surgiram a partir de 11/11/2017, são restritas. Se gerada antes de 11/11/2017
+pode ser apurada normalmente, salvo exceções já definidas judicialmente. Se transitou, segue o
+julgado.
+E-mail Consultivo-20/04/2026
+Bancário – limita auxílio-doença em 24 meses
+6.4 PLR
+• Qualquer reclamada – PLR proporcional (PEDIDO DE DEMISSÃO E JUSTA CAUSA):
+o Cálculo de risco – seguir norma coletiva
+o Cálculo com trânsito julgado – segue o julgado
+o Cálculo com recurso pendente (reclamada recorrendo) – seguir norma coletiva
+E-mail Consultivo-05/05/2025
+• REFLEXOS
+Reflexos em PLR não devem ser apurados em verbas varáveis - exceto se transitou em julgado
+• BANCÁRIOS
+Se a decisão foi omissa quanto a base de cálculo, considerar:
+o Regra básica = base + gratificação x 0,90 + parcela fixa
+o Sempre limitado ao teto
+o GRATIFICAÇÃO SEMESTRAL não deve ser considerada na base do PLR
+o Qualquer modalidade de rescisão divergente da sem justa causa, não apurar PLR proporcional.
+Só apurar se transitou o julgado.
+Se a CCT foi juntada apura, se não foi não apura.
+SEMPRE INCIDIR NA BASE DE IRRF (mesmo com trânsito em julgado).
+PLR não compõe base de cálculo das horas extras.
+6.5 Vale Transporte
+• Se não houver valor da passagem, pesquisar o valor para o período e anexar a fonte de informação
+• Deduzir a contribuição legal do reclamante (mínimo 6% do salário base do autor) - se nunca recebeu
+vale transporte
+• Apuração conforme os dias efetivamente laborados, nos termos dos cartões de ponto anexos aos
+autos, salvo fixação expressa em decisão judicial.
+o neste cenário, inexistindo cartões de ponto nos autos, não apurar.
+6.6 Lucros Cessantes/Complemento de INSS
+• APURAÇÃO
+E-mail Consultivo -25/06/2025
+Apenas se houver documentação com valores pagos Trânsito posterior a 13/08/2014 - restritos
+<<<PÁGINA 6>>>
+7.0 CONCEITOS BÁSICOS
+7.1 Trânsito em Julgado
+Uma sentença torna-se definitiva e não são possíveis mais recursos.
+Qualquer disputa é limitada apenas aos parâmetros de liquidação (como o prêmio é calculado, não o que
+foi concedido)
+7.2 Matérias de ordem pública
+Exceções que podem ser revistas a qualquer momento, mesmo após uma sentença transitada em julgado.
+• Correção Monetária / Juros de Mora
+• Contribuições Fiscais e Previdenciárias
+• Compensação por valores já pagos – inclusive valores de complemento auxílio doença
+• Prescrição quinquenal – tratado como premissa interna
+7.3 Preclusão
+A preclusão é a perda do direito de praticar um ato processual, seja porque o prazo já passou, seja porque uma
+ação anterior invalida a nova. Existem três tipos:
+• Temporal: O prazo para a realização de um ato expira (por exemplo, uma parte perde o prazo para
+recorrer de uma decisão).
+• Lógico: Um ato recém-praticado contradiz um anterior (por exemplo, uma parte interpõe recurso depois
+de já ter aceitado a decisão).
+• Consumativo: O ato já foi realizado e não pode ser repetido (por exemplo, uma parte interpõe um
+segundo recurso exatamente no mesmo ponto que o primeiro).
+7.4 Modalidade de Rescisão
+DISPENSA SEM JUSTA
+DISPENSA POR JUSTA RESCISÃO POR
+VERBAS CAUSA/ RESCISÃO PEDIDO DE DEMISSÃO
+CAUSA ACORDO MÚTUO
+INDIRETA
+Saldo de Salário
+13º proporcional
+Férias + 1/3 vencidas
+Férias + 1/3 proporcional
+50% do valor fixo o empregado deve
+Aviso prévio
+conceder ao patrão
+Saque dos depósitos de 100% do valor 50% do valor fixo
+FGTS
+Indenização sobre indenização de 40% indenização de 20%
+depósitos de FGTS do valor do valor
+desde que atenda aos
+Seguro desemprego requisitos da
+legislação
+MULTA ARTIGO 477 – sempre o último salário BASE para salários fixos e quando comissionista puro a
+média dos últimos 12 meses.
+7.5 Honorários Advocatícios
+• Em casos de JUSTIÇA GRATUITA AO RECTE – incluir em “comentários” no PJE o valore devido, acrescido
+de juros (taxa % no relatório em “juros sobre verbas”);
+• Valor devido ao reclamante – sempre apurar, nos casos de parcelas vincendas considerar as 12
+primeiras parcelas para soma das vincendas e apuração do valor devido;
+<<<PÁGINA 7>>>
+Honorários assistenciais devidos ao advogado do SINDICATO – não apuramos.
+Em caso de INDEFERIMENTO DA JUSTIÇA GRATUITA DO RECLAMANTE os honorários devem ser
+calculados e deduzidos do crédito
+8.0 CORREÇÃO MONETÁRIA E JUROS
+A seguinte regra para atualizações monetárias é obrigatória e substitui as diferentes decisões judiciais:
+• Utilizar o IPCA-E para correção monetária do período até a data da propositura da ação.
+• Utilizar a SELIC para juros no período a partir da data do depósito.
+9.0 DANO MORAL
+Observar dano causado:
+EXTENSÃO DO DANO LIMITAÇÃO
+LEVE Limitado 3x último salário
+MÉDIA Limitado 5x último salário
+GRAVE Limitado 20x último salário
+GRAVÍSSIMA Limitado 50x último salário
+OMISSÃO DA EXTENSÃO DO DANO Limitado 50x último salário
+• RECURSO PENDENTE: Se houver um RR ADMITIDO para reduzir a indenização por danos e nenhum
+novo valor tiver sido indicado, NÃO CALCULE E-mail Consultivo -20/06/2025
+• CAUSA DE PEDIR: Observar a causa de pedir do dano moral, se for relacionado a previdência privada
+ou complemento de aposentadoria, restringir.
+E-mail Consultivo – 09/03/2026
+• CORREÇÃO MONETÁRIA: data da arbitragem (data em que o valor foi fixado), e não da data do
+depósito. Esta regra não se aplica a danos materiais ou pensões.
+No PJE Calc deve constar opção "Juros - Aplicar Súmula nº 439 do TST" = NÃO
+10.0 HORAS EXTRAS BANCÁRIO
+CARACTERÍSTICA O QUE CONSIDERAR
+Salário base + Comissão de Cargos + ATS
+BASE DE CÁLCULO
+• gratificação semestral não entra na base de cálculo
+• Se ajuizado até 31/12/2018
+deduz a gratificação apenas a partir de 09/2018
+• Se ajuizado após 31/12/2018
+deduz a gratificação de função por todo o período
+• Clicar em “zerar valor negativo”
+• Se a he 8ª ficar negativa no resumo – podemos manter, DESDE QUE as he 7ª/8ª estejam
+DEDUÇÃO NA 7ª E 8ª HORA positivas
+• HE PRÉ CONTRATADAS – se o valor for fixo; incluir na base de cálculo das horas extras e
+deduzir da 7ª/8ª he (EM CASOS DE OMISSÃO), aplicar a limitação de percentual
+Nos casos em que houver apuração de equiparação salarial, sempre deduzir a
+gratificação do paradigma apurado.
+CARGO DE GERENTE GERAL, NÃO CALCULE horas extras, a menos que o caso tenha uma sentença final e irrecorrível
+• VERIFICAR se registrava ponto
+GERENTE GERAL DE AGÊNCIA,
+Se não registrava, mas recebia salário alto – não apura
+SUPERINTENDENTE
+Se registrava, mas recebia salário alto – apura
+<<<PÁGINA 8>>>
+11.0 HORAS EXTRAS E ADICIONAL NOTURNO
+CARACTERÍSTICA O QUE CONSIDERAR
+• APURAR SÚMULA 85:
+✓ alegação de nulidade de acordo de compensação de jornada
+✓ nulidade do suposto banco de horas, e
+ACORDO DE COMPENSAÇÃO DE JORNADA
+✓ determinada a aplicação da súmula 85 do TST.
+• utilizar cartão de ponto paralelo em Excel INTERNO
+• Expressamente deferido - convencional
+• Sem convenção de um período – 50%
+ADICIONAL HE
+• Caso de omissão – 50%
+• Limita em 10/11/2017
+• aplicar o critério do art.58 (10 min)
+ART 384
+• Aplicar o adicional 50% (mesmo nas 100%)
+ART. 71
+ART 72
+• Natureza salarial limitada em 10/11/2017
+ART 66/67
+• Aplicar 50% em caso de omissão para dias normais, domingos e feriados antes
+Intervalo digitador
+da reforma, pós reforma, sempre aplicar 50%
+(ou QUARQUER ARTIGO que faça analogia ao artigo 71)
+• Não incluir periculosidade e insalubridade na base
+OBSERVAR SE FOI DEFERIDO O ART 67 E
+ALTERAR NO PJE CALC
+• Se EXPRESSO Súmula 264 – aplica
+• Se OMISSO – apenas salário base
+BASE SUM 264 – HE NORMAIS E FICTAS
+• não considerar DSR na base de cálculo
+• Se expresso, aplicar
+BASE SUM 340 – HE FICTAS • Se omisso, não aplica e exclui comissão da base e os respectivos DSRs
+• Se expresso, aplicar
+• Se omisso, considera comissão e prêmios na base de cálculo (sum 264, sem
+BASE SUM 340 – HE NORMAIS
+considerar os DSR das comissões)
+• Não apurar reflexos dos DSR's sobre as demais verbas em casos de omissão.
+• Quando houver o deferimento expresso, considerar novo entendimento, ou seja,
+OJ 394 (DSR E COM ESTES)
+não apurar até 19/03/23 e apurar após 20/03/23
+Limita em 10/11/2017
+IN ITINERE
+APENAS se deferida Sumula 60/OJ 97
+INCLUSÃO ADIC NOT NA BASE DAS HE
+Sempre observar a frequência dos cartões juntados/ficha financeira/ficha registro
+JORNADA FIXADA
+Observar TEMA 296 do IRR - Caso a reclamada alegue tal tema em suas contestações,
+mesmo sem RR admitido quanto ao tema, apurar horas extras excedentes a 12ª diária.
+ESCALA 12X36 - DEFERIMENTO DE HORAS EXTRAS
+EXCED. 8ª DIARIA
+• Casos em que RESTRITOS para horas extras:
+• Trânsito inferior a dois anos;
+CASOS DE TRABALHO EXTERNO – ART. 62
+• Norma coletiva prevendo expressamente o enquadramento no art. 62;
+(INDEPENDENTE DO SEGMENTO)
+• Norma coletiva que contenha desobrigação do controle de jornada;
+• Contrato de trabalho, ficha de registro e outras provas com
+E-mail Co nsultivo -04/12/2025
+enquadramento expresso no art. 62;
+• Ausência de norma coletiva nos autos.
+MOTORISTA NÃO SE ENQUADRA, SEGUIR
+PREMISSA ESPECÍFICA.
+• Para casos com possibilidade de controle indireto, aplica-se o
+TEMA 300 - RESTRITOS
+APENAS se deferida Sumula 60
+PRORROGAÇÃO NOTURNA
+• 1/3 do salário normal
+SOBREAVISO • Não incluir periculosidade e insalubridade na base
+Mesmo que deferido excedente à 6ª, observar CCT/ACT para jornada elastecida e considerar
+TURNO ININTERRUPTO
+conforme previsão normativa
+E-mail Consultivo -17/01/2025 • não se aplica para casos transitados em julgado.
+<<<PÁGINA 9>>>
+12.0 HORAS EXTRAS MOTORISTAS
+• Verificar os acordos coletivos de trabalho juntados, pois esses acordos podem excluir certos cálculos,
+apesar da sentença judicial.
+E-mail Consultivo -16/01/2025
+Se houver cartão de ponto válido apuramos HE
+jornada for fixada, pela invalidade dos cartões apuramos HE
+jornada for fixada, pela falta dos cartões não apuramos HE
+• TEMPO DE ESPERA:
+o Se estiver incluso na jornada (fixada ou reconhecida) –deduz horas extras e tempo de espera
+pago (valor) da apuração
+o Se deferidas “a parte”, em casos de omissão de parâmetros – apurar A RAZÃO DE 30% DO
+SALÁRIO HORA, SEM ADICIONAL - em outra verba separado das horas extras.
+13.0 LIMITAÇÃO NA INICIAL
+Quando aplicar:
+E-mail Consultivo -23/06/2025
+• Há determinação judicial expressa para aplicar a limitação;
+• O RR da reclamada foi recebido;
+deve ser aplicada a cada reivindicação individual, não ao valor total do caso
+Valor total/número de meses
+Lembrar de separar o FGTS + 40%, caso esteja no total do pedido
+14.0 PENSÃO MENSAL
+14.1 Processos anterior ao acórdão/ pendente de e.d. ou r.o.
+• Apenas as vencidas (mesmo se fixada parcela única)
+14.2 Laudo pericial
+• Mesmo que haja determinação para pensão, se o LAUDO PERICIAL for NEGATIVO, não apurar (só
+apurar se transitou em julgado)
+14.3 Nexo causal/concausal E-mail Consultivo -07/03/2025
+• CAUSAL (culpa exclusiva da reclamada): apura como foi deferido
+• CONCAUSAL (culpa de ambas as partes): sobre o percentual deferido, aplicar o percentual de culpa da
+reclamada
+o Incapacidade x nexo concausal
+• Exemplo: incapacidade deferida 30%
+• Nexo concausal da reclamada 40% - no laudo pericial ou na decisão
+• Aplicar: 30% x 40% = pagar 12% de pensão
+▪ Em caso de OMISSÃO – aplica 50% do deferido
+<<<PÁGINA 10>>>
+ATIVO Deduz conforme tabela
+INCAPACIDADE
+PERMANENTE
+DESLIGADO vincendas com redutor
+AFASTADO PARCIAL até decisão/apto
+PENSÃO
+INCAPACIDADE
+SÓ VENCIDAS até decisão/apto
+PARCIAL
+CENÁRIO VENCIDAS VINCENDAS REDUTOR
+• DEFINIDO
+pode considerar
+PARCELA ÚNICA Não considerar juros • OMISSO/ INDEFERIDO
+(sempre separar em Até data atualização • Aplica redutor Constituição capital ou valor presente
+vencidas e vincendas) • OMISSO RED E INDEFERE CONS CAP
+aplica redutor 30%
+Deduz as parcelas mensais pelo tempo
+E-mail Consultivo -02/04/2025 estimado – após esses meses, pode manter a • DEFINIDO
+apuração
+INCAPACIDADE pode considerar
+• Aplica redutor
+• OMISSO
+PERMANENTE Até data atualização ACORDÃO R.O. DEDUZ 54 meses Constituição capital ou valor presente
+ativo
+RR AGUARDANDO DEDUZ 46 meses • OMISSO RED E INDEFERE CONS CAP
+AIRR INTERP/AGUARDANDO DEDUZ 43 meses aplica redutor 30%
+REXT DEDUZ 43 meses
+• DEFINIDO
+INCAPACIDADE pode considerar
+Não considerar juros
+• OMISSO
+PERMANENTE Até data atualização • Aplica redutor
+Constituição capital ou valor presente
+desligado
+• OMISSO RED E INDEFERE CONS CAP
+aplica redutor 30%
+Até a data decisão
+ou
+data em que foi
+considerado apto ao
+NÃO APURA NÃO APURA
+AFASTADO trabalho
+(se cessada antes da
+INSS
+decisão)
+Até a data decisão
+INCAPACIDADE ou E-mail Consultivo -18/03/2025
+data em que foi
+TEMPORÁRIA considerado apto ao
+NÃO APURA NÃO APURA
+OU trabalho
+(se cessada antes da
+PARCIAL
+decisão)
+PARCELA MENSAL Até data atualização NÃO APURA
+NÃO APURA
+PROCESSOS
+ANTERIOR AO Até data atualização
+ACÓRDÃO/ NÃO APURA NÃO APURA
+(mesmo se fixada
+PENDENTE DE E.D.
+parcela única)
+OU R.O.
+<<<PÁGINA 11>>>
+15.0 PERÍODO DE CÁLCULO
+• CONTRATO ATIVO:
+Até a data da DISTRIBUIÇÃO DA AÇÃO (se a decisão for omissa)
+• PARCELAS VINCENDAS:
+Apurar somente quando houver determinação
+o Verificar se está afastado ou reintegrado (conforme verba deferida)
+• RECLAMADA ALVO:
+Sempre observar apenas o período de responsabilidade da reclamada alvo
+• DOCUMENTAÇÃO:
+Caso não haja a documentação e todo o período, limitar a apuração até a data da última documentação
+juntada.
+16.0 PREVIDENCIA PRIVADA
+• Devem ser RESTRITOS os casos:
+o diferença entre o valor do benefício mensal de complementação de aposentadoria
+o valor que seria devido caso as horas extras e seus reflexos - deferidos em processos anteriores
+o tivessem sido integrados ao salário de participação
+o complementação de aposentadoria à PREVI – qualquer previdência privada
+o pedido da reclamada a respeito da aplicação de prescrição total ou do marco inicial para
+apuração da verba
+• Verbas principais com reflexos e incidência em alguma previdência privada - PODEMOS REALIZAR
+Processos com trânsito em julgado não devem ser afetados, a princípio, pela restrição
+17.0 PROTOCOLOS PARA CENÁRIOS ESPECÍFICOS
+17.1 Plano de Cargos e Salários (PCS) - Bancários
+• PRÉ REQUISITOS
+o Distribuídos após 11/11/2017 – NÃO REALIZAR PCS MESMO COM TRÂNSITO EM JULGADO
+o O cálculo só pode ser realizado após decisão de recurso, desde que não haja recurso admitido
+sobre o tema PCS.
+• ITENS INDISPENSÁVEIS
+o Definição de grade e zona – caso não seja fixado, considerar a mínima
+o Tabela de origem PCS
+o Holerites/CCTs/ficha registro com percentuais para aplicação dos reajustes
+o SE houver determinação expressa para considerar tabelas anexadas pelo reclamante, podemos
+considerar
+• BANCO SANTANDER
+Para ex-funcionários do Banco Real, o reclamante deve ter sido admitido até 03/2009, caso contrário,
+o cálculo é restrito
+• REAJUSTES
+o Aplicar apenas ajustes contratuais (por exemplo, de acordos coletivos).
+o NÃO aplique ajustes baseados em mérito ou promoção
+<<<PÁGINA 12>>>
+• DEDUÇÃO DA GRATIFICAÇÃO DE FUNÇÃO
+o Caso a gratificação de função seja deferida como reflexa, não deduzir do PCS, caso contrário
+(omissão) deduzir das diferenças de PCS.
+o Se o julgado foi omisso – podemos aplicar o percentual normativo (50% - RS e 55% outros TRTs)
+17.2 Terceirização e Responsabilidade Subsidiária
+• RESPONSABILIDADE SUBSIDIÁRIA
+Se a sentença definir períodos específicos de responsabilidade para diferentes réus, o cálculo deve ser
+limitado ao período correspondente à empresa ré-alvo.
+• RESPONSABILIDADE SOLIDÁRIA
+Se a responsabilidade solidária e um grupo econômico forem reconhecidos, os cálculos podem
+prosseguir normalmente sem restrições de período.
+• CASOS RESTRITOS
+o NÃO CALCULE casos envolvendo (classificação incorreta do funcionário como contratado) ou
+terceirização ilícita que ainda não chegaram a uma sentença transitada em julgado.
+o NÃO CALCULE Pejotização, mesmo com trânsito em julgado
+o NÃO CALCULE reconhecimento entre reclamadas com mesma atividade fim
+17.3 Casos de Enquadramento E-mail Consultivo -30/07/2025
+O TST considera caracterizada a atividade financeira quando a empresa:
+• CONCEDE CRÉDITO, seja diretamente ao consumidor ou por meio de operações de parcelamento e
+financiamento;
+• ASSUME RISCO FINANCEIRO, isto é, utiliza capital próprio para custear as operações e arcar com
+eventuais inadimplências;
+• ADMINISTRA CARTÕES, COBRA, EMITE FATURA, atuando não apenas como prestadora de serviços
+operacionais, mas como responsável pela gestão e concessão do crédito vinculado ao cartão
+Em casos de enquadramento como financiário, acionar equipe interna E-mail Consultivo -04/11/2025
+o EMPRESAS QUE NÃO CONSIDERAMOS COMO FINANCIÁRIA, apuramos apenas as parcelas
+que não fazem parte do enquadramento
+• ADOBE/ CREFISA:
+Não apurar nenhuma verba referente ao enquadramento como financiário ADOBE/ CREFISA,
+inclusive pedido sucessivo de horas extras.
+Viabilidade apenas se:
+Pedido sucessivo já julgado pelo TST ou não há discussão de vínculo com a Crefisa.
+Podemos apurar qualquer outra verba que não tenha relação com o enquadramento, como por exemplo:
+o Adicional de Periculosidade;
+o Indenização por Danos Morais;
+o Diferenças Salariais por Equiparação (desde que o paradigma indicado não exerça função de
+financiário)
+o Outras verbas de natureza diversa ao enquadramento sindical.
+<<<PÁGINA 13>>>
+17.4 Gratificação Especial – BANCO SANTANDER
+Deverá ser realizada a RESTRIÇÃO TOTAL DA VERBA, com desconto integral no cálculo (NÃO APURAR A VERBA)
+• A restrição não deve ser aplicada aos processos com data de dispensa anterior a 2012.
+• Não se aplica restrição para processo que já houve trânsito em julgado no processo principal
+• Incide IRRF
+17.5 PROFESSORES
+• Observar CCTs e verificar as férias letivas, geralmente usufruídas em janeiro e julho
+• DSR é 1/6;
+• Semana de 4,5;
+• Horas extras com adicional de 50
+18.0 PRÊMIOS
+• Somente considerar natureza salarial até 10/11/2017
+o Se transitou em julgado, podemos seguir conforme deferido
+A restrição deve abranger quaisquer verbas pagas a título de metas ou produtividade,
+independentemente da nomenclatura adotada, tais como as rubricas SRV, PPR e AGIR, sem
+prejuízo de outras parcelas de natureza semelhante.
+E-mail Consultivo – 09/03/2026
+19.0 RECLAMADAS ESPECÍFICAS
+19.1 Banco Santander – GRATIFICAÇÃO ESPECIAL
+Deve ser restrito
+E-mail Consultivo -11/02/2025
+Essa restrição não se aplica (não restringe):
+• Casos com sentença transitada em julgado ou
+• Casos com funcionários que foram demitidos antes de 2012
+19.2 Banco Bradesco – VERBA DE REPRESENTAÇÃO
+CARACTERÍSTICA O QUE FAZER
+PRÉ ACÓRDÃO Não apurar
+Calcule apenas se o paradigma:
+PÓS ACÓRDÃO o Mesmo ano de demissão
+o Mesma função
+o Mesmo departamento
+o Salário equivalente
+SE O VALOR FOI DEFERIDO Apurar conforme deferido
+A restrição não se aplica em casos que já transitaram em julgado
+19.3 Banco ITAU
+PLR não integra o salário
+E-mail Consultivo -05/06/2025
+• PODEMOS RESTRINGIR:
+o Diferença Salarial RP 52 – exceto se transitou em julgado
+<<<PÁGINA 14>>>
+19.4 Pirelli/Prometeon(TRT 4) – HORAS EXTRAS, INTRAJORNADA E ADICIONAL NOTURNO
+• HORAS EXTRAS
+Excedente 8ª, ainda que deferida excedente a 6ªhora.
+Lançar nomenclatura de horas extras indicando o excedente apurado (8/44 no lugar do excedente a
+6ª por exemplo)
+• INTRAJORNADA
+Considere sempre 30 minutos de intervalo, a apuração deve ser realizada somente se não houve gozo
+dos 30 minutos de intervalo
+• ADICIONAL NOTURNO
+Considere 45%
+o Caso deferido no título executivo a existência de diferenças a serem pagas a condenação deverá
+ser mantida COM SEPARAÇÃO de valores pagos através do Excel disponibilizado
+internamente.
+19.5 Petrobrás – RMNR E-mail Consultivo -02/04/2025
+NÃO CALCULE nada relacionado ao RMNR (Remuneração Mínima por Nível e Regime), mesmo em casos com
+sentença transitada em julgado.
+• Se existirem outros prêmios no mesmo caso, calcule-os, mas desconsidere completamente qualquer
+valor associado ao RMNR.
+E-mail Consultivo 19/03/2026
+19.6 Comissão – Bancário
+• Caso o deferimento seja relacionado a pagar diferença de comissão já constante no holerite
+podemos apurar.
+• Quando o processo envolver pedido de comissões por venda de produtos ou reflexos salariais das
+comissões em qualquer verba não apura.
+Nos processos com mais de 2 anos de trânsito podemos apurar normalmente.
+20.0 REINTEGRAÇÃO
+• Na ausência de documentos – apurar até a data da decisão
+• Sempre deduzir valores pagos das rescisórias e multa fundiária, podemos deixar os valores negativos
+Se NÃO houver documentação para DEDUÇÃO – NÃO APURAR A VERBA
+<<<PÁGINA 15>>>
+21.0 RESPONSABILIDADE SUBSIDIÁRIA E SOLIDÁRIA
+21.1 SUBSIDIÁRIA
+E-mail Consultivo -04/02/2025
+• Na hipótese onde as reclamadas subsidiárias tenham períodos definidos pelo juízo, apurar
+exclusivamente o período da “nossa reclamada alvo”.
+• EM CASOS DE RECONHECIMENTO DE VÍNCULO
+o Caso demonstrada existência de relação comercial – processo não deve ser apurado
+o Somente devemos seguir com o cálculo, caso a função do contratado, não seja a mesma que
+a da reclamada
+▪ Exemplo: empresas com responsabilidade subsidiária, onde o empregado da empresa A
+prestou serviços de bancário na empresa B (banco) – não seguimos
+21.2 SOLIDÁRIA
+• reconhecimento da responsabilidade solidária e grupo econômico entre as rés, podemos apurar os
+valores relacionados ao reconhecimento de vínculo normalmente
+23.0 TIPOS E METODOLOGIAS DE CÁLCULO
+ANÁLISE DE ADEQUAÇÃO DE
+Execução definitiva Execução provisória
+CÁLCULO CÁLCULO
+• Observar ANDAMENTO
+DIRETRIZES PRINCIPAIS SEM HOMOLOGAÇÃO SEM HOMOLOGAÇÃO PROCESSUAL;
+• Trânsito julgado. PERITO: Analisar cálculo pericial e PERITO: Analisar cálculo pericial e
+• Matéria de ordem pública. observar impugnação da observar impugnação da
+• ADC 58. RECLAMADA RECLAMADA • Verificar DECISÕES
+• FGTS a depositar.  Podemos retificar, caso a  Aplicar premissas de MODIFICATIVAS;
+reclamada TENHA RAZÃO REDUÇÃO de RISCO
+EXECUÇÃO PROVISÓRIA CÁLCULO HOMOLOGADO CÁLCULO HOMOLOGADO
+• Não se limitar ao PEDIDO DA
+ZEEV
+OU
+DEFINITIVA: PERITO/RECLAMADA: PERITO/RECLAMADA:
+• Cálculo do Reclamante • Observar DIRETRIZES • Analisar o cálculo e
+com concordância PRINCIPAIS impugnação da • Verificar se está em execução
+ou RECLAMADA DEFINITIVA ou PROVISÓRIA
+• Sem manifestação da • caso haja erro material que
+diminui o cálculo, devemos • Adequar se a reclamada
+parte contraria:
+copiar tiver razão
+ Analisar se está conforme • Caso esteja correto, aplicar
+julgado, DIRETRIZES PRINCIPAIS e
+ fazer cálculo aplicando premissas de REDUÇÃO de
+premissas e
+RISCO, se necessário
+ c
+d
+o
+im
+pi
+i
+a
+n
+r
+u
+e
+i
+r
+o
+ro
+c
+m
+álc
+a
+u
+te
+lo
+ri
+.
+a l que
+<<<PÁGINA 16>>>
+24.0 TEMAS CRÍTICOS
+Antes de finalizar qualquer cálculo, consulte este resumo de alto nível das decisões mais críticas baseadas em
+risco.
+CENÁRIO NÃO TRANSITOU JÁ TRANSITOU
+Ações Civis Públicas Restringir Ajuizamento do cumprimento de
+Consultivo-03/06/2025 sentença E PRESCRIÇÃO DA PRINCIPAL
+Adicional de Transferência Restringir Seguir o julgado
+Consultivo-23/07/2025
+ATS - Bônus por Tempo de Serviço Restringir Seguir o julgado
+Consultivo-17/02/2025
+Base INSS reclamante Sempre considerar Sempre considerar
+Casos PCS ajuizados após 11/11/2017 Restringir Restrito, mesmo com trânsito
+Consultivo-15/10/2025
+Complemento de Previdência Privada (PREVI, FUNCEF, Restringir Restringir
+etc.) e cálculo atuarial
+Consultivo-21/03/2025
+CTVA – Caixa Econômica Restringir Seguir o julgado
+Deduzir: alvarás e deferimento de Deduzir: alvarás e deferimento de
+liberação – juntar a atualização e o liberação – juntar a atualização e o
+Dedução de ALVARÁS
+relatório no mesmo arquivo relatório no mesmo arquivo
+Enquadramento com legislação BR (casos de cruzeiro e Restringir Restringir
+congêneres)
+Diferença salarial Manter irredutibilidade salarial, salvo Manter irredutibilidade salarial, salvo
+limitação direto na condenação limitação direto na condenação
+Diferença Salarial RP52-ITAU Restringir Seguir o julgado
+Férias em dobro Não se aplica em reflexos, apenas nas Não se aplica em reflexos, apenas nas
+principais principais
+Só deduzir se especificado o valor, se
+FGTS no Saldo REMANESCENTE Não se aplica não, considera tudo no principal
+Integração Vale Alimentação/Cheque Rancho Restringir Restringir
+PDV/PDI Incide IRRF Seguir o julgado
+POM/ REINTREGRAÇÃO Restringir Restringir
+(OBS: Caso haja mais verbas deferidas no processo
+restringir integralmente) - RECLAMDA WMS
+Quebra de caixa Restringir Seguir o julgado
+Recurso de Revista Adequar aos pontos admitidos da Não se aplica
+recda
+Reflexos das verbas principais Se não recebia em holerite, não apura Seguir o julgado
+<<<PÁGINA 17>>>

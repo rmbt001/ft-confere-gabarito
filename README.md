@@ -71,6 +71,19 @@ Total da IA contra o total do PJC, nominal, sem honorários, como no painel. O q
 ("Verbas que não compõem o Principal") fica fora dos dois lados. Dano moral acima de R$ 5.000 é limitado no lado do
 PJC quando a IA aplicou o teto.
 
+## Contexto do Fast Track
+
+O repositório também leva o contexto de trabalho, para o Claude da VM partir do mesmo ponto:
+
+- `CLAUDE.md`: carregado automaticamente pelo Claude Code quando ele abre esta pasta; aponta para o resto.
+- `.claude/memory/`: as memórias (retrato de 07/11/2026), com o índice em `MEMORY.md`.
+- `.claude/agents/`: o agente analista de divergências e o auditor de etapas.
+- `contexto/premissas/`: manual de Premissas de Cálculo, glossário de produção e situação das premissas na esteira.
+- `contexto/modelos/`: modelo de página no visual LIFT.
+
+Para atualizar as memórias depois, copie de novo a pasta `Repos\.claude\memory` (sem os arquivos `*-EC2AMAZ-*`) e
+faça um commit.
+
 ## O que não sobe para o repositório
 
 `.env` (token), `casos/` (os PDFs), `.cache/` (saídas da IA) e `saidas/` estão no `.gitignore`.
