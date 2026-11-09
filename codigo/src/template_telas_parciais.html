@@ -1,0 +1,2263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validação de Cálculo — LIFT × PJC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--salmao:#F2705B;--salmao-claro:#FFE9E3;--preto:#1B1A19;--cinza:#6B6764;
+    --linha:#E9E8EA;--bg:#FFFFFF;--card:#F6F6F7;--ok:#2E9E6B;--ok-bg:#E9F6EF;--ruim:#D8503C;--ruim-bg:#FBE8E4;--neutro:#9C9692;--neutro-bg:#F1F1F3;
+    --text:#1B1A19;--surface:#FFFFFF;
+    /* escala de acurácia (4 faixas, ver FAIXAS_ACC no script) */
+    --acc-bate:#16794F;--acc-meta:#2E9E6B;--acc-perto:#C98A00;--acc-ruim:#D8503C;}
+  /* tema escuro: sobrescreve só as variáveis + os poucos pontos com cor fixa;
+     as regras do tema claro ficam intactas (todas leem as vars). --preto segue
+     sendo o dark literal do header/botões (não flipa). */
+  html.dark{--salmao-claro:#3A241F;--cinza:#9E99A0;--linha:#33333B;--bg:#161619;
+    --card:#202027;--ok-bg:#123024;--ruim-bg:#3A1A14;--neutro-bg:#26262C;
+    --text:#E9E6E2;--surface:#1E1E24;
+    --acc-bate:#4FC58E;--acc-meta:#3FB37E;--acc-perto:#D9A22B;--acc-ruim:#E0705C;}
+  html.dark body{color:var(--text)}
+  html.dark aside,html.dark .cnjsel,html.dark .navside button,html.dark .prosa,
+  html.dark .obs,html.dark .btn-dl,html.dark thead th{background:var(--surface)}
+  html.dark .navside button,html.dark .btn-dl,html.dark th.gia{color:var(--text)}
+  #themebtn{background:#ffffff1c;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-size:15px;cursor:pointer;line-height:1}
+  #themebtn:hover{background:#ffffff33}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Onest,system-ui,sans-serif;color:var(--preto);background:var(--bg);font-size:14px}
+  h1,h2,h3,.fh{font-family:Sora,sans-serif}
+  header{background:var(--preto);color:#fff;padding:14px 26px}
+  .htop{display:flex;justify-content:space-between;align-items:center;gap:20px}
+  header h1{font-size:16px;margin:0}.acc{text-align:right}.acc .num{font-family:Sora;font-size:24px;font-weight:700;color:var(--salmao)}.acc .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.08em;opacity:.8}
+  .cnjtabs{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+  .cnjtabs button{font-family:Onest;font-size:12px;color:#fff;background:#ffffff18;border:0;padding:7px 12px;border-radius:7px;cursor:pointer}
+  .cnjtabs button.on{background:var(--salmao)}
+  .nav{display:flex;gap:8px;margin-top:10px}
+  .nav button{font-family:Onest;font-size:12.5px;color:#fff;background:#ffffff14;border:0;padding:7px 13px;border-radius:7px;cursor:pointer}
+  .nav button.on{background:#ffffff30}
+  .btn-controle{width:100%;text-align:left;font-family:Sora;font-weight:600;font-size:13.5px;color:#fff;background:var(--preto);border:none;padding:10px 13px;border-radius:9px;cursor:pointer;margin-bottom:6px}
+  /* grupos da navegação: o rótulo do grupo diz o RECORTE que as telas dele usam.
+     Com 8 telas, deixar o recorte só no <h3> de dentro foi o que fez o mesmo
+     número aparecer com três valores em telas diferentes. */
+  .navgrp{margin:15px 0 7px;line-height:1.3}
+  .navgrp b{font-family:Sora;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--text)}
+  .navgrp span{display:block;font-size:10.5px;color:var(--cinza);margin-top:2px}
+  .navsep{border:0;height:1px;background:var(--linha);margin:16px 0 12px}
+  .btn-controle:hover{background:var(--salmao)}
+  .btn-controle.on{background:var(--salmao)}
+  input[type=date]{font-family:Onest;font-size:12.5px;padding:6px 8px;border:1px solid var(--linha);border-radius:7px}
+  .cnjsel{width:100%;padding:9px 10px;border:1px solid var(--linha);border-radius:9px;font-family:Onest;font-size:12.5px;background:#fff;margin-bottom:12px;cursor:pointer}
+  .navside{display:flex;flex-direction:column;gap:5px;margin-bottom:16px}
+  .navside button{text-align:left;font-family:Onest;font-size:13.5px;color:var(--preto);background:#fff;border:1px solid var(--linha);padding:9px 12px;border-radius:8px;cursor:pointer}
+  .navside button:hover{border-color:var(--salmao)}
+  .navside button.on{background:var(--salmao-claro);border-color:var(--salmao);font-weight:600}
+  .layout{display:flex;min-height:calc(100vh - 70px)}
+  aside{width:320px;border-right:1px solid var(--linha);padding:18px;overflow:auto;background:#fff}
+  main{flex:1;padding:24px 28px;overflow:auto}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+  .card{background:var(--card);border:1px solid var(--linha);border-radius:10px;padding:10px}
+  .card .n{font-family:Sora;font-size:19px;font-weight:700}.card .l{font-size:10px;color:var(--cinza);text-transform:uppercase}
+  .secttl{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--cinza);margin:14px 0 8px}
+  .vitem{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 11px;border:1px solid var(--linha);border-radius:9px;margin-bottom:6px;cursor:pointer}
+  .vitem:hover{border-color:var(--salmao)}.vitem.sel{border-color:var(--salmao);background:var(--salmao-claro)}
+  .vitem .nm{font-size:12.5px;font-weight:500;line-height:1.25}
+  .badge{font-size:9.5px;font-weight:600;padding:3px 7px;border-radius:20px;white-space:nowrap}
+  .b-ok{background:var(--ok-bg);color:var(--ok)}.b-ruim{background:var(--ruim-bg);color:var(--ruim)}.b-neutro{background:var(--neutro-bg);color:var(--neutro)}
+  h2{margin:0 0 4px;font-size:20px}.sub{font-size:13px;color:var(--cinza)}
+  .prosa{background:#fff;border:1px solid var(--linha);border-left:3px solid var(--salmao);border-radius:11px;padding:18px 22px;line-height:1.6;font-size:14.5px;max-width:900px}
+  .prosa p{margin:0 0 12px}.prosa p:last-child{margin:0}
+  .totais{display:flex;gap:24px;margin:10px 0 16px;flex-wrap:wrap}
+  .totais .v{font-family:Sora;font-size:18px;font-weight:700}.totais .k{font-size:10px;color:var(--cinza);text-transform:uppercase}
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  th,td{padding:7px 9px;text-align:right;font-size:12.5px;border-bottom:1px solid var(--linha)}
+  th{font-size:9.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--cinza);font-weight:600}
+  th:first-child,td:first-child{text-align:left}
+  thead th{position:sticky;top:0;background:#fff}
+  td.ok{color:var(--ok)}td.ruim{color:var(--ruim);font-weight:600}td.vazio{color:var(--neutro)}
+  .grp{border-left:1px solid var(--linha)}
+  th.gia{color:var(--preto)}th.gpjc{color:var(--salmao)}
+  .obs{margin-top:18px;background:#fff;border:1px solid var(--linha);border-left:3px solid var(--cinza);border-radius:10px;padding:14px 18px;line-height:1.55;font-size:14px;max-width:900px}
+  .obs h3{margin:0 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--cinza)}
+  .p4{background:var(--salmao-claro);border:1px solid #F3C9BF;border-radius:10px;padding:14px 18px;margin-top:14px;font-size:13.5px;line-height:1.5;max-width:900px}
+  .p4 b{font-family:Sora}.fer{font-size:10px;color:var(--salmao)}
+  .btn-dl{font-family:Onest;font-size:11.5px;color:var(--preto);background:#fff;border:1px solid var(--linha);padding:5px 11px;border-radius:7px;cursor:pointer;margin:8px 0}
+  .btn-dl:hover{border-color:var(--salmao);color:var(--salmao)}
+  .warn{background:#FFF4E5;border:1px solid #F0C277;border-left:4px solid #E08A00;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13.5px;line-height:1.5;max-width:920px}
+  /* ---- aba Analytics ---- */
+  :root{--azul:#2563C9;--azul-bg:#E7EEFB;--ouro:#C98A00}
+  html.dark{--azul-bg:#16233F}
+  .an-fil{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:2px 0 18px}
+  .an-fil .fl{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--cinza);margin-right:4px}
+  .an-fil button{font-family:Onest;font-size:12px;color:var(--text);background:var(--card);border:1px solid var(--linha);padding:6px 11px;border-radius:7px;cursor:pointer}
+  .an-fil button.on{background:var(--salmao);border-color:var(--salmao);color:#fff}
+  .seccab{display:flex;align-items:baseline;gap:10px;margin:26px 0 4px;flex-wrap:wrap}
+  .seccab h3{font-size:14px;margin:0;text-transform:uppercase;letter-spacing:.06em}
+  .seccab .q{font-size:12.5px;color:var(--cinza)}
+  .sechr{height:2px;background:var(--salmao);width:34px;border-radius:2px;margin-bottom:14px}
+  /* régua do topo do Placar: duas tabelas enxutas, % na meta como número principal */
+  .rg-per{font-size:13.5px;margin:8px 0 14px;color:var(--cinza)}
+  .rg-per b{color:var(--text)}
+  .rg-aviso{color:#8a5a00}
+  .rg-grid{display:grid;grid-template-columns:3fr 2fr;gap:28px;align-items:start;max-width:1200px}
+  .rg-bloco h4{font-family:Sora;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--cinza);margin:0 0 6px}
+  .rg-tab{width:100%;border-collapse:collapse;font-size:14px}
+  .rg-tab th{font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--cinza);text-align:left;padding:6px 10px;border-bottom:2px solid var(--linha);background:none}
+  .rg-tab td{padding:11px 10px;border-bottom:1px solid var(--linha);vertical-align:middle}
+  .rg-tab .rg-num{text-align:right;white-space:nowrap}
+  .rg-nome{font-family:Sora;font-weight:700;font-size:15px}
+  .rg-desc{font-size:12.5px;color:var(--cinza);margin-top:2px}
+  .rg-meta{font-family:Sora;font-weight:700;font-size:26px;color:var(--salmao);line-height:1}
+  .rg-med{font-family:Sora;font-weight:600;font-size:17px}
+  .rg-n{font-family:Sora;font-size:15px}
+  .rg-princ td{background:var(--salmao-claro)}
+  .rg-nota{font-size:12.5px;color:var(--cinza);margin:10px 0 18px;max-width:1200px}
+  .rg-score{display:inline-flex;align-items:center;gap:6px;margin-left:10px}
+  .rg-score select{font:inherit;font-size:13px;padding:5px 8px;border:1px solid var(--linha);border-radius:8px;background:var(--bg)}
+  @media (max-width:900px){.rg-grid{grid-template-columns:1fr}}
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .tile{background:var(--card);border:1px solid var(--linha);border-radius:12px;padding:14px 15px}
+  .tile.hero{background:var(--salmao-claro);border-color:var(--salmao)}
+  .tile .n{font-family:Sora;font-size:27px;font-weight:700;line-height:1;color:var(--salmao)}
+  .tile.plain .n{color:var(--text)}
+  .tile .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--cinza);margin-top:8px;line-height:1.35}
+  .tile .d{font-size:11px;color:var(--cinza);margin-top:5px}
+  .tile .n small{font-size:14px;font-weight:600;color:var(--cinza)}
+  .panel{background:var(--surface);border:1px solid var(--linha);border-radius:14px;padding:18px 20px;margin-top:14px}
+  .panel h3{font-size:13px;margin:0 0 2px}
+  .panel .ph{font-size:11.5px;color:var(--cinza);margin-bottom:14px}
+  .an-grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}
+  .an-grid2b{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .mtx{display:grid;grid-template-columns:96px 1fr 1fr;gap:6px}
+  .mtx .cell{border-radius:10px;padding:12px 13px;border:1px solid var(--linha);background:var(--card)}
+  .mtx .rh,.mtx .ch{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10.5px;color:var(--cinza);font-weight:600;text-align:center;line-height:1.3}
+  .mtx .cell .cn{font-family:Sora;font-weight:700;font-size:23px;line-height:1}
+  .mtx .cell .cl{font-size:10.5px;color:var(--cinza);margin-top:5px;line-height:1.3}
+  .cell.okc{background:var(--ok-bg);border-color:var(--ok)}
+  .cell.grave{background:var(--ruim-bg);border-color:var(--ruim)}
+  .cell.perda{background:var(--neutro-bg);border-color:var(--neutro)}
+  .kpi{display:flex;align-items:baseline;gap:8px;margin-bottom:9px}
+  .kpi .kn{font-family:Sora;font-weight:700;font-size:19px}
+  .kpi .kl{font-size:11.5px;color:var(--cinza)}
+  .kpi.g .kn{color:var(--ruim)}.kpi.p .kn{color:var(--neutro)}
+  .fstep{margin-bottom:7px}
+  .fbar-wrap{display:flex;align-items:center;gap:12px}
+  .fbar-track{flex:1;height:34px;background:var(--card);border:1px solid var(--linha);border-radius:8px;overflow:hidden}
+  .fbar-fill{height:100%;background:var(--salmao);border-radius:7px 0 0 7px;display:flex;align-items:center;padding-left:11px;color:#fff;font-family:Sora;font-weight:600;font-size:13px}
+  .fbar-meta{width:190px;font-size:12px;color:var(--cinza)}
+  .frname{font-size:12px;font-weight:500;color:var(--text)}
+  .fpass{font-size:11px;color:var(--ok);font-weight:600}
+  .an-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;margin-top:10px}
+  .an-legend span{display:inline-flex;align-items:center;gap:6px;color:var(--cinza)}
+  .an-dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+  .an-note{font-size:11.5px;color:var(--cinza);margin-top:12px;line-height:1.5;border-left:2px solid var(--linha);padding-left:11px}
+  .tag{display:inline-block;font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;background:var(--neutro-bg);color:var(--neutro);padding:2px 7px;border-radius:20px;vertical-align:middle}
+  @media(max-width:900px){.tiles{grid-template-columns:1fr 1fr}.an-grid2,.an-grid2b{grid-template-columns:1fr}}
+
+/* diagnóstico do agente: problemas agrupados por tipo */
+.ag-grupo td{background:var(--surface-2,#f6f3f3);padding-top:9px;padding-bottom:7px;text-align:left}
+.ag-p{vertical-align:top;text-align:left;max-width:680px;padding-top:8px;padding-bottom:9px}
+.ag-v{vertical-align:top;text-align:right;white-space:nowrap;padding-top:8px}
+.ag-s{vertical-align:top;text-align:left;padding-top:8px;min-width:150px}
+.ag-l{margin-top:4px;color:var(--cinza);line-height:1.45}
+.ag-l span{display:inline-block;min-width:118px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text);opacity:.75;margin-right:6px}
+.ag-gab{margin-top:6px;padding:7px 10px;border-left:3px solid #7a6fb0;border-radius:0 6px 6px 0;background:var(--surface-2,transparent)}
+.ag-gab-t{font-size:10.5px;font-weight:700;color:#7a6fb0;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div><h1>Validação de Cálculo — LIFT × PJC</h1><div class="sub" id="proc" style="color:#ffffffaa;font-size:12px;margin-top:3px"></div></div>
+    <button id="themebtn" onclick="toggleTema()" title="Alternar tema claro/escuro">🌙</button>
+  </div>
+</header>
+<div class="layout">
+  <aside>
+    <div class="navgrp"><b>Visão geral</b><span>rodada mais recente</span></div>
+    <button id="nv-placar" class="btn-controle" onclick="irPlacar()">📊 Rodada</button>
+    <button id="nv-verbas" class="btn-controle" onclick="irVerbas()">📐 Verbas</button>
+    <button id="nv-consol" class="btn-controle" onclick="irConsol()">🧮 Verba consolidada</button>
+    <button id="nv-naocalc" class="btn-controle" onclick="irNaoCalc()">🚫 Não calculadas</button>
+    <button id="nv-problemas" class="btn-controle" onclick="irProblemas()">🤖 Problemas do agente</button>
+    <button id="nv-premissas" class="btn-controle" onclick="irPremissas()">📋 Premissas do manual</button>
+    <hr class="navsep">
+    <button id="nv-caso" class="btn-controle" onclick="irCaso()">🔎 Análise por caso</button>
+    <div id="caso-nav" style="display:none">
+      <div class="sub" style="margin:0 0 6px;font-size:11px">Processo (digite p/ buscar)</div>
+      <input id="cnjsel" class="cnjsel" list="cnjlist" placeholder="Buscar CNJ…" autocomplete="off"
+             onchange="selCnj(this.value)" onfocus="this.select()">
+      <datalist id="cnjlist"></datalist>
+      <div class="navside">
+        <button id="nv-lista" onclick="ir('lista')">📋 Lista de casos</button>
+        <button id="nv-resumo" onclick="ir('resumo')">Resumo</button>
+        <button id="nv-quadro" onclick="ir('quadro')">Quadro geral</button>
+        <button id="nv-jornada" onclick="ir('jornada')">Jornada / Cartão</button>
+        <button id="nv-hist" onclick="ir('hist')">Histórico Salarial</button>
+        <button id="nv-rodadas" onclick="ir('rodadas')">Rodadas</button>
+      </div>
+      <div class="cards" id="cards"></div>
+      <div id="lista"></div>
+    </div>
+  </aside>
+  <main id="main"></main>
+</div>
+<script>
+const D = /*__DADOS__*/;
+// Caso COMPARÁVEL = tem cálculo de referência carregado E lido de forma confiável.
+// `sem_pjc` = o PJC ainda não subiu (rodou, mas não há gabarito): o caso é visível e
+// analisável pelo lado LIFT, e fica FORA de toda média/funil de acurácia — não é erro
+// do FT, é ausência de referência. Todo agregado de acurácia passa por aqui.
+// `fora_regua` = execução que terminou com ERRO antes do cálculo ("nao_calculado") ou
+// gabarito de outro processo/cálculo ("gabarito_a_corrigir"): também fica FORA de
+// toda média. O gerar_telas já reprova a guarda de extração nesses casos; a
+// condição aqui é explícita para não depender disso.
+const comPJC = c => !c.sem_pjc && c.extracao_confiavel && !c.fora_regua;
+const FORA_REGUA_ROT={nao_calculado:"⛔ Não calculado (execução com erro)",gabarito_a_corrigir:"⚠️ Gabarito a corrigir"};
+// default: caso pré-definido; se não existir, cai no melhor apto (extração confiável, maior acurácia)
+let CNJ = (()=>{
+  const PREF="0011753-36.2022.5.15.0067";
+  if(D.casos[PREF])return PREF;
+  const aptos=D.cnjs.filter(c=>D.casos[c]&&D.casos[c].apto);
+  const conf=aptos.filter(c=>comPJC(D.casos[c]));
+  const top=arr=>arr.slice().sort((a,b)=>((D.casos[b].quadro.assertividade||0)-(D.casos[a].quadro.assertividade||0)))[0];
+  return top(conf.length?conf:aptos) || D.cnjs[0];
+})();
+const caso = () => D.casos[CNJ];
+const brl = v => v==null?"—":v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const esc = s => String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const numf = v => v==null?"—":v.toLocaleString("pt-BR",{maximumFractionDigits:2});
+const pct = v => v==null?"—":numf(v)+"%";
+const mes = c => {if(!c)return"—";const[a,m]=c.split("-");return m+"/"+a;};
+const BADGE={coincide:["b-ok","coincide"],so_ia:["b-ruim","só IA"],so_pjc:["b-ruim","só PJC"]};
+// A comparação é sempre NOMINAL (o "Devido", antes da correção monetária): IA
+// `total_verba` × PJC `devido`. A IA também tem o corrigido (`total_verba_atualizado`)
+// e o PJC a atualização, mas isso é outra camada (índices SELIC/data), não a lógica do FT.
+const NOTA_NOMINAL='<span title="Comparação de valores nominais: o Devido de cada verba, antes da correção monetária (SELIC/juros). A atualização é etapa mecânica e separada.">💡 valores <b>nominais</b> (devido, antes da correção monetária) · <span style="border-bottom:1px dotted">o quê?</span></span>';
+function badgeDe(v){
+  if(v.status==="nao_calc")return["b-neutro","não calculável (IA)"];
+  if(v.status==="so_ia"&&v.motivo_nao_calc==="documental")return["b-neutro","depende de doc"];
+  // sem gabarito nenhuma verba é "só IA" (isso afirmaria que o PJC não a tem):
+  // ou a IA calculou, ou deferiu e não calculou. Sem julgamento de valor.
+  if(caso().sem_pjc)return v.total_ia!=null?["b-neutro","calculada · sem PJC"]:["b-neutro","deferida, não calculada"];
+  if(v.status==="so_ia"&&v.motivo_nao_calc==="no_pjc")return["b-ruim","não calculada (PJC tem)"];
+  return BADGE[v.status]||["b-neutro",v.status];
+}
+const prox=(a,b)=>{if(a==null||b==null)return null;const m=Math.max(Math.abs(a),Math.abs(b))||1;return Math.abs(a-b)/m<0.01;};
+const cls=(ia,pj)=>(ia!=null&&pj!=null)?(prox(ia,pj)?"ok":"ruim"):((ia==null||pj==null)?"vazio":"");
+// --- exportação CSV (separador ; e BOM, abre no Excel pt-BR) ---
+const csvCel=v=>{if(v==null)return"";v=typeof v==="number"?v.toLocaleString("pt-BR",{maximumFractionDigits:2}):String(v);return /[;"\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+function baixarCSV(nome,linhas){
+  const csv="﻿"+linhas.map(r=>r.map(csvCel).join(";")).join("\n");
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  a.download=nome;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(a.href);
+}
+let vAtual=null;
+function baixarHist(qual){
+  const c=caso(), cnj=c.processo.cnj;
+  if(qual==="pjc"){const t=c.historico_pjc;
+    baixarCSV(`${cnj}_historico_PJC.csv`,[["Competência",...t.colunas],...t.linhas.map(l=>[mes(l.competencia),...t.colunas.map(co=>l.valores[co])])]);}
+  else{const t=c.historico_p7;
+    baixarCSV(`${cnj}_historico_P7.csv`,[["Competência",...t.rubricas],...t.linhas.map(l=>[mes(l.competencia),...l.valores])]);}
+}
+function baixarVerba(){
+  const v=vAtual;if(!v||!v.competencias.length)return;
+  const head=["Competência","Base IA","Base IA fixa","Base IA var","Base PJC","Dias IA (P8)","Dias úteis (P8)","Dias PJC (deriv.)","Horas IA","Horas PJC",
+              "Bruto IA","Bruto PJC","Deduzido IA","Deduzido PJC","Δ Deduzido","Valor IA","Valor PJC","Δ Valor","Índice IA","Índice PJC","Δ Índice","Memória IA"];
+  const rows=v.competencias.map(c=>{const prin=c.pjc.find(x=>x.rotulo===v.rotulo_principal)||c.pjc[0]||{};
+    const dv=(c.ia.valor!=null&&prin.valor!=null)?c.ia.valor-prin.valor:null;
+    const dd=(c.ia.compensado!=null||prin.pago!=null)?(c.ia.compensado||0)-(prin.pago||0):null;
+    const dInd=(c.ia.indice!=null&&prin.indice!=null)?c.ia.indice-prin.indice:null;
+    return [mes(c.competencia),c.ia.base,c.ia.base_fixa,c.ia.base_variavel,prin.base,c.ia.dias,(c.cal_p8||{}).uteis,c.dias_pjc,c.ia.horas,prin.horas,
+            c.ia.valor_bruto,prin.valor_bruto,c.ia.compensado,prin.pago,dd,c.ia.valor,prin.valor,dv,c.ia.indice,prin.indice,dInd,c.ia.memoria];});
+  baixarCSV(`${caso().processo.cnj}_${(v.nome_ia||v.nome_pjc||"verba").slice(0,30).replace(/[^\w]+/g,"_")}.csv`,[head,...rows]);
+}
+
+function topo(){
+  // datalist permite busca por dígitos do CNJ (a lista é grande). O label traz
+  // assertividade + tipo p/ orientar a escolha sem abrir o caso.
+  // ordena com APTOS primeiro (depois a ordem original) p/ a lista de busca
+  const ordCnjs=D.cnjs.slice().sort((a,b)=>((D.casos[b]&&D.casos[b].apto?1:0)-(D.casos[a]&&D.casos[a].apto?1:0)));
+  document.getElementById("cnjlist").innerHTML=ordCnjs.map(c=>{
+    const k=D.casos[c], a=k&&k.quadro?k.quadro.assertividade:null;
+    const acc=k&&k.sem_pjc?"⏳ sem PJC":(a!=null?a+"%":"—");
+    return `<option value="${c}" label="${k&&k.apto?"✓ ":""}${c} · ${acc}${k&&k.tipo_calculo?" · "+esc(k.tipo_calculo):""}">`;}).join("");
+  document.getElementById("cnjsel").value=CNJ;
+  const c=caso();
+  document.getElementById("proc").textContent=`${CNJ} · ${c.processo.periodo_calculo||""}`;
+  const vs=c.verbas, cont=t=>vs.filter(v=>v.status===t).length;
+  // sem PJC não existe "coincide/só IA/só PJC" — os cards viram o retrato do lado LIFT
+  const _g=(c.camadas||{}).global||{};
+  const cards=c.sem_pjc
+    ?[[vs.filter(v=>v.total_ia!=null).length,"Calculadas"],[vs.filter(v=>v.total_ia==null).length,"Não calculadas"],["—","PJC"],[brl(c.quadro.total_ia),"Total IA"]]
+    :[[cont("coincide"),"Coincidentes"],[cont("so_ia"),"Só IA"],[cont("so_pjc"),"Só PJC"],[brl(c.quadro.total_ia),"Total IA"],
+      // as duas juntas, de propósito: a diferença entre elas é o erro que o total
+      // esconde (verba acima compensando verba abaixo, verba perdida vs. extra).
+      [`<span style="color:${corAcc(_g.acc)}">${accTxt(_g.acc)}</span>`,"Acurácia global",
+       "Erro somado em módulo, verba a verba, nas três camadas. Verba que só a IA tem ou só o PJC tem conta como erro cheio. Dividido pelo total do PJC, então pode ficar negativo quando o cálculo excede a referência."],
+      [accTxt(c.quadro.assertividade),"Assertividade (só os totais)",
+       "Compara o total da IA com o total do PJC, dividido pelo PJC. É líquida: verba a mais cancela verba a menos — o quanto isso acontece neste caso está no índice de compensação."]];
+  document.getElementById("cards").innerHTML=cards
+    .map(([n,l,t])=>`<div class="card"${t?` title="${esc(t)}"`:""}><div class="n" style="font-size:${typeof n==='string'?'15px':'19px'}">${n}</div><div class="l">${l}</div></div>`).join("");
+  const item=({v,i})=>{const[k,t]=badgeDe(v);
+    return `<div class="vitem" data-i="${i}" onclick="verVerba(${i})"><div class="nm">${v.nome_ia||v.nome_pjc}</div><span class="badge ${k}">${t}</span></div>`;};
+  const idx=vs.map((v,i)=>({v,i}));
+  const princ=idx.filter(x=>!x.v.is_reflexo&&!x.v.is_rescisoria);
+  const resc=idx.filter(x=>x.v.is_rescisoria);
+  const refl=idx.filter(x=>x.v.is_reflexo);
+  const grupo=(tit,arr)=>arr.length?`<div class="secttl" style="margin-top:12px">${tit}</div>`+arr.map(item).join(""):"";
+  document.getElementById("lista").innerHTML=
+    `<div class="secttl">Verbas — principais</div>`+princ.map(item).join("")
+    +grupo("Verbas — rescisórias",resc)
+    +grupo("Reflexos",refl);
+}
+function trocaCnj(c){CNJ=c;topo();ir('resumo');}
+// navCaso = anda na lista de casos (setas ‹ ›). Nome distinto do irCaso() logo
+// abaixo, que só troca o modo do lateral — os dois hoistam e o último venceria.
+function navCaso(delta){const L=_navLista(),i=L.indexOf(CNJ);if(i<0)return;const j=(i+delta+L.length)%L.length;trocaCnj(L[j]);}
+document.addEventListener('keydown',e=>{const t=(e.target||{}).tagName;if(/^(INPUT|TEXTAREA|SELECT)$/.test(t)||e.metaKey||e.ctrlKey||e.altKey)return;if(e.key==='ArrowLeft'){navCaso(-1);e.preventDefault();}else if(e.key==='ArrowRight'){navCaso(1);e.preventDefault();}});
+function selCnj(v){
+  // aceita CNJ exato ou, se a pessoa digitou só dígitos/parte, casa o 1º que contém.
+  if(D.casos[v])return trocaCnj(v);
+  const d=String(v).replace(/\D/g,"");
+  const hit=D.cnjs.find(c=>c===v)||(d&&D.cnjs.find(c=>c.replace(/\D/g,"").includes(d)));
+  if(hit)trocaCnj(hit); else document.getElementById("cnjsel").value=CNJ;
+}
+// modo do lateral: 'controle'|'premissas'|'verbas' (globais) | 'caso' (análise por caso).
+// O bloco per-caso (#caso-nav) só aparece no modo 'caso' — o lateral abre limpo.
+let _MODO="placar";   // tela ativa, p/ re-renderizar ao mexer no escopo (só aptos)
+const _ABAS=["placar","verbas","consol","naocalc","problemas","premissas","caso"];
+function _modo(q){
+  _MODO=q;
+  _ABAS.forEach(k=>{const b=document.getElementById("nv-"+k); if(b)b.classList.toggle("on",k===q);});
+  document.getElementById("caso-nav").style.display=q==="caso"?"block":"none";
+  if(q!=="caso")document.getElementById("proc").textContent="";
+}
+// entrar pelo botão do lateral cai na LISTA (a pergunta é "qual caso?"); entrar
+// clicando num CNJ em qualquer tela cai no resumo daquele caso.
+function irCaso(){_modo("caso");ir('lista');}
+let _SUB="lista";   // sub-tela ativa do modo caso, p/ re-render ao mexer no escopo
+function ir(v){
+  _modo("caso"); _SUB=v;
+  ["lista","resumo","quadro","jornada","hist","rodadas"].forEach(x=>document.getElementById("nv-"+x).classList.toggle("on",x===v));
+  document.querySelectorAll(".vitem").forEach(e=>e.classList.remove("sel"));
+  ({lista:telaLista,resumo:telaResumo,quadro:telaQuadro,jornada:telaJornada,hist:telaHist,rodadas:telaRodadas}[v])();}
+
+// ---- camadas de VALOR: pré-índice (nominal) / pós-índice / pós-juros ----
+// O mesmo cálculo tem três valores. Comparar os três separa "errou a conta" de
+// "errou a atualização": se o nominal bate e o corrigido não, o problema é
+// índice/data-base; se corrigido bate e com-juros não, é marco inicial/taxa.
+const LAYERS_VALOR=[
+  ["nominal","Pré-índice (nominal)","o devido, sem atualização — é onde mora a lógica do FT"],
+  ["corrigido","Pós-índice (corrigido)","nominal × fator do índice de correção monetária (IPCA-E até a distribuição)"],
+  ["juros","Pós-juros","corrigido + juros de mora (SELIC acumulada)"],
+];
+// valores da verba na camada pedida (nominal usa os campos de sempre)
+const valLayer=(v,L)=>L==="nominal"
+  ? {ia:v.total_ia,pjc:v.total_pjc,acc:v.acuracia}
+  : {ia:(v[L]||{}).ia,pjc:(v[L]||{}).pjc,acc:(v[L]||{}).acc};
+// fator aplicado por cada lado, com destaque quando divergem mais de 2%
+function fatorCell(v){
+  const c=v.corrigido||{}, a=c.fator_ia, b=c.fator_pjc;
+  const f=x=>x==null?"—":x.toFixed(3).replace(".",",");
+  if(a==null&&b==null)return '<td class="sub" style="text-align:right">—</td>';
+  const div=(a!=null&&b!=null&&Math.abs(a-b)/Math.max(a,b)>0.02);
+  return `<td style="text-align:right;white-space:nowrap;color:${div?"var(--acc-perto)":"var(--cinza)"}" title="Fator MÉDIO da verba (corrigido ÷ nominal): IA ${f(a)} × referência ${f(b)}.${div?" Divergem mais de 2%, mas atenção: fator médio também muda quando os dois lados apuram valores em MESES diferentes, mesmo com o índice mensal idêntico (efeito de composição). A comparação limpa do índice é competência a competência, na tabela da verba.":""}">${f(a)} / ${f(b)}</td>`;
+}
+// cor da acurácia pela meta de 80%
+// ---- escala ÚNICA de acurácia ----------------------------------------------
+// Quatro faixas, usadas em toda a aplicação. Vermelho só abaixo de 50%: com a
+// mediana da população em ~38%, o corte antigo (vermelho abaixo de 60%, e 70/40
+// nas listas de caso) pintava quase tudo de vermelho e a cor parava de
+// significar alguma coisa. Cor é reservada à ACURÁCIA: Δ em R$ e células de
+// valor ficam neutros, com seta para a direção.
+const FAIXAS_ACC=[
+  [95,"var(--acc-bate)","bate","≥ 95% · bate"],
+  [80,"var(--acc-meta)","na meta","80–95% · dentro da meta de 80%"],
+  [50,"var(--acc-perto)","abaixo da meta","50–80% · abaixo da meta"],
+  [-1e9,"var(--acc-ruim)","não bate","< 50% · não bate"],
+];
+const faixaAcc=a=>a==null?null:FAIXAS_ACC.find(f=>a>=f[0]);
+const corAcc=a=>{const f=faixaAcc(a);return f?f[1]:"var(--cinza)";};
+const rotAcc=a=>{const f=faixaAcc(a);return f?f[3]:"sem acurácia";};
+// legenda reutilizável da escala (uma vez por tela, onde a cor aparece)
+const LEGENDA_ACC=`<div class="an-legend" style="margin-top:8px;font-size:11.5px">${
+  FAIXAS_ACC.map(f=>`<span><i class="an-dot" style="background:${f[1]}"></i> ${f[3]}</span>`).join("")}</div>`;
+const accTxt=a=>a==null?"—":(Math.round(a*10)/10)+"%";
+function quadroTabela(reflexo, titulo){
+  const vs=caso().verbas.filter(v=>(!!v.is_reflexo)===reflexo);
+  if(!vs.length)return"";
+  const cm=(caso().camadas||{});
+  const linhas=vs.map(v=>{
+    const[k,t]=badgeDe(v);
+    const cod=v.codigo||v.codigo_glossario||v.codigo_base||v.codigo_depara||"—";
+    // linha que soma várias verbas do PJC contra uma da IA: mostra quais (0000740-56, HE em 3 verbas)
+    const rp=(v.rotulos_pjc||[]).filter(Boolean);
+    const nome=(v.nome_ia||v.nome_pjc)+(rp.length>1?`<div class="sub" style="margin-top:2px">PJC soma ${rp.length} verbas: ${rp.map(esc).join(" · ")}</div>`:"");
+    const dif=(v.total_ia!=null&&v.total_pjc!=null)?v.total_ia-v.total_pjc:null;
+    // Δ é NEUTRO: a seta dá a direção e o número dá o tamanho. Quão ruim é fica
+    // só na coluna Acurácia — pintar o Δ de vermelho a cada centavo de diferença
+    // deixava a tabela inteira vermelha e a cor sem informação.
+    const dtxt=dif==null?"—":(Math.abs(dif)<0.01?"—"
+      :`${dif>0?"▲":"▼"} ${numf(Math.abs(dif))}`);
+    // no reflexo, a acurácia da verba-base é a chave de leitura: base ruim => erro
+    // herdado (o reflexo multiplica o principal); base certa => erro do reflexo.
+    // reflexo sem par no PJC (só IA / só PJC): não há o que ler com a acurácia da base, e o
+    // número ao lado de "—" parecia a nota do próprio reflexo (Raíra, 16/10/2026)
+    const cb=!reflexo?"":(v.status!=="coincide")?`<td class="sub" style="text-align:right" title="reflexo sem par no PJC">—</td>`:(v.acuracia_base==null
+      ? `<td class="sub" style="text-align:right" title="${esc(v.verba_base||"verba-base")}: sem par no PJC — não dá p/ separar herdado de próprio">—</td>`
+      : `<td style="text-align:right;color:${corAcc(v.acuracia_base)}" title="${esc(v.verba_base||"")} bate ${v.acuracia_base}% neste caso">${v.acuracia_base}%</td>`);
+    return `<tr><td style="white-space:nowrap;color:var(--cinza)">${cod}</td><td>${nome}</td>
+      <td>${brl(v.total_ia)}</td><td>${brl(v.total_pjc)}</td>
+      <td class="sub" title="${dif!=null&&dif>0?"o LIFT calculou a mais":(dif!=null&&dif<0?"o LIFT calculou a menos":"")}">${dtxt}</td>
+      <td style="font-weight:600;color:${corAcc(v.acuracia)}" title="${rotAcc(v.acuracia)}">${v.acuracia!=null?v.acuracia+"%":"—"}</td>${cb}
+      ${fatorCell(v)}<td><span class="badge ${k}">${t}</span></td></tr>`;}).join("");
+  const sp=caso().sem_pjc;
+  const tia=vs.reduce((s,v)=>s+(v.total_ia||0),0), tpjc=sp?null:vs.reduce((s,v)=>s+(v.total_pjc||0),0);
+  // acurácia do subtotal = erro em MÓDULO da camada (não o líquido do subtotal)
+  const accSub=reflexo?(cm.reflexo||{}).acc
+    :(()=>{const p=cm.principal||{},r=cm.rescisoria||{};const den=(p.den||0)+(r.den||0);
+           return den?100*(1-((p.dif_abs||0)+(r.dif_abs||0))/den):null;})();
+  const nota=reflexo
+    ? `<div class="sub" style="margin:0 0 6px;max-width:900px">Reflexos calculados em código sobre cada verba-base. A coluna <b>Acur. base</b> traz a acurácia da verba-base <b>neste caso</b> — sem ela o número do reflexo engana: o reflexo multiplica o principal, então erro de base aparece de novo no 13º, nas férias, no aviso e no DSR (1 erro contado 5 vezes).</div>`
+    : "";
+  return `<h3 style="margin:18px 0 6px">${titulo}</h3>${nota}
+    <table><thead><tr><th>Código</th><th>Verba (nome na IA)</th><th>Valor IA</th><th>Valor PJC</th><th>Δ</th><th>Acurácia</th>${reflexo?'<th style="text-align:right" title="acurácia da verba-base neste caso">Acur. base</th>':""}<th style="text-align:right" title="fator de correção monetária aplicado de cada lado (IA / referência). Vermelho = divergem mais de 2%, ou seja índice ou data-base diferente">Fator índice</th><th>Status</th></tr></thead>
+      <tbody>${linhas}</tbody>
+      <tfoot><tr style="font-weight:700"><td></td><td>Subtotal</td><td>${brl(tia)}</td><td>${brl(tpjc)}</td>
+        <td class="sub">${sp?"—":(tia-tpjc>0?"▲ ":"▼ ")+numf(Math.abs(tia-tpjc))}</td><td style="color:${corAcc(accSub)}" title="acurácia da camada (${rotAcc(accSub)}): erro somado em módulo ÷ valor do PJC de cada verba, não cancela">${accTxt(accSub)}</td>${reflexo?"<td></td>":""}<td></td><td></td></tr></tfoot></table>${LEGENDA_ACC}`;
+}
+// ---- acurácia por camada + GLOBAL (do caso) ----
+// A assertividade compara TOTAIS e por isso cancela erro (verba 40% acima anula
+// verba 40% abaixo). A acurácia global soma o erro em MÓDULO verba a verba, nas
+// três camadas, contando verba só-IA/só-PJC como erro cheio. Fica ≤ a
+// assertividade, salvo quando alguma verba do PJC é negativa.
+// O índice de compensação do caso mede o erro que se cancela no total.
+const CAMADAS=[["principal","Principais (mensais · P10a)","var(--salmao)"],
+               ["rescisoria","Rescisórias / valor fixo (P10b)","#2563C9"],
+               ["reflexo","Reflexos (13º, férias, aviso, DSR)","#C98A00"]];
+// As duas colunas de % respondem perguntas diferentes, e é a diferença entre elas
+// que explica o caso: "acurácia da camada" conta verba perdida/extra como erro
+// cheio (mede escopo + valor juntos); "valor quando casa" olha só as verbas que os
+// dois lados têm (mede valor puro). Uma alta e a outra baixa = problema de escopo.
+const LEG_CAMADAS=`<div class="sub" style="margin:6px 0 10px;max-width:940px;border-left:2px solid var(--salmao);padding-left:10px">
+  <b>As duas colunas de % respondem perguntas diferentes:</b>
+  <div style="margin-top:6px"><b>Acurácia da camada:</b> “de todo o dinheiro desta camada, quanto está no lugar certo?” Compara verba por verba e soma todos os erros, sem deixar um anular o outro. Verba que só um dos dois lados tem conta pelo valor inteiro.</div>
+  <div style="margin-top:5px"><b>Valor quando casa:</b> “quando os dois lados têm a mesma verba, o valor bate?” Ignora verba faltando e verba sobrando (é a mesma medida da aba “Acurácia por verba”).</div>
+  <div style="margin-top:6px">Se a segunda está bem acima da primeira, a <b>conta</b> está razoável e o problema é a <b>lista de verbas</b>. Se as duas estão baixas, o problema é a conta mesmo.</div></div>`;
+function blocoCamadas(){
+  const c=caso(), cm=c.camadas; if(!cm||c.sem_pjc)return"";
+  const g=cm.global||{};
+  const linha=([k,rot,cor])=>{const e=cm[k]; if(!e||!e.n)return"";
+    const pesoIA=g.ia?Math.round(100*e.ia/g.ia):null;
+    const medV=_mediana(e.accs||[]);
+    const baseOk=(k==="reflexo")?_mediana(e.accs_base_ok||[]):null;
+    return `<tr><td><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${cor};margin-right:7px"></span>${rot}</td>
+      <td style="text-align:right">${e.n_par} de ${e.n}</td>
+      <td style="text-align:right">${brl(e.ia)}${pesoIA!=null?` <span class="sub">${pesoIA}% do valor</span>`:""}</td>
+      <td style="text-align:right">${brl(e.pjc)}</td>
+      <td style="text-align:right;font-weight:700;color:${corAcc(e.acc)}">${accTxt(e.acc)}</td>
+      <td style="text-align:right">${accTxt(medV)}${medV!=null?` <span class="sub">(${e.n_par})</span>`:""}</td>
+      <td style="text-align:right">${k==="reflexo"?(baseOk!=null?`<b style="color:${corAcc(baseOk)}">${accTxt(baseOk)}</b> <span class="sub">(${(e.accs_base_ok||[]).length})</span>`:'<span class="sub">nenhuma base ≥95%</span>'):'<span class="sub">—</span>'}</td></tr>`;};
+  const canc=(g.acc!=null&&c.quadro.assertividade!=null)?Math.round((c.quadro.assertividade-g.acc)*10)/10:null;
+  const medG=_mediana(g.accs||[]);
+  const escopo=(medG!=null&&g.acc!=null)?Math.round((medG-g.acc)*10)/10:null;
+  return `<h3 style="margin:20px 0 6px">Acurácia global e por camada</h3>
+    ${LEG_CAMADAS}
+    <table><thead><tr><th>Camada</th><th style="text-align:right" title="verbas que casaram com o PJC / total de verbas da camada">Verbas c/ par</th><th style="text-align:right">IA</th><th style="text-align:right">PJC</th>
+      <th style="text-align:right" title="Σ|IA−PJC| ÷ Σ |PJC|, todas as verbas da camada (verba só-IA = erro cheio; verba só-PJC entra no denominador)">Acurácia da camada</th>
+      <th style="text-align:right" title="mediana da acurácia das verbas que os dois lados têm — mede só o valor">Valor quando casa</th>
+      <th style="text-align:right" title="reflexos cuja verba-base bate ≥95% — o que mede o reflexo em si, sem o erro herdado da base">Reflexo c/ base certa</th></tr></thead>
+      <tbody>${CAMADAS.map(linha).join("")}</tbody>
+      <tfoot><tr style="font-weight:700"><td>GLOBAL (todas as camadas)</td><td style="text-align:right">${g.n_par} de ${g.n||0}</td>
+        <td style="text-align:right">${brl(g.ia)}</td><td style="text-align:right">${brl(g.pjc)}</td>
+        <td style="text-align:right;color:${corAcc(g.acc)}">${accTxt(g.acc)}</td>
+        <td style="text-align:right">${accTxt(medG)}</td><td></td></tr></tfoot></table>
+    <div class="sub" style="margin-top:8px;max-width:940px"><b>Leitura deste caso:</b> assertividade (só os totais) <b>${accTxt(c.quadro.assertividade)}</b>${canc!=null&&canc>=3?` → <b>${canc} pontos</b> disso é erro que se cancela no total`:""} · acurácia global <b style="color:${corAcc(g.acc)}">${accTxt(g.acc)}</b>${escopo!=null&&escopo>=5?` · quando a verba casa, o valor bate <b>${accTxt(medG)}</b> → os <b>${escopo} pontos</b> de diferença são verba a mais/a menos (escopo), não conta errada`:""}.</div>`;
+}
+// tabela das três camadas de valor do CASO: onde a divergência entra
+function blocoValor(){
+  const c=caso(), L=(c.quadro||{}).layers; if(!L||c.sem_pjc)return"";
+  const linhas=LAYERS_VALOR.map(([k,rot,desc])=>{const e=L[k]||{};
+    return `<tr><td><b>${rot}</b><div class="sub" style="font-size:11px">${desc}</div></td>
+      <td style="text-align:right">${brl(e.total_ia)}</td><td style="text-align:right">${brl(e.total_pjc)}</td>
+      <td style="text-align:right;font-weight:700;color:${corAcc(e.acuracia_global)}">${accTxt(e.acuracia_global)}</td>
+      <td style="text-align:right">${accTxt(e.assertividade)}</td></tr>`;}).join("");
+  // quantas verbas aplicam fator diferente do da referência (>2%)
+  const comFator=c.verbas.filter(v=>(v.corrigido||{}).fator_ia!=null&&(v.corrigido||{}).fator_pjc!=null);
+  const divFator=comFator.filter(v=>Math.abs(v.corrigido.fator_ia-v.corrigido.fator_pjc)/Math.max(v.corrigido.fator_ia,v.corrigido.fator_pjc)>0.02);
+  // sinal LIMPO do índice: competência a competência (o fator médio da verba
+  // também muda por composição — meses diferentes apurados de cada lado)
+  let nComp=0,nDivComp=0;
+  c.verbas.forEach(v=>(v.competencias||[]).forEach(x=>{
+    const ii=x.ia.indice, ip=((x.pjc||[])[0]||{}).indice;
+    if(ii==null||ip==null)return; nComp++;
+    if(Math.abs(ii-ip)/Math.max(ii,ip)>0.02)nDivComp++;}));
+  const nota=comFator.length
+    ? `Índice comparável <b>competência a competência</b> em ${nComp} mês(es); <b style="color:${nDivComp?"var(--ruim)":"var(--ok)"}">${nDivComp}</b> com diferença acima de 2% — esse é o sinal limpo de <b>índice ou data-base</b> diferente. `
+      +`(A coluna “Fator índice” das tabelas é o fator <b>médio da verba</b>: ${divFator.length} de ${comFator.length} verbas divergem mais de 2%, mas parte disso é composição — os dois lados apurando valores em meses diferentes, com o mesmo índice mensal.)`
+    : "Sem fator comparável neste caso (a referência não trouxe o corrigido por verba).";
+  const semJuros=LAYERS_VALOR.every(([k])=>k!=="juros"||(L.juros||{}).total_pjc==null);
+  return `<h3 style="margin:20px 0 6px">Camadas de valor — onde a divergência entra</h3>
+    <div class="sub" style="margin-bottom:8px;max-width:940px">O mesmo cálculo tem três valores. Se o <b>nominal</b> bate e o <b>corrigido</b> não, o problema é o índice ou a data-base. Se o corrigido bate e o <b>com juros</b> não, é o marco inicial ou a taxa. Fonte: lado LIFT nas tabelas consolidadas; lado referência = <b>devido × índice acumulado</b> do próprio .pjc (exato) e, nos juros, a linha da verba no Resumo do PDF.</div>
+    <table><thead><tr><th>Camada</th><th style="text-align:right">IA</th><th style="text-align:right">Referência</th>
+      <th style="text-align:right" title="erro em módulo, verba a verba">Acurácia global</th>
+      <th style="text-align:right" title="compara só os totais">Assertividade</th></tr></thead><tbody>${linhas}</tbody></table>
+    <div class="sub" style="margin-top:6px;max-width:940px">${nota}${semJuros?" A camada pós-juros da referência depende do Resumo do PDF; sem PDF ao lado do .pjc ela fica vazia.":""}</div>`;
+}
+function blocoQuadros(){
+  const q=caso().quadro, sp=caso().sem_pjc;
+  const g=(caso().camadas||{}).global||{};
+  const totalLinha = sp
+    ? `TOTAL GERAL — IA ${brl(q.total_ia)} × PJC <span style="color:var(--cinza)">—</span> · <span style="color:var(--cinza)">sem assertividade (PJC não carregado)</span>`
+    : `TOTAL GERAL — IA ${brl(q.total_ia)} × PJC ${brl(q.total_pjc)} · <span style="color:var(--salmao)">assertividade ${q.assertividade!=null?q.assertividade+"%":"—"}</span> · <span style="color:${corAcc(g.acc)}">acurácia global ${accTxt(g.acc)}</span>`;
+  return quadroTabela(false,"Verbas")+quadroTabela(true,"Reflexos")
+    +`<div style="margin-top:14px;font-family:Sora;font-weight:700;font-size:15px">${totalLinha}</div>`
+    +`<div class="sub" style="margin-top:4px">${NOTA_NOMINAL}</div>`
+    +blocoCamadas()+blocoValor();
+}
+// ---- dados cadastrais: cabeçalho da referência × dados iniciais (P1) ----
+// Vem antes de qualquer verba: admissão, demissão e recorte do período amarram
+// TODO o cálculo. Divergiu aqui, a acurácia das verbas mede outro contrato.
+const _CAD_ST={bate:["✓ bate","var(--ok)"],parcial:["≈ grafia diferente","var(--acc-perto)"],
+  diverge:["✕ divergem","var(--ruim)"],sem_lift:["sem dado no LIFT","var(--cinza)"],
+  // período: não é certo/errado, é ESCOPO — cada lado apura um intervalo
+  escopo_maior:["◧ referência apura mais período","var(--acc-perto)"],
+  escopo_menor:["◨ referência apura menos período","var(--acc-perto)"],
+  // no PJC o "fim" é a data de término do CÁLCULO (atualização), não o fim do
+  // contrato — referência indo além do LIFT ali é esperado, não divergência
+  ref_atualizada:["≈ referência atualizada (vai além)","var(--cinza)"],
+  sem_pjc:["sem dado na referência","var(--cinza)"],sem_ambos:["sem dado","var(--cinza)"]};
+function blocoCadastro(){
+  const c=caso(), cad=c.cadastro;
+  if(!cad||!cad.linhas||!cad.linhas.length)return"";
+  if(!cad.n_comparados)
+    return `<div class="obs" style="margin-top:18px"><h3>Dados cadastrais</h3>Sem par para comparar: ${c.sem_pjc?"o cálculo de referência ainda não subiu":"o cabeçalho da referência e/ou os dados iniciais (P1) não foram lidos"}.</div>`;
+  const linhas=cad.linhas.map(l=>{
+    const[txt,cor]=_CAD_ST[l.status]||["—","var(--cinza)"];
+    const d=l.delta_dias;
+    const dtxt=(d!=null&&d!==0)?`<span style="color:var(--ruim)">${d>0?"+":""}${d} dia${Math.abs(d)!==1?"s":""}</span>`:(d===0?'<span class="sub">—</span>':'<span class="sub">—</span>');
+    return `<tr><td>${esc(l.campo)}</td>
+      <td>${esc(l.lift||"—")}${l.fonte_lift?` <span class="sub" title="fonte da data no P1">(${esc(l.fonte_lift)})</span>`:""}</td>
+      <td>${esc(l.pjc||"—")}</td><td style="text-align:right">${dtxt}</td>
+      <td style="color:${cor};white-space:nowrap">${txt}${l.motivo?`<div class="sub" style="font-size:11px;white-space:normal;max-width:260px">${esc(l.motivo)}</div>`:""}</td></tr>`;}).join("");
+  const grave=(cad.graves||[]).length>0, nEsc=cad.n_escopo||0;
+  const alertas=[
+    grave?`<div class="sub" style="color:var(--ruim)"><b>Contrato diferente</b> (admissão/demissão): a acurácia deste caso não é comparável até isso fechar.</div>`:"",
+    nEsc?`<div class="sub" style="color:var(--acc-perto)"><b>Escopo do período diferente</b>: os dois lados apuram um nº diferente de meses, então toda verba mensal diverge por escopo, não por erro de conta.</div>`:"",
+    (cad.n_diverge&&!grave&&(cad.divergentes||[]).includes("reclamada"))?`<div class="sub">Divergência só na parte: costuma ser litisconsórcio/tomador — a referência nomeia quem paga, o P1 o empregador.</div>`:""
+  ].filter(Boolean).join("");
+  const cab=(cad.n_diverge||nEsc)
+    ? `<div style="color:${grave?"var(--ruim)":"var(--acc-perto)"};font-weight:700">${grave?"✕":"⚠"} ${cad.n_diverge} campo(s) divergem${nEsc?` · ${nEsc} com escopo de período diferente`:""} (de ${cad.n_comparados} comparáveis)</div>`+alertas
+    : `<div style="color:var(--ok);font-weight:700">✓ os ${cad.n_comparados} campos comparáveis conferem</div>`;
+  const extra=[cad.data_prescricao?`prescrição derivada pelo LIFT: <b>${cad.data_prescricao}</b>`:"",
+    cad.causa_afastamento?`causa do afastamento: ${esc(cad.causa_afastamento)}`:"",
+    cad.cnpj_reclamada?`CNPJ da reclamada: ${esc(cad.cnpj_reclamada)}`:""].filter(Boolean).join(" · ");
+  return `<details class="p4" ${(grave||nEsc)?"open":""} style="margin-top:18px">
+    <summary style="cursor:pointer;font-family:Sora;font-weight:700;font-size:14px">Dados cadastrais — LIFT (P1) × cálculo de referência <span style="font-family:Onest;font-weight:400;color:var(--cinza)">— partes, contrato e período apurado</span></summary>
+    <div style="margin-top:8px">${cab}</div>
+    <table style="margin-top:8px"><thead><tr><th>Campo</th><th>LIFT (P1)</th><th>Referência (PJC)</th><th style="text-align:right">Δ</th><th>Status</th></tr></thead><tbody>${linhas}</tbody></table>
+    ${extra?`<div class="sub" style="margin-top:6px">${extra}</div>`:""}
+    <div class="sub" style="margin-top:4px">O “período apurado” da referência é o período do cálculo do PJC — que já é o recorte não prescrito. Grafia de nome de empresa (LTDA/S.A., filial) não conta como divergência.</div>
+  </details>`;
+}
+function listaMotivos(ms){return (ms&&ms.length)?`<ul style="margin:6px 0 0 18px">${ms.map(m=>`<li>${esc(m)}</li>`).join("")}</ul>`:"";}
+function bannerExtracao(){
+  const c=caso(), dg=c.diag_extracao||{};
+  if(c.extracao_confiavel)return"";
+  // fora da régua tem banner próprio: não é o parser que falhou
+  if(c.fora_regua==="nao_calculado")return `<div class="warn"><b>⛔ Não calculado — a execução terminou com ERRO.</b> ${esc(c.motivo_fora_regua||"")}. Sem P10 não há valor da IA para comparar: o caso está <b>fora da régua</b> (assertividade, mediana e totais de comparação). O PJC e o deferimento do P4 continuam visíveis abaixo.</div>`;
+  if(c.fora_regua==="gabarito_a_corrigir")return `<div class="warn"><b>⚠️ Gabarito a corrigir.</b> ${esc(c.motivo_fora_regua||"")}. A comparação abaixo é contra o cálculo errado; o caso fica <b>fora da régua</b> até o arquivo certo subir para <code>casos/${esc(c.processo.cnj)}/</code>.</div>`;
+  // compat: JSONs antigos não têm motivos_extracao — cai no texto do over-extração.
+  const ms=dg.motivos_extracao||[`o Devido somado (${brl(dg.devido_total)}) supera o Valor Corrigido (${brl(dg.corrigido_total)}).`];
+  return `<div class="warn"><b>⚠️ Extração do PJC pouco confiável neste caso.</b> As comparações por verba e a assertividade deste caso podem estar incorretas até o ajuste do parser.${listaMotivos(ms)}</div>`;
+}
+function bannerHist(){
+  const c=caso(), dg=c.diag_extracao||{};
+  if(c.hist_confiavel)return"";
+  return `<div class="warn"><b>⚠️ Histórico salarial do PJC pouco confiável.</b> A comparação de salário-base e prêmio abaixo pode estar incompleta neste layout.${listaMotivos(dg.motivos_hist)}</div>`;
+}
+function bannerSemPjc(){
+  // Caso rodou no LIFT e o cálculo de referência ainda não subiu. Não é falha do
+  // FT nem de parser: é ausência de gabarito. Deixa explícito o que dá e o que
+  // NÃO dá para concluir aqui, para ninguém ler "só IA" como super-identificação.
+  const c=caso(); if(!c.sem_pjc)return"";
+  return `<div class="warn"><b>⏳ Cálculo de referência (PJC) ainda não carregado neste caso.</b>
+    Todos os campos do PJC e a acurácia ficam vazios, e o caso não entra em nenhuma média do painel.
+    <ul style="margin:6px 0 0 18px">
+      <li><b>Dá para analisar:</b> verbas deferidas (P4), o que o LIFT calculou e como (P9/P10), verbas não calculáveis e a <b>aptidão ao Fast Track</b> — que não depende do PJC.</li>
+      <li><b>Não dá para concluir:</b> valor certo ou errado, verba a mais ou a menos, nem a curadoria de “provável apuração via cartão” (essa lê o PJC).</li>
+    </ul>
+    Quando o PDF/.pjc subir para <code>casos/${esc(c.processo.cnj)}/</code>, o caso passa a ser comparado automaticamente.</div>`;
+}
+function bannerFonte(){
+  // Ponto de atenção: caso sem .pjc nativo -> leitura pelo PDF (menos preciso e
+  // sujeito a artefato de nome, ex.: art. 384 que o PJC chama de "HE C/ 100%").
+  const c=caso();
+  if(c.fonte_ref!=="pdf")return"";
+  return `<div class="warn"><b>⚠️ .pjc nativo não encontrado neste caso — leitura via PDF.</b> Menos preciso e sujeito a artefatos de layout/nome no casamento das verbas (ex.: o art. 384, que o PJC rotula como “Horas Extras C/ 100%”). Baixar o .pjc deste caso resolve na fonte.</div>`;
+}
+function blocoObsCalculo(c){
+  // "Observações de cálculo" do formulário Zeev: metodologia que o cálculo de
+  // REFERÊNCIA declarou (período limitado a holerites, ausências deduzidas,
+  // IPCA-E/SELIC...). Ajuda a explicar a origem de uma divergência.
+  const t=c.observacoes_calculo; if(!t)return"";
+  const linhas=t.split(/\r?\n/).map(l=>l.trim()).filter(Boolean)
+    .map(l=>`<div style="margin:5px 0">${esc(l)}</div>`).join("");
+  return `<details class="p4" open style="margin-top:18px">
+    <summary style="cursor:pointer;font-family:Sora;font-weight:700;font-size:14px">Observações de cálculo do PJC <span style="font-family:Onest;font-weight:400;color:var(--cinza)">— metodologia declarada pela referência (Zeev)</span></summary>
+    <div style="margin-top:10px;line-height:1.5">${linhas}</div>
+  </details>`;
+}
+// HE somadas dos dois lados: o PJC costuma pôr toda hora acima da jornada numa linha
+// só, e o casamento verba a verba faz a verba de além da 8ª parecer "só IA".
+function blocoFamiliaHE(c){
+  const f=c.familia_he; if(!f) return "";
+  const dif=(f.total_ia||0)-(f.total_pjc||0);
+  const ia=f.verbas_ia.map(v=>`${esc(v.codigo)} ${brl(v.total)}${v.status==="so_ia"?' <span class="sub">(aparece como só IA)</span>':""}`).join(" + ");
+  const pj=f.linhas_pjc.length?f.linhas_pjc.map(l=>`${esc(l.nome)} ${brl(l.total)}`).join(" + "):"nenhuma linha de hora extra";
+  return `<div style="background:#f4f6fb;border-left:4px solid #3b5bdb;border-radius:8px;padding:10px 14px;margin:0 0 16px">
+    <div style="font-family:Sora;font-weight:700;font-size:13.5px">Horas extras somadas (7ª/8ª + além da 8ª): IA ${brl(f.total_ia)} × PJC ${brl(f.total_pjc)}
+      · diferença ${brl(dif)}${f.assertividade!=null?` · assertividade ${accTxt(f.assertividade)}`:""}</div>
+    <div style="font-size:12.5px;margin-top:4px"><b>IA:</b> ${ia}</div>
+    <div style="font-size:12.5px"><b>PJC:</b> ${pj}</div>
+    <div class="sub" style="margin-top:4px">Principal, sem reflexos. Compare por aqui antes de ler as verbas de hora extra uma a uma.</div></div>`;
+}
+function bannerAptidao(c){
+  const apto=!!c.apto, cor=apto?'#1a7f37':'#b3261e', bg=apto?'#e8f5ea':'#fbe9e7';
+  const rotulo=apto?'✓ APTO':'✕ NÃO APTO';
+  const cat=c.categoria_inaptidao?` — <b>${esc(c.categoria_inaptidao)}</b>`:(apto?'':' — motivo não classificado');
+  const mots=(c.motivos_inaptidao&&c.motivos_inaptidao.length)
+    ? `<ul style="margin:6px 0 0;padding-left:18px;font-size:12.5px">${c.motivos_inaptidao.map(m=>`<li><b>${esc(m.categoria||'')}</b>${m.detalhe?': '+esc(m.detalhe):''}</li>`).join("")}</ul>` : '';
+  const dproc=c.data_processamento?`Data do cálculo: <b>${esc(c.data_processamento)}</b>`:'sem data de cálculo';
+  const dval=c.data_validade_calculo?` · validade ${esc(c.data_validade_calculo)}`:'';
+  const tipo=c.tipo_calculo?` · ${esc(c.tipo_calculo)}`:'';
+  // avisos sobre o gabarito (pedidos improcedentes, linhas fora do principal): não mudam a aptidão
+  const alertas=(c.alertas_pjc||[]).map(a=>`<div style="background:#fff4d6;border-left:4px solid #b7791f;border-radius:8px;padding:9px 14px;margin:-8px 0 16px">
+    <div style="font-family:Sora;font-weight:700;font-size:13px;color:#8a5a00">⚠ ${esc(a.titulo)}</div>
+    <div style="font-size:12.5px;margin-top:3px">${esc(a.detalhe)}</div></div>`).join("");
+  return `<div style="background:${bg};border-left:4px solid ${cor};border-radius:8px;padding:11px 14px;margin-bottom:16px">
+    <div style="font-family:Sora;font-weight:700;font-size:14px;color:${cor}">${rotulo}${cat}</div>
+    ${mots}
+    <div class="sub" style="margin-top:7px">${dproc}${dval}${tipo}</div></div>${alertas}`;
+}
+function telaResumo(){
+  const _c=caso();
+  const _tipo=_c.tipo_calculo?` · <b>${esc(_c.tipo_calculo)}</b>${_c.calculo_adequacao?' ⟳ adequação':''}${_c.data_validade_calculo?` · validade ${_c.data_validade_calculo}`:''}`:" · tipo de cálculo não encontrado na esteira";
+  const _L=_navLista(), _i=_L.indexOf(CNJ), _nav=`<span style="display:inline-flex;align-items:center;gap:6px;margin-left:2px">
+      <button onclick="navCaso(-1)" title="caso anterior (tecla ←)" style="font-family:Sora;font-size:15px;line-height:1;color:#fff;background:var(--salmao);border:0;border-radius:7px;padding:4px 10px;cursor:pointer">‹</button>
+      <button onclick="navCaso(1)" title="próximo caso (tecla →)" style="font-family:Sora;font-size:15px;line-height:1;color:#fff;background:var(--salmao);border:0;border-radius:7px;padding:4px 10px;cursor:pointer">›</button>
+      <span class="sub">caso ${_i+1}/${_L.length} · use ← →</span></span>`;
+  document.getElementById("main").innerHTML=`<h2 style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">Resumo da comparação ${_nav}</h2>
+    <div class="sub" style="margin-bottom:16px">${_c.processo.cnj}${_tipo}</div>
+    <div style="display:flex;align-items:center;gap:9px;margin:0 0 14px;flex-wrap:wrap">
+      <span class="sub" style="font-size:11.5px">Jornada:</span>${chipJornada(_c)}
+      ${(_c.jornada&&_c.jornada.cartao)?`<span class="sub" style="font-size:11.5px">${_c.jornada.cartao.n_comp} meses · ${_c.jornada.cartao.n_dias} dias de batida</span>`:""}
+      <a href="javascript:ir('jornada')" style="color:var(--salmao);font-size:11.5px">abrir jornada / cartão ↗</a></div>
+    ${bannerAptidao(_c)}
+    ${blocoConfianca(_c)}
+    ${blocoAgente(_c)}
+    ${bannerSemPjc()}
+    ${bannerFonte()}
+    ${bannerExtracao()}
+    ${bannerHist()}
+    ${blocoRodadas()}
+    ${blocoCadastro()}
+    ${blocoFamiliaHE(_c)}
+    ${blocoQuadros()}
+    <div class="prosa" style="margin-top:18px">${caso().resumo_texto.map(t=>`<p>${t}</p>`).join("")}</div>
+    ${blocoObsCalculo(_c)}
+    <p class="sub" style="margin-top:14px">Clique numa verba à esquerda para a comparação competência a competência.</p>`;
+}
+function telaQuadro(){
+  document.getElementById("main").innerHTML=`<h2>Quadro geral dos cálculos</h2>
+    <div class="sub" style="margin-bottom:14px">Verbas principais e reflexos, separados — IA × PJC. ${NOTA_NOMINAL}</div>${blocoQuadros()}`;
+}
+// ASSERTIVIDADE de uma rodada contra a referência, na definição do projeto:
+// 1 − |IA − PJC| ÷ PJC (o `assert_geral` do gerar_telas), a mesma régua do
+// card de assertividade do Placar.
+// Denominador é o PJC, a referência, para que o erro do Fast Track seja medido
+// contra o gabarito. A medida não tem piso: um caso que calcula 20× resulta em
+// assertividade de −1800%. Por isso toda leitura agregada deve se basear na
+// mediana, não na média.
+const asrtRodada=(ia,pjc)=>{
+  if(ia==null||pjc==null)return null;   // sem âncora continua "—", nunca 0 (D8)
+  const num=Math.abs(ia-pjc), den=Math.abs(pjc);
+  return den?100*(1-num/den):(num?0:100);
+};
+// Âncora das rodadas: o total da referência SEM REFLEXOS.
+// O `total_lift` de uma rodada é principal + rescisórias e NÃO tem reflexo (que
+// é calculado em código, fora do P10). Ancorar no total cheio do PJC — que TEM
+// reflexo — compara coisas diferentes: o sinal do delta invertia em 23% dos
+// casos reprocessados, e caso que melhorou 24 pontos aparecia caindo 34.
+const ancoraRodada=c=>{
+  const q=c.quadro||{};
+  if(q.total_pjc_base!=null)return q.total_pjc_base;
+  // Sem o campo (JSON de um render anterior), soma direto as verbas não-reflexo
+  // do gabarito — mesmo resultado, e a tela não fica errada esperando render.
+  let s=null;
+  (c.verbas||[]).forEach(v=>{ if(!v.is_reflexo&&v.total_pjc!=null)s=(s||0)+v.total_pjc; });
+  return s!=null?s:q.total_pjc;
+};
+// Faixa compacta no RESUMO, quando o caso foi reprocessado: assertividade da
+// rodada anterior para a atual e as três maiores mudanças de verba.
+// Vive no Resumo porque é ali que a pergunta nasce — olhando o quadro e vendo o
+// número ruim. Mandar procurar noutra aba é onde a investigação morre.
+function blocoRodadas(){
+  const c=caso(), rod=(c.rodadas||[]);
+  if(rod.length<2)return"";
+  // âncora SEM reflexos — ver `ancoraRodada`
+  const pjc=ancoraRodada(c);
+  const A=rod[rod.length-2], B=rod[rod.length-1];
+  const aA=asrtRodada(A.total_lift,pjc), aB=asrtRodada(B.total_lift,pjc);
+  const um=v=>numf(Math.round(v*10)/10);
+  const g=(aA!=null&&aB!=null)?aB-aA:null;
+  const cor=g==null?"var(--cinza)":g>0.05?"var(--ok)":g<-0.05?"var(--ruim)":"var(--cinza)";
+  const kv=v=>v.cod||("id:"+v.id);
+  const mA=new Map((A.verbas||[]).map(v=>[kv(v),v])), mB=new Map((B.verbas||[]).map(v=>[kv(v),v]));
+  const its=[...new Set([...mA.keys(),...mB.keys()])].map(k=>{
+    const a=mA.get(k), b=mB.get(k), ta=a?a.total:null, tb=b?b.total:null, dv=(tb||0)-(ta||0);
+    return {cod:(b||a).cod||"sem código", nome:(b||a).nome, dv,
+            st:!a?"nova":!b?"sumiu":(Math.abs(dv)<=1?"igual":"mudou")};
+  }).filter(i=>i.st!=="igual").sort((x,y)=>Math.abs(y.dv)-Math.abs(x.dv)).slice(0,3);
+  const chips=its.map(i=>{
+    const c2=i.st==="sumiu"?"var(--ruim)":i.st==="nova"?"var(--ok)":(i.dv>0?"var(--ok)":"var(--ruim)");
+    const txt=i.st==="sumiu"?"sumiu":i.st==="nova"?"nova":(i.dv>0?"▲ ":"▼ ")+brl(Math.abs(i.dv));
+    return `<span style="white-space:nowrap" title="${esc(i.nome||"")}"><b style="color:${c2}">${
+      esc(i.cod)}</b> <span class="sub">${txt}</span></span>`;}).join(' <span class="sub">·</span> ');
+  return `<div class="obs" style="border-left-color:${cor};margin-bottom:14px">
+    <h3>caso reprocessado — ${rod.length}ª rodada, em ${esc(B.quando.slice(0,10).split("-").reverse().join("/"))}</h3>
+    <div>assertividade <b>${aA==null?"—":um(aA)+"%"} → ${aB==null?"—":um(aB)+"%"}</b>
+      ${g==null?"":`<b style="color:${cor}">(${g>0?"+":"−"}${um(Math.abs(g))} p.p.)</b>`}
+      ${(A.safra&&B.safra&&A.safra!==B.safra)?`<span class="sub"> · safra ${esc(A.safra)} → ${esc(B.safra)}</span>`:""}</div>
+    ${its.length?`<div style="margin-top:7px">${chips}</div>`:
+      '<div class="sub" style="margin-top:7px">nenhuma verba mudou de valor entre as duas rodadas</div>'}
+    <div style="margin-top:8px"><span onclick="ir('rodadas')"
+      style="cursor:pointer;color:var(--salmao);font-weight:600">ver todas as rodadas e o diff completo ↗</span></div></div>`;
+}
+// ---- sub-aba "Rodadas": o histórico de reprocessamentos DESTE caso ---------
+// Caso reprocessado é o MESMO gabarito avaliado duas vezes: a única leitura que
+// separa "o FT melhorou" de "a amostra mudou". Vive aqui, e não só no bloco
+// pareado da tela de versões, porque o pareado exige TROCA DE SAFRA — e
+// reprocessamento sem mudança de prompt (bug corrigido, re-extração, insumo
+// novo) não aparece lá e mesmo assim move o número.
+// Compara `total_lift` (principal + rescisórias, SEM reflexos) contra o total da
+// referência, igual ao bloco pareado. Não é o número do card: é a definição que
+// se mantém idêntica entre rodadas, que é o que uma comparação exige.
+function telaRodadas(){
+  const c=caso(), rod=(c.rodadas||[]);
+  const pjc=ancoraRodada(c);
+  const cab=`<h2>Rodadas do caso</h2>
+    <div class="sub" style="margin-bottom:14px">${CNJ} · uma linha por execução do cálculo final (P10a).
+    A referência é a mesma em todas, então serve de âncora fixa.</div>`;
+  const main=document.getElementById("main");
+  if(rod.length<2){
+    main.innerHTML=cab+`<div class="obs"><h3>${rod.length?"rodada única":"sem rodada registrada"}</h3>${
+      rod.length
+        ? `Rodou uma vez só, em <b>${esc(rod[0].quando.replace("T"," "))}</b>${
+            rod[0].safra?` (safra <b>${esc(rod[0].safra)}</b>)`:""}. Não há antes e depois para comparar.`
+        : `Não há linha de P10a para este processo no recorte atual.`}</div>`;
+    return;
+  }
+  const um=v=>numf(Math.round(v*10)/10);
+  const linhas=rod.map((r,i)=>{
+    const ant=i?rod[i-1]:null;
+    const d=asrtRodada(r.total_lift,pjc), dA=ant?asrtRodada(ant.total_lift,pjc):null;
+    const gan=(d!=null&&dA!=null)?d-dA:null;              // >0 = assertividade subiu
+    const dv=(ant&&r.total_lift!=null&&ant.total_lift!=null)?r.total_lift-ant.total_lift:null;
+    const cor=gan==null?"var(--neutro)":gan>0.05?"var(--ok)":gan<-0.05?"var(--ruim)":"var(--neutro)";
+    const v=r.versoes||{};
+    return `<tr>
+      <td style="white-space:nowrap"><b>${i+1}ª</b></td>
+      <td style="white-space:nowrap">${esc(r.quando.replace("T"," "))}</td>
+      <td>${r.safra?esc(r.safra):'<span class="sub">—</span>'}</td>
+      <td class="sub" style="font-size:11px;white-space:nowrap">${
+        ["P9a","P9b","P10a","P10b"].map(k=>v[k]==null?`${k} —`:`${k} v${v[k]}`).join(" · ")}</td>
+      <td style="text-align:right">${brl(r.total_lift)}</td>
+      <td style="text-align:right">${dv==null?"—":(dv>0?"▲ ":"▼ ")+brl(Math.abs(dv))}</td>
+      <td style="text-align:right;font-weight:700;color:${corAcc(d)}">${d==null?"—":um(d)+"%"}</td>
+      <td style="text-align:right;color:${cor};font-weight:600">${
+        gan==null?"—":(gan>0?"+":"−")+um(Math.abs(gan))+" p.p."}</td></tr>`;
+  }).join("");
+  const aP=asrtRodada(rod[0].total_lift,pjc), aU=asrtRodada(rod[rod.length-1].total_lift,pjc);
+  const veredito=(aP==null||aU==null)
+    ? `<div class="obs"><h3>sem referência para ancorar</h3>Dá para ver o valor mudar entre rodadas,
+       mas não para dizer se mudou <b>na direção do certo</b>: este caso não tem cálculo de
+       referência lido.</div>`
+    : (()=>{const g=aU-aP;
+        const [cor,tit]=g>0.05?["var(--ok)","assertividade subiu"]
+                       :g<-0.05?["var(--ruim)","assertividade caiu"]
+                               :["var(--neutro)","não moveu o número"];
+        return `<div class="obs" style="border-left-color:${cor}">
+          <h3>da 1ª à ${rod.length}ª rodada: ${tit}</h3>
+          assertividade <b>${um(aP)}% → ${um(aU)}%</b>
+          (${g>0?"+":"−"}${um(Math.abs(g))} p.p.) · referência ${brl(pjc)}</div>`;})();
+  // Diff VERBA A VERBA entre rodadas consecutivas. O total diz QUE caiu; isto diz
+  // SE foi verba que sumiu ou verba que encolheu — causas diferentes, que se
+  // investigam em lugares diferentes (escopo do P2/P4 x quantificação do P9).
+  // A chave é o código do glossário: `id_verba` é posicional (verba_01...) e a
+  // mesma posição pode ser outra verba na rodada seguinte.
+  const kv=v=>v.cod||("id:"+v.id);
+  const rotV=v=>v.nome?`<b>${esc(v.cod)}</b> · ${esc(v.nome)}`:(v.cod?`<b>${esc(v.cod)}</b>`:`<span class="sub">sem código (${esc(String(v.id))})</span>`);
+  const ESTADO={sumiu:["var(--ruim)","sumiu"],nova:["var(--ok)","nova"],
+                subiu:["var(--ok)","subiu"],caiu:["var(--ruim)","caiu"],igual:["var(--neutro)","igual"]};
+  const blocoDiff=rod.slice(1).map((B,j)=>{
+    const A=rod[j], mA=new Map((A.verbas||[]).map(v=>[kv(v),v])), mB=new Map((B.verbas||[]).map(v=>[kv(v),v]));
+    const ks=[...new Set([...mA.keys(),...mB.keys()])];
+    if(!ks.length)return `<details style="border:1px solid var(--linha);border-radius:9px;padding:9px 13px;margin-bottom:7px">
+      <summary style="cursor:pointer;list-style:none"><b style="font-family:Sora">${j+1}ª → ${j+2}ª rodada</b>
+      <span class="sub"> · nenhuma verba registrada nas duas rodadas</span></summary></details>`;
+    const its=ks.map(k=>{const a=mA.get(k),b=mB.get(k);
+      const ta=a?a.total:null, tb=b?b.total:null, dv=(tb||0)-(ta||0);
+      const st=!a?"nova":!b?"sumiu":Math.abs(dv)<=1?"igual":(dv>0?"subiu":"caiu");
+      return {rot:rotV(b||a),cam:(b||a).camada,ta,tb,dv,st};
+    }).sort((x,y)=>Math.abs(y.dv)-Math.abs(x.dv));
+    const n=k=>its.filter(i=>i.st===k).length;
+    const tot=its.reduce((s,i)=>s+i.dv,0);
+    const corpo=its.map(i=>{const [cor,rot]=ESTADO[i.st];
+      return `<tr><td>${i.rot}</td>
+        <td class="sub" style="font-size:11px">${i.cam==="rescisoria"?"rescisória":"mensal"}</td>
+        <td style="text-align:right">${i.ta==null?'<span class="sub">—</span>':brl(i.ta)}</td>
+        <td style="text-align:right">${i.tb==null?'<span class="sub">—</span>':brl(i.tb)}</td>
+        <td style="text-align:right">${i.st==="nova"||i.st==="sumiu"?"—":(i.dv>0?"▲ ":"▼ ")+brl(Math.abs(i.dv))}</td>
+        <td style="text-align:right;color:${cor};font-weight:600">${rot}</td></tr>`;}).join("");
+    return `<details style="border:1px solid var(--linha);border-radius:9px;padding:9px 13px;margin-bottom:7px" ${j===rod.length-2?"open":""}>
+      <summary style="cursor:pointer;list-style:none;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap">
+        <b style="font-family:Sora">${j+1}ª → ${j+2}ª rodada</b>
+        ${n("sumiu")?`<span class="sub" style="color:var(--ruim)">${n("sumiu")} sumiu</span>`:""}
+        ${n("nova")?`<span class="sub" style="color:var(--ok)">${n("nova")} nova</span>`:""}
+        ${n("caiu")+n("subiu")?`<span class="sub">${n("caiu")+n("subiu")} mudou de valor</span>`:""}
+        ${n("igual")?`<span class="sub">${n("igual")} igual</span>`:""}
+        <span class="sub" style="margin-left:auto;font-weight:700">${tot>0?"▲ ":"▼ "}${brl(Math.abs(tot))}</span>
+      </summary>
+      <div style="overflow-x:auto"><table style="font-size:12px;margin-top:6px"><thead><tr>
+        <th>Verba</th><th>Camada</th><th style="text-align:right">Antes</th>
+        <th style="text-align:right">Depois</th><th style="text-align:right">Δ</th>
+        <th style="text-align:right">O que houve</th></tr></thead><tbody>${corpo}</tbody></table></div>
+    </details>`;}).join("");
+  main.innerHTML=cab+veredito+
+    `<div style="overflow-x:auto"><table style="font-size:12px;margin-top:12px"><thead><tr>
+      <th>#</th><th>Quando</th><th>Safra</th><th>Versões de prompt</th>
+      <th style="text-align:right">Total LIFT</th><th style="text-align:right">Δ R$ vs anterior</th>
+      <th style="text-align:right" title="1 − |LIFT − referência| ÷ referência (sem reflexos). Pode passar de −100% quando o LIFT calcula acima da referência.">Assertividade</th>
+      <th style="text-align:right">Δ p.p.</th></tr></thead><tbody>${linhas}</tbody></table></div>
+    ${LEGENDA_ACC}
+    <h3 style="margin:20px 0 8px">O que mudou, verba a verba</h3>
+    <div class="sub" style="margin-bottom:8px">Uma verba que <b>sumiu</b> é problema de escopo
+    (o P2/P4 deixou de identificar); uma que <b>caiu</b> é de quantificação (o P9 apurou menos).
+    Ordenado pelo tamanho da mudança em reais.</div>
+    ${blocoDiff}
+    <div class="obs" style="margin-top:14px"><h3>como ler</h3>
+      <b>Total LIFT</b> é principal + rescisórias, <b>sem reflexos</b> — os reflexos são calculados
+      em código e não têm versão de prompt. A referência usada aqui (${brl(pjc)}) também é
+      <b>sem reflexos</b>, então os dois lados batem: a assertividade desta tela é a do subtotal
+      <b>Verbas</b> do Quadro geral, não a do <b>Total geral</b>, que inclui reflexos dos dois
+      lados.<br><br>
+      Só a camada <b>nominal</b> volta no histórico. As tabelas consolidadas (corrigido e pós-juros)
+      guardam apenas a safra mais recente de cada processo, então <b>não existe</b> a camada
+      corrigida das rodadas antigas — e é por isso que a <b>acurácia global</b> de antes não é
+      reconstruível, só a assertividade.</div>`;
+}
+function telaHist(){
+  const c=caso();
+  const tab=(titulo,colunas,linhas,getVal)=>{
+    if(!linhas||!linhas.length)return `<h3 style="margin:16px 0 6px">${titulo}</h3><p class="sub">Sem dados extraídos.</p>`;
+    const head=colunas.map(co=>`<th>${co}</th>`).join("");
+    const body=linhas.map(l=>`<tr><td>${mes(l.competencia)}</td>${colunas.map((co,ci)=>`<td>${brl(getVal(l,co,ci))}</td>`).join("")}</tr>`).join("");
+    return `<h3 style="margin:16px 0 6px">${titulo}</h3>
+      <div style="overflow-x:auto"><table style="font-size:11px"><thead><tr><th>Compet.</th>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+  };
+  const pjc=c.historico_pjc||{colunas:[],linhas:[]}, p7=c.historico_p7||{rubricas:[],linhas:[]};
+  const rb=c.rubricas_base||[];                     // rubricas que compõem o salário base (só .pjc)
+  const COL_BASE="Salário base (Σ)";
+  // com .pjc, prepõe a coluna de base composta (soma das rubricas-base do mês)
+  const colsPJC = rb.length ? [COL_BASE, ...pjc.colunas] : pjc.colunas;
+  const valPJC = (l,co)=> co===COL_BASE
+      ? rb.reduce((s,r)=> s+(l.valores[r]||0), 0)
+      : l.valores[co];
+  const notaBase = rb.length
+      ? `<p class="sub" style="margin:2px 0 8px"><b>${COL_BASE}</b> = soma das rubricas que o cálculo usa como base: <b>${rb.join(" + ")}</b>.</p>`
+      : "";
+  const seloFonte = c.fonte_ref==="pjc"
+      ? `<span class="sub">fonte: <b>.pjc nativo</b></span>`
+      : (c.fonte_ref==="pdf" ? `<span class="sub">fonte: PDF (sem .pjc)</span>` : "");
+  document.getElementById("main").innerHTML=`<h2>Histórico Salarial ${seloFonte}</h2>
+    ${bannerSemPjc()}
+    ${bannerHist()}
+    <div class="sub" style="margin-bottom:6px">Duas tabelas separadas: o que o <b>PJC</b> traz (todas as rubricas) e o que o <b>P7 (holerite filtro)</b> produziu — para comparar a composição.</div>
+    ${notaBase}
+    ${tab("PJC — Ocorrências do Histórico Salarial", colsPJC, pjc.linhas, valPJC)}
+    ${pjc.linhas.length?`<button class="btn-dl" onclick="baixarHist('pjc')">⤓ Baixar tabela PJC (CSV)</button>`:""}
+    ${tab("P7 — Holerite filtro (rubricas)", p7.rubricas, p7.linhas, (l,co,ci)=>l.valores[ci])}
+    ${p7.linhas.length?`<button class="btn-dl" onclick="baixarHist('p7')">⤓ Baixar tabela P7 (CSV)</button>`:""}`;
+}
+
+function verVerba(i){
+  _modo("caso");
+  ["resumo","quadro","hist"].forEach(x=>document.getElementById("nv-"+x).classList.remove("on"));
+  document.querySelectorAll(".vitem").forEach(e=>e.classList.toggle("sel",+e.dataset.i===i));
+  const v=caso().verbas[i];const[bk,bt]=badgeDe(v);vAtual=v;
+  let tabela="";
+  if(v.competencias.length){
+    // valores e Δ ficam NEUTROS (cor é só da acurácia). A seta dá a direção; o
+    // sinal de "quão ruim" da competência vive na coluna Acur. do grupo Valor.
+    const dCel=d=>d==null?'<td class="vazio">—</td>'
+      :(Math.abs(d)<0.01?'<td class="vazio">—</td>'
+      :`<td class="sub">${d>0?"▲":"▼"} ${numf(Math.abs(d))}</td>`);
+    const par=(ia,pj,fmt)=>{
+      const d=(ia!=null&&pj!=null)?ia-pj:null;
+      return `<td class="grp">${fmt(ia)}</td><td class="${(ia==null||pj==null)?"vazio":""}">${fmt(pj)}</td>`+dCel(d);};
+    // acurácia da competência: 1 − |Δ| ÷ PJC (mesma conta da verba). Sem piso,
+    // igual às outras: o mês em que o LIFT calculou o dobro dá 0%, o triplo dá
+    // −100%. Denominador zero segue a regra D4.
+    const accComp=(ia,pj)=>{if(ia==null||pj==null)return null;
+      const num=Math.abs(ia-pj), den=Math.abs(pj);
+      return den?Math.round(1000*(1-num/den))/10:(num?0:100);};
+    const linhas=v.competencias.map(c=>{
+      const prin=c.pjc.find(x=>x.rotulo===v.rotulo_principal)||c.pjc[0]||{};
+      const fer=c.ferias_pjc>0?` <span class="fer">${c.ferias_pjc}d fér.</span>`:"";
+      // Súmula 340: base da IA vem separada em fixa+variável (base_calculo_bruta é nulo)
+      const baseCells=(c.ia.s340&&(c.ia.base_fixa!=null||c.ia.base_variavel!=null))
+        ? `<td class="grp">Fixa ${numf(c.ia.base_fixa)}<br>Var ${numf(c.ia.base_variavel)}</td><td>${numf(prin.base)}</td><td class="vazio">—</td>`
+        : par(c.ia.base,prin.base,numf);
+      // Deduzido = o que já foi pago na folha e é abatido do devido. O "Valor" das
+      // duas colunas já é líquido (IA: valor_mensal_calculado − valores_compensados;
+      // PJC: Devido − Pago), então a dedução precisa de coluna própria — sem ela um
+      // Δ de valor não distingue "apurou diferente" de "não deduziu o pago".
+      // Ninguém deduziu nada no mês: fica apagado, não verde (0=0 não é acerto).
+      const dIA=c.ia.compensado, dPJC=prin.pago;
+      const tip=`title="Bruto IA ${brl(c.ia.valor_bruto)} · Bruto PJC ${brl(prin.valor_bruto)}"`;
+      const dedCells=(!dIA&&!dPJC)
+        ? `<td class="grp vazio" ${tip}>—</td><td class="vazio" ${tip}>—</td><td class="vazio">—</td>`
+        : `<td class="grp" ${tip}>${brl(dIA||0)}</td><td ${tip}>${brl(dPJC||0)}</td>`+dCel((dIA||0)-(dPJC||0));
+      // DIAS: conceitos diferentes dos dois lados, então NÃO é comparação com
+      // Δ vermelho. IA = dias trabalhados efetivos do P8 (úteis − férias/feriado/
+      // afastamento); referência = dias corridos do período − férias, derivado
+      // pelo app (o PJC não traz "dias" nas verbas de hora, traz horas).
+      const k8=c.cal_p8||{};
+      const tipDias=k8.dias!=null
+        ? `title="P8: ${k8.total_mes} dias no mês · ${k8.uteis} úteis · −${k8.ferias||0} férias · −${k8.feriados||0} feriado · −${k8.afast||0} afastamento = ${k8.dias} trabalhados${k8.horas_contratuais!=null?` · ${k8.horas_contratuais}h contratuais`:""}"`
+        : 'title="sem calendário do P8 nesta competência"';
+      const diasCells=`<td class="grp" ${tipDias}>${numf(c.ia.dias)}${c.ia.dias_fonte==="P8"?' <span class="sub" style="font-size:9px">P8</span>':""}</td>`
+        +`<td class="sub" title="dias corridos do período − férias (derivado pelo app; o PJC não traz dias nas verbas de hora)">${numf(c.dias_pjc)}</td>`
+        +`<td class="sub">${(c.ia.dias!=null&&c.dias_pjc!=null)?numf(c.ia.dias-c.dias_pjc):"—"}</td>`;
+      // ÍNDICE de correção monetária aplicado na competência, dos dois lados
+      const iI=c.ia.indice, iP=prin.indice;
+      const f4=x=>x==null?"—":x.toFixed(4).replace(".",",");
+      const dI=(iI!=null&&iP!=null)?iI-iP:null;
+      // índice: o único destaque que sobrevive fora da acurácia, porque acima de
+      // 2% ele aponta índice/data-base diferente, que é outra causa (não valor).
+      const divI=dI!=null&&Math.abs(dI)/Math.max(iI,iP)>0.02;
+      const indCells=`<td class="grp">${f4(iI)}</td><td class="${dI==null?"vazio":""}">${f4(iP)}</td>`
+        +`<td class="${dI==null?"vazio":"sub"}" style="${divI?"color:var(--acc-perto);font-weight:600":""}" title="diferença de fator de correção: acima de 2% é índice ou data-base diferente, não conta errada">${dI!=null?(dI>0?"+":"")+dI.toFixed(4).replace(".",","):"—"}</td>`;
+      const aC=accComp(c.ia.valor,prin.valor);
+      return `<tr><td>${mes(c.competencia)}${fer}</td>
+        ${baseCells}
+        ${diasCells}
+        ${par(c.ia.horas,prin.horas,numf)}
+        ${dedCells}
+        ${par(c.ia.valor,prin.valor,brl)}
+        <td style="font-weight:600;color:${corAcc(aC)}" title="${rotAcc(aC)}">${aC!=null?accTxt(aC):"—"}</td>
+        ${indCells}
+        <td style="text-align:left;font-size:10.5px;color:var(--cinza);max-width:240px">${c.ia.memoria||"—"}</td></tr>`;}).join("");
+    tabela=`<table><thead>
+      <tr><th rowspan="2">Compet.</th><th colspan="3" class="grp">Base de cálculo</th><th colspan="3" class="grp" title="IA = dias trabalhados efetivos do P8 (úteis − férias/feriado/afastamento). Referência = dias corridos do período − férias, derivado pelo app. São conceitos diferentes: o Δ é informativo, não erro.">Dias <span style="font-weight:400">(conceitos ≠)</span></th><th colspan="3" class="grp">Horas</th><th colspan="3" class="grp" title="Valores já pagos na folha, abatidos do devido (IA: valores_compensados · PJC: coluna Pago)">Deduzido (pago)</th><th colspan="4" class="grp">Valor (líquido)</th><th colspan="3" class="grp" title="fator de correção monetária acumulado da competência: IA (tabela consolidada) × referência (indiceAcumulado do .pjc)">Índice de correção</th><th rowspan="2">Memória (IA)</th></tr>
+      <tr><th class="grp">IA</th><th>PJC</th><th>Δ</th><th class="grp">IA</th><th>PJC</th><th>Δ</th><th class="grp">IA</th><th>PJC</th><th>Δ</th><th class="grp">IA</th><th>PJC</th><th>Δ</th><th class="grp">IA</th><th>PJC</th><th>Δ</th><th title="acurácia do valor nesta competência: 1 − |Δ| ÷ valor da referência. Sem piso: o mês em que o LIFT calculou o dobro dá 0%, o triplo dá −100%. É a única coluna colorida da tabela.">Acur.</th><th class="grp">IA</th><th>PJC</th><th>Δ</th></tr>
+      </thead><tbody>${linhas}</tbody></table>
+      ${LEGENDA_ACC}
+      <button class="btn-dl" onclick="baixarVerba()">⤓ Baixar tabela (CSV)</button>`;
+  }
+  const p=v.p4;
+  const intBlock = (titulo, obj, aberto) => obj ? `<details class="p4" style="margin-top:10px"${aberto?" open":""}>
+      <summary style="cursor:pointer;font-family:Sora"><b>${esc(titulo)}</b></summary>
+      ${Object.keys(obj).map(k=>`<div style="margin-top:8px"><b>${esc(k)}:</b><pre style="white-space:pre-wrap;word-break:break-word;background:var(--surface);border:1px solid #F3C9BF;border-radius:6px;padding:8px;margin:4px 0 0;max-height:340px;overflow:auto;font-size:12px;font-family:ui-monospace,Menlo,Consolas,monospace">${esc(typeof obj[k]==="string"?obj[k]:JSON.stringify(obj[k],null,2))}</pre></div>`).join("")}
+    </details>` : "";
+  const blocos = intBlock("Saída integral do P4 (deferimento — infos_decisoes) — crua, sem edição", p&&p._raw, true)
+    + intBlock("Saída integral do P9a (roteamento / insumos gerais por verba) — crua", v.p9a_raw, false)
+    + intBlock("Saída integral do P9b (apuração mensal — 1 competência de amostra) — crua", v.p9b_raw, false);
+  document.getElementById("main").innerHTML=`<h2>${v.nome_ia||v.nome_pjc}</h2>
+    <div class="sub">${v.nome_pjc&&v.nome_ia&&v.nome_pjc!==v.nome_ia?("PJC: "+v.nome_pjc):"&nbsp;"}</div>
+    <div class="totais">
+      <div><div class="v">${brl(v.total_ia)}</div><div class="k">Total IA</div></div>
+      <div><div class="v">${brl(v.total_pjc)}</div><div class="k">Total PJC ${(v.rotulos_pjc||[]).filter(Boolean).length>1?`(${v.rotulos_pjc.filter(Boolean).length} verbas: ${v.rotulos_pjc.filter(Boolean).map(esc).join(" · ")})`:(v.rotulo_principal?("("+v.rotulo_principal+")"):"")}${v.teto_pjc?` · <span style="color:var(--salmao)" title="Dano moral capado no teto do FT (R$ 5.000); o juiz fixou ${brl(v.teto_pjc)}">teto BT052</span>`:""}</div></div>
+      <div><div class="v" style="color:var(--salmao)">${v.acuracia!=null?v.acuracia+"%":"—"}</div><div class="k">Acurácia (verba inteira)</div></div>
+      ${v.acuracia_componente!=null&&v.componente_perdido&&v.componente_perdido.length?`<div><div class="v" style="color:var(--cinza)">${v.acuracia_componente}%</div><div class="k">só no que a IA calculou (${v.rotulo_principal})</div></div>`:""}
+      ${(v.compensado_ia||v.pago_pjc)?`<div><div class="v" style="color:${prox(v.compensado_ia||0,v.pago_pjc||0)?"var(--cinza)":"var(--ruim)"}">${brl(v.compensado_ia||0)} <span style="font-size:12px;color:var(--cinza)">/ ${brl(v.pago_pjc||0)}</span></div><div class="k" title="Já pago na folha e abatido do devido. Os totais acima são líquidos dos dois lados.">Deduzido IA / PJC</div></div>`:""}
+      <div><span class="badge ${bk}" style="font-size:11px">${bt}</span>${v.usa_s340?' <span class="badge b-neutro" style="font-size:11px">Súmula 340 · fixa+variável</span>':''}</div>
+    </div>
+    ${(v.corrigido&&(v.corrigido.ia!=null||v.corrigido.pjc!=null))?`<table style="margin-top:6px;max-width:640px;font-size:12px"><thead><tr><th>Camada de valor</th><th style="text-align:right">IA</th><th style="text-align:right">Referência</th><th style="text-align:right">Acur.</th></tr></thead><tbody>
+      ${LAYERS_VALOR.map(([k,rot])=>{const e=valLayer(v,k);
+        return `<tr><td>${rot}</td><td style="text-align:right">${brl(e.ia)}</td><td style="text-align:right">${brl(e.pjc)}</td><td style="text-align:right;color:${corAcc(e.acc)}">${accTxt(e.acc)}</td></tr>`;}).join("")}
+      </tbody></table>
+      <div class="sub" style="margin-top:4px">Fator de correção aplicado: IA <b>${v.corrigido.fator_ia!=null?v.corrigido.fator_ia.toFixed(4).replace(".",","):"—"}</b> × referência <b>${v.corrigido.fator_pjc!=null?v.corrigido.fator_pjc.toFixed(4).replace(".",","):"—"}</b>${v.corrigido.rescalado?` · <span style="color:var(--acc-perto)" title="a tabela consolidada agrupa por id_verba e aqui o nominal dela (${brl(v.corrigido.nominal_consolidada)}) não bate com o do cálculo (${brl(v.total_ia)}) — id repetido ou safra diferente. O corrigido foi reescalado pelo nominal para não contar valor em dobro.">corrigido reescalado (nominal da consolidada divergente)</span>`:""}</div>`:""}
+    ${v.componente_perdido&&v.componente_perdido.length?`<div class="obs" style="border-left-color:var(--ruim)"><h3>Atenção — base não computada</h3>O PJC aplica a verba também sobre a base <b>${v.componente_perdido.join(", ")}</b>, que a IA não calculou (faltou separar base fixa e variável).</div>`:""}
+    ${tabela||(p?"":'<p class="sub">Sem competências para exibir.</p>')}
+    <div class="obs"><h3>Observações</h3>${v.obs_texto||"—"}</div>
+    ${blocos}`;
+}
+
+// ---- Controle Geral (painel) ----
+let fDe="", fAte="";
+function irPlacar(){ _modo("placar"); telaPlacar(); }
+function irPremissas(){ _modo("premissas"); telaPremissas(); }
+// ---- PREMISSAS, pelo agente (cópia, 18/10) ------------------------------------
+// A aba antiga lia as "Observações de cálculo" do PJC, e só 4 de 322 casos citam premissa numerada
+// ali. O agente cita a seção do manual em mais da metade dos problemas, então a aba agrupa os
+// problemas do agente pela seção citada, com a situação de cada item na esteira
+// (ft_arvore_divergencias/premissas/premissas_situacao_esteira.json, que o aplica_score_jev.py injeta).
+// Um problema que cita duas seções conta nas duas: a soma das linhas passa do total.
+const PREM_ESTEIRA=/*__PREMISSAS_ESTEIRA__*/[];
+const PREM_SECAO={}, PREM_ITEM={};
+PREM_ESTEIRA.forEach(it=>{const m=/^(\d{1,2}\.\d)\s*(.*)$/.exec(it.secao||""); if(!m)return;
+  const s=PREM_SECAO[m[1]]=PREM_SECAO[m[1]]||{nome:m[2],itens:[]}; s.itens.push(it); PREM_ITEM[it.id]=it;});
+const PREM_SIT={enderecada:["endereçada","var(--ok)"],parcial:["parcial","var(--acc-perto)"],nao_enderecada:["não endereçada","var(--ruim)"],
+  fora_escopo:["fora do escopo","var(--cinza)"],processo_interno:["processo interno","var(--cinza)"]};
+const _premSitTag=s=>{const [r,cor]=PREM_SIT[s]||[s||"—","var(--cinza)"];
+  return `<span style="font-size:10.5px;font-weight:600;color:${cor};white-space:nowrap">${r}</span>`;};
+// seções e itens que a regra citada pelo agente menciona; só conta número que existe no manual
+function _premCitadas(p){
+  const t=String(p.regra||"");
+  if(!/premissa/i.test(t)&&!/^\s*\d{1,2}\.\d/.test(t))return {secoes:[],itens:[]};
+  const secoes=new Set(), itens=new Set();
+  t.replace(/\b(\d{1,2}\.\d)(?:-([a-z]{1,2}))?\b/g,(m,s,i)=>{
+    if(!PREM_SECAO[s])return m; secoes.add(s); if(i&&PREM_ITEM[s+"-"+i])itens.add(s+"-"+i); return m;});
+  return {secoes:[...secoes],itens:[...itens]};
+}
+let premGrupo="todos", premCat="";
+function telaPremissas(){
+  const cs=casosFiltrados().filter(c=>c.agente&&_noGrupo(c,premGrupo));
+  const ps=_probsDe(cs).filter(p=>!premCat||p.cat===premCat);
+  const sec={}; let nCit=0;
+  ps.forEach(p=>{const {secoes,itens}=_premCitadas(p); if(!secoes.length)return; nCit++;
+    secoes.forEach(s=>{const e=sec[s]=sec[s]||{s,ps:[],casos:new Set(),mais:0,menos:0,cat:{}};
+      e.ps.push({...p,_itens:itens.filter(i=>i.startsWith(s+"-"))}); e.casos.add(p.cnj);
+      e[p.mais?"mais":"menos"]+=p.rs; e.cat[p.cat]=(e.cat[p.cat]||0)+1;});});
+  const ord=Object.values(sec).sort((a,b)=>b.mais-a.mais||b.ps.length-a.ps.length);
+  const sitSecao=s=>{const n={}; (PREM_SECAO[s].itens||[]).forEach(it=>{n[it.situacao]=(n[it.situacao]||0)+1;});
+    return ["nao_enderecada","parcial","enderecada"].filter(k=>n[k]).map(k=>`${n[k]} ${_premSitTag(k)}`).join(" · ")||'<span class="sub">—</span>';};
+  const _linha=p=>`<tr style="cursor:pointer" onclick="trocaCnj('${p.cnj}')">
+      <td style="white-space:nowrap;font-variant-numeric:tabular-nums;text-align:left">${p.cnj}</td><td style="text-align:left">${_agTag(p.cat,true)}</td>
+      <td style="text-align:left"><b>${esc(p.titulo||p.verba||"")}</b><div class="sub" style="font-size:11.5px">${esc(p.oque||"")}</div></td>
+      <td style="text-align:right;white-space:nowrap">${p.mais?"▲":"▼"} ${brl(p.rs)}</td></tr>`;
+  const _tab=arr=>`<table style="font-size:12px;margin-top:6px"><tbody>${arr.slice().sort((a,b)=>(b.mais-a.mais)||(b.rs-a.rs)).map(_linha).join("")}</tbody></table>`;
+  const blocos=ord.map(e=>{
+    const porItem={}; e.ps.forEach(p=>(p._itens.length?p._itens:[""]).forEach(i=>(porItem[i]=porItem[i]||[]).push(p)));
+    const itensTxt=Object.keys(porItem).sort((a,b)=>(a==="")-(b==="")||a.localeCompare(b)).map(i=>{
+      const it=PREM_ITEM[i];
+      const cab=i?`<div style="margin-top:12px"><b style="font-family:Sora">${esc(i)}</b> ${_premSitTag(it.situacao)} · ${esc(it.regra)}
+          ${it.falta?`<div class="sub" style="font-size:11.5px;margin-top:2px">O que falta na esteira: ${esc(it.falta)}</div>`:""}</div>`
+        :`<div style="margin-top:12px" class="sub"><b>Seção citada sem item específico</b></div>`;
+      return cab+_tab(porItem[i]);}).join("");
+    const cats=Object.keys(AG_CAT).filter(k=>e.cat[k]).map(k=>`${_agTag(k,true)} ${e.cat[k]}`).join(" ");
+    return `<details style="border:1px solid var(--linha);border-radius:9px;padding:9px 13px;margin-bottom:7px">
+      <summary style="cursor:pointer;list-style:none">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <b style="font-family:Sora;color:var(--salmao);min-width:40px">${e.s}</b>
+          <span style="flex:1;min-width:200px">${esc(PREM_SECAO[e.s].nome)}</span>
+          <span style="min-width:110px;text-align:right">▲ <b>${brlK(e.mais)}</b></span>
+          <span style="min-width:110px;text-align:right" class="sub">▼ ${brlK(e.menos)}</span>
+          <b style="font-family:Sora;min-width:120px;text-align:right">${e.ps.length} probl. · ${e.casos.size} casos</b></div>
+        <div style="margin:5px 0 0 52px;font-size:11px;display:flex;gap:14px;flex-wrap:wrap"><span>${cats}</span><span class="sub">esteira: ${sitSecao(e.s)}</span></div>
+      </summary>${itensTxt}</details>`;}).join("");
+  document.getElementById("main").innerHTML=`<h2>Premissas do manual</h2>
+    ${barraPeriodo()}
+    <div class="sub" style="margin-bottom:12px;max-width:940px">Problemas do agente agrupados pela seção do manual que ele cita: <b>${nCit}</b> de ${ps.length} problemas citam uma seção.
+      Ordem: R$ a mais primeiro. Muito <b>erro da IA</b> numa seção = ajuste de prompt; muito <b>gabarito questionável</b> = o calculista não seguiu o manual; <b>decisão de negócio</b> = decisão sua.
+      Um problema que cita duas seções conta nas duas.</div>
+    <div style="display:flex;gap:10px;align-items:end;margin:0 0 14px;flex-wrap:wrap">
+      ${_selF("Casos",premGrupo,GRUPOS_CASO,"premGrupo=this.value;telaPremissas()")}
+      ${_selF("Categoria do agente",premCat,[["","Todas"],...Object.entries(AG_CAT).map(([k,v])=>[k,v[0]])],"premCat=this.value;telaPremissas()")}
+    </div>
+    ${blocos||'<p class="sub">Nenhum problema do agente cita seção do manual neste recorte.</p>'}`;
+}
+// o filtro de período é o mesmo em toda aba: re-renderiza a ATIVA (antes cada
+// chamada dizia qual tela redesenhar, e a lista cresceu junto com as abas).
+function aplicaFiltro(){fDe=document.getElementById("fDe").value;fAte=document.getElementById("fAte").value;_render();}
+function limpaFiltro(){fDe="";fAte="";anPeriodo="Tudo";_render();}
+
+function aptidaoCell(c){
+  const improc=(c.alertas_pjc||[]).some(a=>a.tipo==="pedidos_improcedentes")
+    ?' <span style="color:#8a5a00" title="O PJC lista pedidos improcedentes: base dos honorários de sucumbência que o reclamante paga. Caso perto de não apto.">⚠ pedidos improcedentes</span>':"";
+  if(c.apto){
+    if(c.tipo_nao_encontrado)
+      return '✓ Apto <span class="sub" title="Apto, mas o tipo de cálculo não foi encontrado na esteira de pré-compra — não deu p/ confirmar que é Risco Real. Não demove sozinho.">· tipo não encontrado na esteira</span>'+improc;
+    return (aptoValor(c)?'✓ Apto valor <span class="sub" title="Apto com o valor calculado pela IA entre R$ 50 mil e R$ 200 mil">· R$ 50–200 mil</span>':"✓ Apto")+improc;
+  }
+  const det=(c.motivos_inaptidao||[]).map(m=>m.categoria+": "+m.detalhe).join(" · ")
+    ||(c.codigos_inelegiveis||[]).join(", ")||"não-apto";
+  const cat=c.categoria_inaptidao?" · "+esc(c.categoria_inaptidao):"";
+  return `<span style="color:var(--ruim)" title="${esc(det)}">Não Apto${cat}</span>${improc}`;
+}
+function casosFiltrados(){
+  return D.cnjs.map(c=>({cnj:c,...D.casos[c]})).filter(c=>{
+    const d=c.data_processamento; if(!d)return true;
+    if(fDe&&d<fDe)return false; if(fAte&&d>fAte)return false; return true;})
+    .filter(c=>!fScore||(c.confianca||{}).faixa===fScore);
+}
+// filtro de score de confiança (faixa), na mesma barra do período: vale para todas as abas
+let fScore="";
+function setScore(v){fScore=v;_render();}
+// ---- escopo de ACURÁCIA: só aptos por padrão --------------------------------
+// O que interessa medir é o que vai pelo automatizado: caso não-apto vai pro
+// humano/Full, então o erro dele não é dívida do FT. Não-apto continua visível
+// nas seções que falam de APTIDÃO (funil, categorias, tipo de cálculo, problemas),
+// que precisam dele por definição — essas ignoram este seletor e dizem isso.
+let soAptos=true;
+const casosEscopo=()=>soAptos?casosFiltrados().filter(c=>c.apto):casosFiltrados();
+const _RENDER={placar:()=>telaPlacar(),verbas:()=>telaVerbas(),consol:()=>telaConsol(),naocalc:()=>telaNaoCalc(),problemas:()=>telaProblemas(),premissas:()=>telaPremissas(),
+               caso:()=>({lista:telaLista,resumo:telaResumo,quadro:telaQuadro,jornada:telaJornada,
+                          hist:telaHist,rodadas:telaRodadas}[_SUB]||telaResumo)()};
+function _render(){(_RENDER[_MODO]||_RENDER.placar)();}
+function setSoAptos(v){soAptos=v;_render();}
+const _media=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+const _mediana=a=>{if(!a.length)return null;const s=a.slice().sort((x,y)=>x-y),m=s.length>>1;return s.length%2?s[m]:(s[m-1]+s[m])/2;};
+// ---- agregação das camadas (soma o erro em módulo através dos casos) ----------
+// Duas leituras por camada, que respondem perguntas diferentes:
+//  - `acc` POOL = Σ|IA−PJC| ÷ Σ|PJC| de todos os casos: ponderada por R$, é o
+//    quanto do dinheiro o FT acerta (um caso grande pesa mais, como na vida).
+//    Sem piso, como as demais: caso que calcula acima do dobro da referência
+//    puxa a camada para o negativo.
+//  - `medCaso` / `medVerba` = mediana por caso / por verba: o caso típico, imune
+//    a um outlier gigante. As duas juntas evitam a leitura errada de qualquer uma.
+function agregaCamadas(cs){
+  const K=["principal","rescisoria","reflexo","global"], out={};
+  K.forEach(k=>out[k]={dif:0,den:0,ia:0,pjc:0,n:0,nPar:0,nCasos:0,accs:[],accsCaso:[],baseOk:[]});
+  cs.forEach(c=>{const cm=c.camadas; if(!cm)return;
+    K.forEach(k=>{const e=cm[k], o=out[k]; if(!e||!e.n)return;
+      o.dif+=e.dif_abs||0; o.den+=e.den||0; o.ia+=e.ia||0; o.pjc+=e.pjc||0;
+      o.n+=e.n||0; o.nPar+=e.n_par||0; o.nCasos++;
+      (e.accs||[]).forEach(a=>o.accs.push(a));
+      (e.accs_base_ok||[]).forEach(a=>o.baseOk.push(a));
+      if(e.acc!=null)o.accsCaso.push(e.acc);});});
+  K.forEach(k=>{const o=out[k];
+    o.acc=o.den?100*(1-o.dif/o.den):null;
+    o.medCaso=_mediana(o.accsCaso); o.medVerba=_mediana(o.accs); o.medBaseOk=_mediana(o.baseOk);});
+  return out;
+}
+// ---- agregação dos dados cadastrais (por campo) -------------------------------
+// Divergência de admissão/demissão/período não é erro de cálculo: é insumo errado.
+// Agregado por campo mostra se é caso isolado ou padrão do extrator (P1).
+function agregaCadastro(cs){
+  const campos={}; let comCad=0, comDiv=0, comGrave=0, comEsc=0;
+  cs.forEach(c=>{
+    const cad=c.cadastro; if(!cad||!cad.n_comparados)return;
+    comCad++; if(cad.n_diverge)comDiv++; if((cad.graves||[]).length)comGrave++; if(cad.n_escopo)comEsc++;
+    (cad.linhas||[]).forEach(l=>{
+      const e=campos[l.chave]||(campos[l.chave]={campo:l.campo,bate:0,parcial:0,mais:0,menos:0,refa:0,diverge:0,sem:0,casos:[]});
+      if(l.status==="bate")e.bate++;
+      else if(l.status==="parcial"){e.parcial++;e.casos.push({cnj:c.cnj,l,tipo:"parcial"});}
+      else if(l.status==="ref_atualizada")e.refa++;
+      else if(l.status==="escopo_maior"){e.mais++;e.casos.push({cnj:c.cnj,l,tipo:"escopo"});}
+      else if(l.status==="escopo_menor"){e.menos++;e.casos.push({cnj:c.cnj,l,tipo:"escopo"});}
+      else if(l.status==="diverge"){e.diverge++;e.casos.push({cnj:c.cnj,l,tipo:"diverge"});}
+      else e.sem++;});});
+  return {campos,comCad,comDiv,comGrave,comEsc};
+}
+// Exemplo numérico da diferença entre as três medidas. Números redondos e fictícios
+// de propósito: a conta tem que dar pra acompanhar de cabeça.
+const LEG_EXEMPLO=`<details style="margin-top:9px">
+  <summary style="cursor:pointer;font-weight:600;color:var(--salmao)">ver um exemplo com números</summary>
+  <div style="margin-top:7px">Um caso com 3 verbas:</div>
+  <table style="font-size:12px;margin-top:5px;max-width:700px"><thead><tr><th>Verba</th><th style="text-align:right">IA</th><th style="text-align:right">PJC</th><th style="text-align:right">erro</th><th style="text-align:right" title="o valor da verba no cálculo de referência — é por ele que o erro é dividido">valor na referência</th><th>o que houve</th></tr></thead><tbody>
+    <tr><td>Horas extras</td><td style="text-align:right">30.000</td><td style="text-align:right">20.000</td><td style="text-align:right">10.000</td><td style="text-align:right">20.000</td><td class="sub">R$ 10 mil a mais</td></tr>
+    <tr><td>Insalubridade</td><td style="text-align:right">10.000</td><td style="text-align:right">20.000</td><td style="text-align:right">10.000</td><td style="text-align:right">20.000</td><td class="sub">R$ 10 mil a menos</td></tr>
+    <tr><td>Dano moral</td><td style="text-align:right">5.000</td><td style="text-align:right">não tem</td><td style="text-align:right">5.000</td><td style="text-align:right">não tem</td><td class="sub">só a IA calculou</td></tr>
+    <tr style="font-weight:700"><td>Total</td><td style="text-align:right">45.000</td><td style="text-align:right">40.000</td><td style="text-align:right">25.000</td><td style="text-align:right">40.000</td><td></td></tr>
+  </tbody></table>
+  <div style="margin-top:8px"><b>② Assertividade = 87,5%.</b> Só compara 45.000 com 40.000: a diferença é de R$ 5 mil sobre os R$ 40 mil da referência. Parece ótimo, mas os R$ 10 mil a mais da hora extra <b>anularam</b> os R$ 10 mil a menos da insalubridade.</div>
+  <div style="margin-top:5px"><b>① Acurácia global = 37,5%.</b> Soma os erros de verdade (R$ 25 mil) e divide pelo <b>valor da referência</b> (R$ 40 mil): 25 ÷ 40 = 62,5% de erro, logo 37,5% no lugar certo. Quase dois terços do dinheiro estão errados, e era isso que o total escondia.</div>
+  <div style="margin-top:5px" class="sub"><b>Por que o denominador é o valor da referência</b> (R$ 40 mil) e não o maior lado de cada verba: o erro do Fast Track se mede contra o gabarito. Dividir pelo maior lado colocava o próprio erro no denominador e dava desconto justamente a quem erra mais — uma verba calculada em 20× a referência tirava 95% de acerto. Duas consequências, as duas aceitas de propósito: o dano moral, que a referência não tem, entra com R$ 5 mil de erro e <b>nada</b> no denominador; e uma verba calculada acima do dobro passa de 100% de erro sozinha, então a medida <b>não tem piso</b> e pode ficar negativa. É por isso que todo número agregado do painel é <b>mediana</b>, nunca média. É exatamente a conta da coluna <b>“Acurácia”</b> de cada verba nas tabelas do caso, só somada.</div>
+  <div style="margin-top:5px"><b>③ Valor quando casa = 50%.</b> Olha só as duas verbas que os dois lados têm: a hora extra erra R$ 10 mil sobre os R$ 20 mil da referência (50%) e a insalubridade erra os mesmos R$ 10 mil sobre os mesmos R$ 20 mil (50%) — uma para cima, outra para baixo, com o mesmo tamanho relativo. O dano moral, que só a IA tem, fica de fora daqui, e é justamente ele que separa ③ de ①.</div>
+  <div style="margin-top:7px" class="sub">Neste exemplo: <b>②</b> muito acima de <b>①</b> avisa que há erro se anulando <b>ou</b> verba de um lado só. Quem separa os dois é o <b>índice de compensação</b>, que aqui dá <b>80%</b> — o erro líquido é R$ 5 mil sobre R$ 25 mil de erro bruto, então quatro quintos do erro somem no total. Os 12,5 pontos entre <b>③</b> (50%) e <b>①</b> (37,5%) são o dano moral: escopo, não conta errada.</div>
+</details>`;
+// ============================================================================
+// Telas agregadas. Uma tela = uma pergunta + UMA população, dita no topo.
+// O antigo "Controle Geral" respondia quatro perguntas na mesma rolagem, com
+// quatro populações diferentes (todos × escopo × confiáveis × FT) — foi assim
+// que o mesmo "aptos" apareceu com três valores na mesma tela.
+//   Placar            → quanto o cálculo acerta?        (aptos · ref < 200k)
+//   Onde o erro nasce → de que natureza é o erro?       (mesma população)
+//   Elegibilidade     → quem entra no automatizado?     (todos do período)
+//   Confiança do dado → dá para acreditar na medição?   (todos do período)
+// ============================================================================
+const LIMITE_FT=200000, TIPO_RR="Cálculo de Risco Real";
+// "Apto valor" (Raíra, 15/10): apto com o valor calculado pela IA entre R$ 50 mil e R$ 200 mil. Usa o valor
+// da IA, e não o da referência, porque é o que se conhece em produção (mesmo gate da matriz dos R$ 200k).
+const APTO_VALOR_MIN=50000, APTO_VALOR_MAX=200000;
+const aptoValor=c=>!!(c&&c.apto&&c.quadro&&c.quadro.total_ia!=null&&c.quadro.total_ia>=APTO_VALOR_MIN&&c.quadro.total_ia<=APTO_VALOR_MAX);
+// % dos casos com assertividade de 80% ou mais (a meta), ao lado de cada mediana
+const _pct80=xs=>{const v=xs.filter(x=>x!=null);return v.length?Math.round(100*v.filter(x=>x>=80).length/v.length)+"%":"—";};
+const _meta80=xs=>" · <b>"+_pct80(xs)+" com ≥ 80%</b>";
+const _tile=(n,l,d,hero)=>`<div class="tile ${hero?"hero":"plain"}"><div class="n">${n}</div><div class="l">${l}</div>${d?`<div class="d">${d}</div>`:""}</div>`;
+const _cab=(t,q)=>`<div class="seccab"><h3>${t}</h3><span class="q">${q}</span></div><div class="sechr"></div>`;
+const PER_PRESETS=[["7 dias",7],["15 dias",15],["30 dias",30],["90 dias",90],["Tudo",null]];
+// barra de período única, igual em todas as abas (o recorte tem que ser o mesmo
+// quando se pula de uma tela para a outra, senão os números deixam de conversar)
+function barraPeriodo(){
+  return `<div class="an-fil"><span class="fl">Período</span>${PER_PRESETS.map(([lb,n])=>
+      `<button class="${anPeriodo===lb?"on":""}" onclick="anSetPeriodo(${n},'${lb}')">${lb}</button>`).join("")}
+    <span style="width:10px"></span>
+    <input type="date" id="fDe" value="${fDe}" onchange="aplicaFiltro()">
+    <span class="sub" style="font-size:11.5px">até</span>
+    <input type="date" id="fAte" value="${fAte}" onchange="aplicaFiltro()">
+    <button class="btn-dl" style="margin:0" onclick="limpaFiltro()">limpar</button>
+    </div>`;
+}
+// população do PLACAR e do ONDE O ERRO NASCE: aptos, referência lida e abaixo do
+// teto do FT. As duas telas partilham isto de propósito — a segunda é a primeira
+// aberta por natureza de erro, então tem de somar o mesmo dinheiro.
+const baseFT=()=>casosEscopo().filter(comPJC).filter(c=>c.apto&&c.quadro.total_pjc!=null&&c.quadro.total_pjc<LIMITE_FT);
+
+// ---------------------------------------------------------------- RODADA -----
+// Cópia de 18/10 (Raíra): uma tela com o número da rodada, a direção do erro, o score de confiança
+// e os não aptos por motivo. Saíram evolução semanal, distribuição, jornada, camadas, "Onde o erro
+// nasce", "Acurácia por verba", Elegibilidade, Confiança do dado e Versões de prompt (o agente já
+// classifica o erro caso a caso). A página de antes está em antes_redesenho_1810/.
+// direção do total do caso: a mais / a menos que a referência, com ±5% contando como dentro
+const _dirCaso=c=>{const q=c.quadro||{},ia=q.total_ia,pj=q.total_pjc;
+  if(ia==null||pj==null||pj<=0)return null; const r=(ia-pj)/pj; return r>0.05?"mais":r<-0.05?"menos":"ok";};
+const DIRECOES=[["","Todas"],["mais","▲ A mais (> 5%)"],["menos","▼ A menos (> 5%)"],["ok","Dentro de ± 5%"]];
+const GRUPOS_CASO=[["todos","Todos"],["aptos","Aptos"],["apto_valor","Apto valor (IA R$ 50–200 mil)"],["naoapto","Não aptos"]];
+const _noGrupo=(c,g)=>g==="aptos"?!!c.apto:g==="apto_valor"?aptoValor(c):g==="naoapto"?!c.apto:true;
+const _probsDe=cs=>{const out=[];cs.forEach(c=>(((c.agente||{}).problemas)||[]).forEach(p=>out.push({...p,cnj:c.cnj})));return out;};
+const _selF=(lab,val,opts,on)=>`<div><div class="sub">${lab}</div><select onchange="${on}" style="padding:8px 10px;border:1px solid var(--linha);border-radius:8px;background:var(--surface);color:var(--text)">${
+  opts.map(([k,l])=>`<option value="${k}"${val===k?" selected":""}>${l}</option>`).join("")}</select></div>`;
+function telaPlacar(){
+  const todos=casosFiltrados(), ap=todos.filter(c=>c.apto), nAp=ap.length;
+  const refTodos=todos.filter(comPJC), apRef=ap.filter(comPJC), apValRef=apRef.filter(aptoValor);
+  const _asA=a=>a.map(c=>c.quadro.assertividade);
+  // faixa sem nenhum apto com referência (hoje, "a calcular") não ganha linha vazia
+  const FAIXAS=CONF_FAIXAS.filter(([k])=>apRef.some(c=>(c.confianca||{}).faixa===k));
+  const _dsPer=todos.map(c=>c.data_processamento).filter(Boolean).sort();
+  const _dmy=d=>d?d.slice(8,10)+"/"+d.slice(5,7):"—";
+  const perTxt=_dsPer.length?`<b>${todos.length}</b> casos com a última execução de <b>${_dmy(_dsPer[0])}</b> a <b>${_dmy(_dsPer[_dsPer.length-1])}</b> · <b>${nAp}</b> aptos · <b>${todos.filter(c=>c.agente).length}</b> com análise do agente`:"nenhum caso";
+  const _rgRow=(nome,desc,xs,principal)=>{const v=xs.filter(x=>x!=null), n=v.length, k=v.filter(x=>x>=80).length, med=_mediana(v);
+    return `<tr class="${principal?"rg-princ":""}"><td><div class="rg-nome">${nome}</div>${desc?`<div class="rg-desc">${desc}</div>`:""}</td>
+      <td class="rg-num rg-n">${n}</td>
+      <td class="rg-num"><span class="rg-meta">${n?Math.round(100*k/n)+"%":"—"}</span></td>
+      <td class="rg-num"><span class="rg-med" style="color:${corAcc(med)}">${accTxt(med)}</span></td></tr>`;};
+  const _rgCab=`<thead><tr><th></th><th class="rg-num">Casos</th><th class="rg-num">Na meta</th><th class="rg-num">Mediana</th></tr></thead>`;
+  // ---- funil: entrou → apto → apto valor → apto valor com confiança alta (Raíra, 18/10) ----
+  const apV=ap.filter(aptoValor), apVA=apV.filter(c=>(c.confianca||{}).faixa==="alta");
+  // entrada da esteira (29/10): CNJs que rodaram e onde pararam; só sem filtro de período/faixa, porque vale para o painel inteiro
+  const E=(!fDe&&!fAte&&!fScore&&D.entrada)?D.entrada:null, base=E?E.rodaram:(todos.length||1);
+  const _fs=(n,rot,desc,ant)=>`<div class="fstep"><div class="fbar-wrap">
+      <div class="fbar-track"><div class="fbar-fill" style="width:${Math.max(4,Math.round(100*n/base))}%">${n}</div></div>
+      <div class="fbar-meta" style="width:340px"><b style="color:var(--text)">${rot}</b>${ant!=null?` · ${ant?Math.round(100*n/ant):0}% do anterior`:""}${desc?`<div style="font-size:11px">${desc}</div>`:""}</div></div></div>`;
+  // 30/10: o painel só tem processo com PJC (inclusive execução com erro); quem terminou sem PJC fica na lista de pendentes
+  const _nf=f=>todos.filter(f).length, nPend=(D.pendentes_pjc||[]).length;
+  const entrada=E?_fs(E.rodaram,"Rodaram na esteira",`CNJs com execução desde ${_dmy(E.desde)} (até ${_dmy(E.ate.slice(0,10))}) · terminaram ${E.finalizados} · pararam em erro ${E.n_erros} (${Object.entries(E.erros).map(([k,v])=>esc(k)+" "+v).join(" · ")})${E.andamento?` · em andamento ${E.andamento}`:""}`,null):"";
+  const descPJC=E?`na régua ${_nf(comPJC)} · execução com erro ${_nf(c=>c.fora_regua==="nao_calculado")} · gabarito a corrigir ${_nf(c=>c.fora_regua==="gabarito_a_corrigir")} · extração não confiável ${_nf(c=>!c.sem_pjc&&!c.fora_regua&&!c.extracao_confiavel)}<br><b>sem PJC: ${nPend}</b> (fora do painel e do funil; lista de pendentes de PJC)`:"";
+  const DEG=[[E?"Com PJC (no painel)":"Casos que entraram",descPJC,todos],["Aptos",ap],["Apto valor","IA entre R$ 50 mil e R$ 200 mil",apV],["Apto valor com confiança alta","",apVA]]
+    .map(x=>x.length===2?[x[0],"",x[1]]:x);
+  const funil=entrada+DEG.map(([rot,desc,cs],i)=>{
+    const w=Math.max(4,Math.round(100*cs.length/base)), ant=i?DEG[i-1][2].length:(E?E.rodaram:null);
+    const A=_asA(cs.filter(comPJC)).filter(x=>x!=null), med=_mediana(A), k=A.filter(x=>x>=80).length;
+    return `<div class="fstep"><div class="fbar-wrap">
+      <div class="fbar-track"><div class="fbar-fill" style="width:${w}%">${cs.length}</div></div>
+      <div class="fbar-meta" style="width:340px"><b style="color:var(--text)">${rot}</b>${ant!=null?` · ${ant?Math.round(100*cs.length/ant):0}% do anterior`:""}${desc?`<span style="font-size:11px"> · ${desc}</span>`:""}
+        <div style="font-size:11px">${A.length?`na meta <b>${Math.round(100*k/A.length)}%</b> · mediana <b style="color:${corAcc(med)}">${accTxt(med)}</b> · ${A.length} com referência lida`:"sem referência lida"}</div></div></div></div>`;}).join("");
+  const rgTab=`<table class="rg-tab">${_rgCab}<tbody>
+    ${_rgRow("Aptos",apRef.length<nAp?`${nAp-apRef.length} aptos com referência não confiável ficam fora`:"régua de produção",_asA(apRef),true)}
+    ${_rgRow("Apto valor","IA entre R$ 50 mil e R$ 200 mil",_asA(apValRef),false)}
+    ${_rgRow("Todos com referência","aptos e não aptos",_asA(refTodos),false)}
+  </tbody></table>`;
+  const _rgScore=base=>`<table class="rg-tab">${_rgCab}<tbody>
+    ${FAIXAS.map(([k,rot,ic])=>_rgRow(`${rot} <span class="rg-desc">${ic}</span>`,"",_asA(base.filter(c=>(c.confianca||{}).faixa===k)),false)).join("")}
+  </tbody></table>`;
+  const rgScore=_rgScore(apRef), rgScoreValor=_rgScore(apValRef);
+  // ---- direção: sobrecálculo primeiro --------------------------------------
+  const _dirLinha=(nome,cs)=>{const g={mais:[],ok:[],menos:[]}; cs.forEach(c=>{const d=_dirCaso(c); if(d)g[d].push(c);});
+    const rs=arr=>arr.reduce((s,c)=>s+Math.abs(c.quadro.total_ia-c.quadro.total_pjc),0);
+    const n=g.mais.length+g.ok.length+g.menos.length, pc=x=>n?Math.round(100*x/n)+"%":"—";
+    return `<tr><td><div class="rg-nome">${nome}</div></td>
+      <td class="rg-num"><b>${g.mais.length}</b> <span class="sub">${pc(g.mais.length)} · ${brlK(rs(g.mais))}</span></td>
+      <td class="rg-num">${g.ok.length} <span class="sub">${pc(g.ok.length)}</span></td>
+      <td class="rg-num">${g.menos.length} <span class="sub">${pc(g.menos.length)} · ${brlK(rs(g.menos))}</span></td></tr>`;};
+  const dirTab=`<table class="rg-tab"><thead><tr><th></th><th class="rg-num">▲ A mais</th><th class="rg-num">Dentro de ± 5%</th><th class="rg-num">▼ A menos</th></tr></thead><tbody>
+    ${_dirLinha("Aptos",apRef)}${_dirLinha("Apto valor",apValRef)}
+    ${FAIXAS.map(([k,rot])=>_dirLinha(`Aptos · score ${rot.toLowerCase()}`,apRef.filter(c=>(c.confianca||{}).faixa===k))).join("")}
+    ${FAIXAS.map(([k,rot])=>_dirLinha(`Apto valor · score ${rot.toLowerCase()}`,apValRef.filter(c=>(c.confianca||{}).faixa===k))).join("")}</tbody></table>`;
+  // ---- score de confiança: a faixa prevê o acerto? Mesma população das tabelas de cima (todos os aptos
+  // com referência lida). Antes usava só os de referência < R$ 200 mil (herança do Placar) e o n de cada
+  // faixa não batia com o resto da tela (Raíra, 19/10).
+  const confGr=FAIXAS.map(([k,rot])=>{
+    const cs2=apRef.filter(c=>(c.confianca||{}).faixa===k&&c.quadro.assertividade!=null);
+    const A=cs2.map(c=>c.quadro.assertividade), fxC=[0,0,0,0];
+    A.forEach(a=>fxC[a>=95?0:a>=80?1:a>=50?2:3]++);
+    const dif=cs2.map(c=>(c.quadro.total_ia||0)-(c.quadro.total_pjc||0));
+    return {k,rot,n:A.length,fx:fxC,mediana:_mediana(A),nMeta:fxC[0]+fxC[1],
+            pct80:A.length?Math.round(100*(fxC[0]+fxC[1])/A.length):0,
+            sobre:dif.filter(d=>d>0).reduce((s,d)=>s+d,0),sub:-dif.filter(d=>d<0).reduce((s,d)=>s+d,0)};});
+  const cAlta=confGr[0], cTot=confGr.reduce((s,e)=>({n:s.n+e.n,nMeta:s.nMeta+e.nMeta,sobre:s.sobre+e.sobre}),{n:0,nMeta:0,sobre:0});
+  const pctTot=cTot.n?Math.round(100*cTot.nMeta/cTot.n):0;
+  const sobreFora=cTot.sobre?Math.round(100*(cTot.sobre-cAlta.sobre)/cTot.sobre):0;
+  // ---- não aptos por motivo --------------------------------------------------
+  const grp={}; todos.filter(c=>!c.apto).forEach(c=>{const k=c.categoria_inaptidao||"Motivo não classificado";grp[k]=(grp[k]||0)+1;});
+  const dord=Object.entries(grp).sort((a,b)=>b[1]-a[1]), dmax=Math.max.apply(null,dord.map(d=>d[1]).concat(1));
+  const naoAptos=dord.length?dord.map(([k,n])=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:7px"><div style="width:230px;font-size:12px">${esc(k)}</div><div style="flex:1;height:18px;background:var(--card);border-radius:6px;overflow:hidden"><div style="width:${100*n/dmax}%;height:100%;background:var(--neutro);border-radius:6px"></div></div><div style="width:34px;text-align:right;font-family:Sora;font-weight:600;font-size:12px">${n}</div></div>`).join(""):'<div class="sub">Nenhum caso não apto.</div>';
+  document.getElementById("main").innerHTML=`<h2>Rodada</h2>
+    ${barraPeriodo()}
+    <div class="rg-per">${perTxt}</div>
+    ${_cab("Funil","quantos casos chegam até a compra?")}
+    <div class="panel" style="margin-top:0">${funil}</div>
+    <div class="rg-grid">
+      <div class="rg-bloco"><h4>Assertividade por recorte</h4>${rgTab}</div>
+      <div class="rg-bloco"><h4>Aptos por faixa do score de confiança</h4>${rgScore}</div>
+      <div class="rg-bloco"></div>
+      <div class="rg-bloco"><h4>Apto valor por faixa do score de confiança</h4>${rgScoreValor}</div>
+    </div>
+    <div class="rg-nota"><b>Na meta</b> = assertividade de 80% ou mais (a IA no máximo 20% acima ou abaixo do real). <b>Mediana</b> = o caso do meio da fila.</div>
+    ${LEGENDA_ACC}
+    ${_cab("Direção","a IA erra mais para cima ou para baixo?")}
+    <div class="sub" style="margin-bottom:8px;max-width:940px">Aptos com referência lida, pelo total do caso. Em R$, a soma da diferença dos casos de cada lado.</div>
+    ${dirTab}
+    ${_cab("Score de confiança","a nota dada antes do gabarito prevê o acerto?")}
+    <div class="sub" style="margin-bottom:10px;max-width:940px">Nota calculada <b>só com o lado LIFT</b>, como em produção. Aqui: os mesmos <b>${apRef.length}</b> aptos com referência lida das tabelas acima.
+      <b>Travas</b> (derrubam para baixa sozinhas): verba sem código no glossário, reflexo acima do teto possível (13º &gt; 1/12, férias + 1/3 &gt; 1/9 da base), hora extra duplicada.
+      <b>Fatores de risco</b> (+1 cada): gratificação de função, comissões, Súmula 340, competências sem salário (≥ 10%; ≥ 50% conta +2), ficha de registro sem férias em 12+ meses calculados (com hora extra ou intervalo), afastamento integral em 6+ meses.</div>
+    <div class="tiles" style="margin-bottom:12px">
+      ${_tile(cTot.n?Math.round(100*cAlta.n/cTot.n)+"%":"—","Casos que seguiriam automáticos","só a faixa <b>alta</b>: "+cAlta.n+" de "+cTot.n,true)}
+      ${_tile(cAlta.n?cAlta.pct80+"%":"—","Na meta (≥ 80%) dentro da alta","contra <b>"+pctTot+"%</b> em todos os "+cTot.n+" casos",true)}
+      ${_tile(cTot.sobre?sobreFora+"%":"—","Do sobrecálculo que fica fora","as outras faixas vão para o calculista: "+brlK(cTot.sobre-cAlta.sobre)+" de "+brlK(cTot.sobre)+" calculados a mais",true)}
+    </div>
+    <div class="panel" style="margin-top:0">${_anConf(confGr)}${LEGENDA_ACC}</div>
+    ${_cab("Não aptos","por que o caso não segue pelo automático?")}
+    <div class="panel" style="margin-top:0">${naoAptos}</div>`;
+}
+
+// ------------------------------------------------- PROBLEMAS DO AGENTE -------
+// No lugar de "Onde o erro nasce" e "Acurácia por verba" (cópia, 18/10): o agente já classifica cada
+// diferença caso a caso, com evidência; aqui só se soma. Sobrecálculo primeiro.
+// Subcategorias (Raíra, 18/10: "dentro das categorias tem que ter subcategorias"): a VERBA vem do campo
+// verba do problema e O QUE ERROU vem do título, os dois por palavra-chave, na ordem da lista (a
+// primeira que casa ganha). Medido nos 2.134 problemas de 18/10: 88% caem num grupo com nome.
+const _semAcento=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+const FAM_VERBA=[
+  ["Reflexos, 13º, férias e DSR",/^reflex|^(13|decimo|ferias|dsr|repouso)|^aviso previo (sobre|de he|das)/],
+  ["Horas extras e jornada",/hora|\bhe\b|intervalo|intrajornada|interjornada|jornada|sobreaviso|domingo|feriado|prontidao/],
+  ["Adicional noturno",/noturn/],
+  ["Periculosidade e insalubridade",/periculos|insalubr/],
+  ["Pensão e danos",/pensao|dano|lucros cessantes/],
+  ["Estabilidade e reintegração",/estabilidade|reintegra|garantia/],
+  ["Gratificação, comissão e variável",/gratific|comiss|variavel|representacao|plr|participacao|premio|bonus/],
+  ["Salário e diferenças salariais",/diferenc|salari|equipara|acumulo|plus|anuenio|\bats\b|agir|piso|reajuste|remunera/],
+  ["Outros adicionais",/adicional/],
+  ["Rescisórias, FGTS e multas",/aviso previo|multa|477|467|rescis|fgts|seguro|indenizacao/],
+  ["O caso inteiro",/todas|processo inteiro|caso inteiro|geral|total/],
+];
+const NAT_PROB=[
+  ["Período apurado",/periodo|prescri|ajuizamento|inicio|termino|fim d|marco|data d|meses (a mais|a menos|fora)|competencia/],
+  ["Identificação da verba",/nao calcul|nao identific|codigo|deferi|excluid|indeferid|duplic|inelegiv|verba a mais|sem a verba|nao lanc|fora do calculo|lancou|classific/],
+  ["Dedução e compensação",/dedu|compens|abat|ja pag|desconto|oj 415/],
+  ["Base de cálculo",/base|salario|divisor|composi|remunera|holerite|rubrica|piso|valor da hora|hora normal|sumula 264/],
+  ["Quantidade de horas e dias",/quantidade|hora|dias|cartao|jornada|frequen|escala|turno|minuto|semana|feriado|domingo|intervalo/],
+  ["Percentual e adicional",/percentual|adicional|%/],
+  ["Reflexos e integração",/reflex|integra|media|avos|13|ferias|dsr|aviso/],
+];
+const _grupoDe=(lista,txt,outro)=>{const t=_semAcento(txt);const g=lista.find(([,rx])=>rx.test(t));return g?g[0]:outro;};
+const _famVerba=p=>p._fam||(p._fam=_grupoDe(FAM_VERBA,p.verba,"Outras verbas"));
+const _natProb=p=>p._nat||(p._nat=_grupoDe(NAT_PROB,p.titulo,"Outros"));
+const _somaRS=g=>({mais:g.filter(p=>p.mais).reduce((s,p)=>s+p.rs,0),menos:g.filter(p=>!p.mais).reduce((s,p)=>s+p.rs,0)});
+// quarto nível (Raíra, 18/10): a verba específica, só nas duas categorias grandes. Nos reflexos, o
+// agente marca muitos como "herdados do principal", e isso vira grupo próprio.
+const SUB_VERBA={
+  "Horas extras e jornada":[
+    ["Intervalo intrajornada",/intrajornada|^intervalo$|intervalo (para|de) (refeicao|descanso|almoco)|art\.? ?71/],
+    ["Intervalo interjornada",/interjornada|entre jornadas|art\.? ?66/],
+    ["Art. 384, NR e outras pausas",/384|\bnr\b|pausa|10 minutos/],
+    ["HE 100%, domingos e feriados",/100|domingo|feriado|dobra|em dobro/],
+    ["HE além da 6ª / 7ª e 8ª",/\b6a\b|6ª|sexta|7ª e 8ª|7a e 8a|bancari/],
+    ["In itinere, sobreaviso e espera",/itinere|sobreaviso|prontidao|espera|deslocamento|transporte/],
+    ["HE 50%, além da 8ª e da 44ª",/50|8a|8ª|44|hora|\bhe\b|jornada|intervalo/]],
+  "Reflexos, 13º, férias e DSR":[
+    ["Herdado do erro do principal",/herd|heranca/],
+    ["DSR / repouso",/dsr|repouso|rsr/],
+    ["13º salário",/13|decimo/],
+    ["Férias + 1/3",/ferias/],
+    ["Aviso prévio",/aviso/],
+    ["FGTS e multa de 40%",/fgts|40%/]],
+};
+const _subVerba=p=>{const r=SUB_VERBA[_famVerba(p)]; return r?_grupoDe(r,p.verba,"Outros"):null;};
+let probGrupo="todos", probDir="", probFam="", probNat="";
+function irProblemas(){ _modo("problemas"); telaProblemas(); }
+const ARV_CSS=`<style>
+  .arv{border:1px solid var(--linha);border-radius:10px;overflow:hidden}
+  .arv .lin{display:grid;grid-template-columns:minmax(260px,1fr) 90px 70px 110px 110px;gap:10px;align-items:center;padding:7px 12px;border-top:1px solid var(--linha)}
+  .arv .cabec{border-top:0;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--cinza);background:var(--card)}
+  .arv .num{text-align:right;font-variant-numeric:tabular-nums}
+  .arv summary{list-style:none;cursor:pointer}
+  .arv summary::-webkit-details-marker{display:none}
+  .arv summary:hover{background:var(--salmao-claro)}
+  .arv .chev{display:inline-block;width:14px;color:var(--cinza);transition:transform .15s}
+  .arv details[open]>summary .chev{transform:rotate(90deg)}
+  .arv .n0>summary{background:var(--card);font-weight:700}
+  .arv .n1>summary{font-weight:600}
+  .arv .n3>summary{font-size:12.5px}
+  .arv .total{font-weight:700;border-top:2px solid var(--linha)}
+  .arv table{font-size:12px;margin:0}
+</style>`;
+function telaProblemas(){
+  const cs=casosFiltrados().filter(c=>c.agente&&_noGrupo(c,probGrupo));
+  const ps=_probsDe(cs).filter(p=>!probDir||(probDir==="mais"?p.mais:!p.mais))
+    .filter(p=>!probFam||_famVerba(p)===probFam).filter(p=>!probNat||_natProb(p)===probNat);
+  const tot={n:ps.length,casos:new Set(ps.map(p=>p.cnj)).size,..._somaRS(ps)};
+  const _linha=p=>`<tr style="cursor:pointer" onclick="trocaCnj('${p.cnj}')">
+      <td style="white-space:nowrap;font-variant-numeric:tabular-nums;text-align:left">${p.cnj}</td>
+      <td style="text-align:left"><b>${esc(p.titulo||p.verba||"")}</b><div class="sub" style="font-size:11px">${esc(p.verba||"")}</div>
+        <div style="font-size:11.5px;margin-top:2px">${esc(p.oque||"")}</div></td>
+      <td style="text-align:right;white-space:nowrap">${p.mais?"▲":"▼"} ${brl(p.rs)}</td><td>${_agSitTag(p)}</td></tr>`;
+  const _grupos=(g,chave)=>{const m={}; g.forEach(p=>{const k=chave(p);(m[k]=m[k]||[]).push(p);});
+    return Object.entries(m).map(([k,gg])=>({k,g:gg,casos:new Set(gg.map(p=>p.cnj)).size,..._somaRS(gg)}))
+      .sort((a,b)=>b.mais-a.mais||b.g.length-a.g.length);};
+  const _nums=e=>`<span class="num">${e.g.length}</span><span class="num">${e.casos}</span>
+      <span class="num"><b>${brlK(e.mais)}</b></span><span class="num sub">${brlK(e.menos)}</span>`;
+  const _no=(nivel,rot,e,corpo)=>`<details class="n${nivel}"><summary class="lin">
+      <span style="padding-left:${nivel*22}px"><span class="chev">▸</span> ${rot}</span>${_nums(e)}</summary>${corpo}</details>`;
+  const _tab=(g,nivel)=>`<div style="padding:4px 12px 10px ${12+(nivel+1)*22}px;border-top:1px solid var(--linha)"><table style="width:100%;table-layout:fixed"><colgroup><col style="width:215px"><col><col style="width:140px"><col style="width:150px"></colgroup><tbody>${
+    g.slice().sort((a,b)=>(b.mais-a.mais)||(b.rs-a.rs)).map(_linha).join("")}</tbody></table></div>`;
+  // categoria → verba → o que errou → verba específica (só HE e reflexos) → problemas
+  const _nat=(g,nivel)=>_grupos(g,_natProb).map(n=>{
+    const sub=_subVerba(n.g[0])!=null;
+    return _no(nivel,esc(n.k),n,sub?_grupos(n.g,_subVerba).map(s=>_no(nivel+1,esc(s.k),s,_tab(s.g,nivel+1))).join(""):_tab(n.g,nivel));}).join("");
+  const cats=_grupos(ps,p=>p.cat).sort((a,b)=>b.mais-a.mais);
+  const arvore=`${ARV_CSS}<div class="arv">
+    <div class="lin cabec"><span>Categoria · verba · o que errou · verba específica</span><span class="num">Problemas</span><span class="num">Casos</span><span class="num">▲ A mais</span><span class="num">▼ A menos</span></div>
+    ${cats.map(e=>_no(0,_agTag(e.k),e,_grupos(e.g,_famVerba).map(f=>_no(1,esc(f.k),f,_nat(f.g,2))).join(""))).join("")}
+    <div class="lin total"><span>Total</span><span class="num">${tot.n}</span><span class="num">${tot.casos}</span><span class="num">${brlK(tot.mais)}</span><span class="num">${brlK(tot.menos)}</span></div></div>`;
+  document.getElementById("main").innerHTML=`<h2>Problemas do agente</h2>
+    ${barraPeriodo()}
+    <div class="sub" style="margin-bottom:12px;max-width:940px">Cada diferença que o agente achou nos casos analisados. Abra a categoria, depois a <b>verba</b>, <b>o que errou</b> e, em horas extras e reflexos, a <b>verba específica</b>. Ordem: R$ a mais primeiro. Clique numa linha de problema para abrir o caso.</div>
+    <div style="display:flex;gap:10px;align-items:end;margin:0 0 14px;flex-wrap:wrap">
+      ${_selF("Casos",probGrupo,GRUPOS_CASO,"probGrupo=this.value;telaProblemas()")}
+      ${_selF("Direção do problema",probDir,[["","Todas"],["mais","▲ A mais"],["menos","▼ A menos"]],"probDir=this.value;telaProblemas()")}
+      ${_selF("Verba",probFam,[["","Todas"],...FAM_VERBA.map(([k])=>[k,k]),["Outras verbas","Outras verbas"]],"probFam=this.value;telaProblemas()")}
+      ${_selF("O que errou",probNat,[["","Tudo"],...NAT_PROB.map(([k])=>[k,k]),["Outros","Outros"]],"probNat=this.value;telaProblemas()")}
+    </div>
+    ${ps.length?arvore:'<p class="sub">Nenhum problema do agente neste recorte.</p>'}`;
+}
+// ------------------------------------------------------------- VERBAS --------
+// Acurácia por verba com gráfico de faixa (Raíra, 18/10): uma linha por verba, o traço fino vai do
+// pior ao melhor caso, o grosso cobre a metade do meio (25%–75%), a bolinha é a mediana e os
+// pontinhos são os casos; a linha tracejada é a meta de 80%. Mesma régua da antiga "Acurácia por
+// verba": só verba que a IA calculou (≠ 0) e casou com a referência, em caso com referência lida;
+// agrupada pelo código do glossário (reflexo: tipo de reflexo × verba-base). Acurácia abaixo de 0%
+// fica encostada no 0 do eixo (o número da mediana continua o real).
+const _codVerba=v=>(v.p4&&v.p4.codigo_glossario)||(v.p9a_raw&&v.p9a_raw.codigo_glossario)
+  ||(v.p9b_raw&&v.p9b_raw.codigo_glossario)||v.codigo_glossario||null;
+const _tipoVerba=v=>v.is_reflexo?"reflexo":(v.is_rescisoria?"rescisoria":"principal");
+const TIPOS_VERBA=[["principal","Principais (mensais · P10a)","var(--salmao)"],
+  ["rescisoria","Rescisórias e valor fixo (P10b)","#2563C9"],["reflexo","Reflexos (13º, férias, aviso, DSR)","#C98A00"]];
+let verbaGrupo="aptos", verbaTipo="todas", verbaFams=[], verbaMin=3, verbaOrd="med", verbaBusca="", verbaSemDM=true;
+// Reflexo herda o erro da verba-base (Raíra, 18/10: "não é fair"). Por padrão a seção de reflexos mede
+// o ERRO PRÓPRIO: compara o tamanho do reflexo em relação à base, na IA e no PJC — se no PJC o 13º sobre
+// HE é 8,3% da HE e na IA também, o reflexo está certo mesmo com a HE errada. Acurácia própria =
+// 1 − |(reflexo IA ÷ base IA) ÷ (reflexo PJC ÷ base PJC) − 1|. Precisa da base casada com valor dos
+// dois lados; sem isso o caso fica fora no modo próprio. Nos aptos de 18/10: 923 comparações com
+// mediana 69,8% como estava; 804 com mediana 90,8% no erro próprio.
+let verbaRefl="proprio";
+const REFL_MODOS=[["proprio","Erro próprio (proporção sobre a base)"],["bruto","Como está (com o erro da base)"]];
+const _quantil=(s,p)=>{if(!s.length)return null;const i=(s.length-1)*p,a=Math.floor(i),b=Math.ceil(i);return s[a]+(s[b]-s[a])*(i-a);};
+function agregaVerbas(){
+  const cs=casosFiltrados().filter(comPJC).filter(c=>_noGrupo(c,verbaGrupo));
+  const g={};
+  cs.forEach(c=>{
+    // o reflexo não carrega código: a IA o nomeia "<tipo> sobre <verba-base>" e o código sai da base
+    const vbase={}; (c.verbas||[]).forEach(v=>{if(!v.is_reflexo&&v.nome_ia)vbase[v.nome_ia]=v;});
+    (c.verbas||[]).forEach(v=>{
+      if(v.status!=="coincide"||v.total_ia==null||v.total_ia===0||v.acuracia==null)return;
+      const tipo=_tipoVerba(v);
+      let cod=_codVerba(v), nome=v.nome_ia||v.nome_pjc, refl=null, accBase=null, proprio=null;
+      if(tipo==="reflexo"){
+        const m=/^(.*?) sobre (.*)$/.exec(nome||""); if(!m)return;
+        refl=m[1]; nome=m[2]; const b=vbase[nome];
+        if(b){cod=_codVerba(b)||cod;
+          if(b.status==="coincide"){accBase=b.acuracia;
+            const rb=(b.total_ia&&b.total_pjc)?b.total_ia/b.total_pjc:null;
+            if(rb>0&&v.total_pjc)proprio=Math.round(1000*(1-Math.abs((v.total_ia/v.total_pjc)/rb-1)))/10;}}
+      }
+      const val=(tipo==="reflexo"&&verbaRefl==="proprio")?proprio:v.acuracia;
+      if(val==null||!nome||(verbaSemDM&&cod==="BT052"))return;
+      const k=tipo+"|"+(refl?refl+"|":"")+(cod||"nome:"+_semAcento(nome).replace(/\s+/g," ").trim());
+      const e=g[k]||(g[k]={tipo,refl,codigo:cod,labels:{},casos:[]});
+      e.labels[nome]=(e.labels[nome]||0)+1;
+      e.casos.push({cnj:c.cnj,data:c.data_processamento,c,ia:v.total_ia,pjc:v.total_pjc,acuracia:v.acuracia,accBase,proprio,val});
+    });
+  });
+  return Object.values(g).map(e=>{
+    const nome=Object.entries(e.labels).sort((a,b)=>b[1]-a[1])[0][0];
+    let label=(e.codigo&&e.codigo!==nome)?e.codigo+" · "+nome:nome; if(e.refl)label=e.refl+" sobre "+label;
+    const s=e.casos.map(o=>o.val).sort((a,b)=>a-b);
+    const mais=e.casos.filter(o=>o.ia>o.pjc&&!prox(o.ia,o.pjc)), menos=e.casos.filter(o=>o.ia<o.pjc&&!prox(o.ia,o.pjc));
+    // categoria pela verba-base também no reflexo: o chip "Horas extras" traz a verba e os reflexos dela
+    return {...e,label,fam:_grupoDe(FAM_VERBA,nome,"Outras verbas"),n:s.length,s,
+      med:_quantil(s,.5),p25:_quantil(s,.25),p75:_quantil(s,.75),pct80:Math.round(100*s.filter(x=>x>=80).length/s.length),
+      nMais:mais.length,nMenos:menos.length,rsMais:mais.reduce((t,o)=>t+o.ia-o.pjc,0),rsMenos:menos.reduce((t,o)=>t+o.pjc-o.ia,0)};
+  });
+}
+// gráfico de faixa de uma verba; o eixo vai de 0% a 100%
+function _faixaSVG(a,cor){
+  const W=300,H=26,x=v=>6+(W-12)*Math.max(0,Math.min(100,v))/100,y=H/2;
+  const pts=a.s.map((v,i)=>`<circle cx="${x(v).toFixed(1)}" cy="${(y+((i%3)-1)*4).toFixed(1)}" r="1.8" fill="var(--cinza)" opacity=".45"/>`).join("");
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block">
+    <line x1="${x(80)}" y1="2" x2="${x(80)}" y2="${H-2}" stroke="var(--cinza)" stroke-dasharray="2 2" opacity=".7"/>
+    <line x1="${x(a.s[0])}" y1="${y}" x2="${x(a.s[a.s.length-1])}" y2="${y}" stroke="var(--cinza)" stroke-width="1.2"/>
+    <line x1="${x(a.p25)}" y1="${y}" x2="${x(a.p75)}" y2="${y}" stroke="${cor}" stroke-width="6" stroke-linecap="round" opacity=".55"/>
+    ${pts}<circle cx="${x(a.med)}" cy="${y}" r="6" fill="${corAcc(a.med)}" stroke="var(--surface)" stroke-width="1.5"><title>mediana ${accTxt(a.med)}</title></circle></svg>`;
+}
+const _eixoSVG=()=>{const W=300,x=v=>6+(W-12)*v/100;
+  return `<svg width="${W}" height="16" style="display:block">${[0,25,50,80,100].map(v=>`<text x="${x(v)}" y="11" font-size="9.5" text-anchor="${v===0?"start":v===100?"end":"middle"}" fill="var(--cinza)"${v===80?' font-weight="700"':""}>${v}%</text>`).join("")}</svg>`;};
+function irVerbas(){ _modo("verbas"); telaVerbas(); }
+function setVerbaFam(f){verbaFams=verbaFams.includes(f)?verbaFams.filter(x=>x!==f):verbaFams.concat(f);telaVerbas();}
+function telaVerbas(){
+  const todas=agregaVerbas(), q=_semAcento(verbaBusca);
+  const vis=todas.filter(a=>a.n>=verbaMin&&(verbaTipo==="todas"||a.tipo===verbaTipo)
+    &&(!verbaFams.length||verbaFams.includes(a.fam))&&(!q||_semAcento(a.label).includes(q)));
+  // padrão: melhor mediana primeiro (Raíra, 18/10)
+  const ORD={med:(a,b)=>b.med-a.med,pior:(a,b)=>a.med-b.med,n:(a,b)=>b.n-a.n,mais:(a,b)=>b.rsMais-a.rsMais};
+  const famsPresentes=[...FAM_VERBA.map(([k])=>k),"Outras verbas"].filter(f=>todas.some(a=>a.fam===f));
+  const chips=famsPresentes.map(f=>{const on=verbaFams.includes(f);
+    return `<button onclick="setVerbaFam('${f.replace(/'/g,"\\'")}')" class="${on?"on":""}">${esc(f)}</button>`;}).join("");
+  const linha=(a,cor)=>{
+    const rf=a.tipo==="reflexo";
+    // casos da verba do melhor para o pior (Raíra, 18/10)
+    const casos=a.casos.slice().sort((x,y)=>y.val-x.val).map(o=>`<tr onclick="trocaCnj('${o.cnj}')" style="cursor:pointer">
+        <td>${o.data||"—"}</td><td style="white-space:nowrap">${o.cnj}</td><td style="text-align:left;font-size:11.5px">${aptidaoCell(o.c)}</td>
+        <td style="text-align:right">${brl(o.ia)}</td><td style="text-align:right">${brl(o.pjc)}</td>
+        <td style="text-align:right;${rf?"":"font-weight:700;"}color:${corAcc(o.acuracia)}">${accTxt(o.acuracia)}</td>
+        ${rf?`<td style="text-align:right;color:${corAcc(o.accBase)}" title="acurácia da verba-base neste caso">${accTxt(o.accBase)}</td>
+          <td style="text-align:right;font-weight:700;color:${corAcc(o.proprio)}" title="erro próprio do reflexo: proporção reflexo ÷ base na IA contra a do PJC">${accTxt(o.proprio)}</td>`:""}
+        <td style="text-align:center">${prox(o.ia,o.pjc)?'<span class="sub">≈</span>':(o.ia>o.pjc?"▲":"▼")}</td></tr>`).join("");
+    return `<details style="border-bottom:1px solid var(--linha);padding:3px 0">
+      <summary style="cursor:pointer;list-style:none;display:grid;grid-template-columns:minmax(220px,1fr) 52px 300px 62px 60px 190px;gap:12px;align-items:center">
+        <span style="font-size:12.5px">${esc(a.label)}</span>
+        <span class="sub" style="text-align:right;font-size:11.5px">${a.n} caso${a.n>1?"s":""}</span>
+        ${_faixaSVG(a,cor)}
+        <b style="text-align:right;color:${corAcc(a.med)}">${accTxt(a.med)}</b>
+        <span class="sub" style="text-align:right;font-size:11.5px" title="casos com acurácia ≥ 80%">${a.pct80}% ≥80</span>
+        <span style="text-align:right;font-size:11.5px;white-space:nowrap" title="casos em que a IA calculou a mais (R$ a mais somado) · casos a menos (R$ a menos somado)">▲ ${a.nMais}${a.rsMais?` <span class="sub">${brlK(a.rsMais)}</span>`:""} · ▼ ${a.nMenos}${a.rsMenos?` <span class="sub">${brlK(a.rsMenos)}</span>`:""}</span>
+      </summary>
+      <div style="margin:6px 0 10px;overflow-x:auto"><table style="font-size:12px"><thead><tr><th>Data</th><th>CNJ</th><th>Aptidão</th><th style="text-align:right">IA · só esta verba</th><th style="text-align:right">Referência · só esta verba</th><th style="text-align:right">${rf?"Como está":"Acurácia"}</th>${rf?'<th style="text-align:right">Base</th><th style="text-align:right">Próprio</th>':""}<th></th></tr></thead><tbody>${casos}</tbody></table></div>
+    </details>`;};
+  const secoes=TIPOS_VERBA.filter(([t])=>verbaTipo==="todas"||verbaTipo===t).map(([t,titulo,cor])=>{
+    const vs=vis.filter(a=>a.tipo===t).sort(ORD[verbaOrd]); if(!vs.length)return "";
+    const pool=vs.reduce((s,a)=>s.concat(a.s),[]).sort((a,b)=>a-b);
+    return `<div style="margin:20px 0 6px;padding:8px 12px;border-left:4px solid ${cor};background:var(--salmao-claro);border-radius:0 9px 9px 0">
+        <b style="font-family:Sora">${titulo}</b> <span class="sub" style="font-size:12px">· ${vs.length} verbas · ${pool.length} comparações · mediana <b style="color:${corAcc(_quantil(pool,.5))}">${accTxt(_quantil(pool,.5))}</b></span>
+        ${t==="reflexo"?`<div class="sub" style="font-size:11.5px;margin-top:3px">${verbaRefl==="proprio"
+          ?"<b>Erro próprio do reflexo</b>: compara o tamanho do reflexo em relação à verba-base, na IA e no PJC, então o erro da base não entra. Fica fora o caso sem a base casada com valor dos dois lados."
+          :"<b>Como está</b>: o reflexo contra o PJC, carregando o erro da verba-base."}</div>`:""}</div>
+      <div style="display:grid;grid-template-columns:minmax(220px,1fr) 52px 300px 62px 60px 190px;gap:12px;font-size:10px;color:var(--cinza);text-transform:uppercase;letter-spacing:.05em;padding:2px 0">
+        <span>Verba</span><span style="text-align:right">Casos</span>${_eixoSVG()}<span style="text-align:right">Mediana</span><span style="text-align:right">Na meta</span><span style="text-align:right">Direção</span></div>
+      ${vs.map(a=>linha(a,cor)).join("")}`;}).join("");
+  document.getElementById("main").innerHTML=`<h2>Verbas</h2>
+    ${barraPeriodo()}
+    <div class="sub" style="margin-bottom:10px;max-width:940px">Acurácia de cada verba entre os casos. Traço fino: do pior ao melhor caso · traço grosso: a metade do meio · <b>bolinha: mediana</b> · pontinhos: os casos · tracejado: meta de 80%. Só verbas que a IA calculou e casaram com a referência. Clique numa verba para ver os casos.</div>
+    <div style="display:flex;gap:10px;align-items:end;margin:0 0 10px;flex-wrap:wrap">
+      ${_selF("Casos",verbaGrupo,GRUPOS_CASO,"verbaGrupo=this.value;telaVerbas()")}
+      ${_selF("Natureza",verbaTipo,[["todas","Todas"],...TIPOS_VERBA.map(([k,r])=>[k,r])],"verbaTipo=this.value;telaVerbas()")}
+      ${_selF("Reflexos",verbaRefl,REFL_MODOS,"verbaRefl=this.value;telaVerbas()")}
+      ${_selF("Mínimo de casos",String(verbaMin),[["1","1"],["3","3"],["5","5"],["10","10"]],"verbaMin=+this.value;telaVerbas()")}
+      ${_selF("Ordem",verbaOrd,[["med","Mediana (melhor primeiro)"],["pior","Mediana (pior primeiro)"],["n","Mais casos primeiro"],["mais","R$ a mais primeiro"]],"verbaOrd=this.value;telaVerbas()")}
+      <div><div class="sub">Buscar verba (nome ou código)</div><input value="${esc(verbaBusca)}" placeholder="ex.: horas extras, BT089…" onchange="verbaBusca=this.value;telaVerbas()"
+        style="padding:8px 10px;border:1px solid var(--linha);border-radius:8px;min-width:220px;background:var(--surface);color:var(--text)"></div>
+      <label class="sub" style="display:flex;align-items:center;gap:6px;cursor:pointer;padding-bottom:8px">
+        <input type="checkbox" ${verbaSemDM?"checked":""} onchange="verbaSemDM=this.checked;telaVerbas()"> sem dano moral (BT052)</label>
+    </div>
+    <div class="an-fil" style="margin-bottom:6px"><span class="fl">Categorias</span>${chips}${verbaFams.length?`<button onclick="verbaFams=[];telaVerbas()">limpar</button>`:""}</div>
+    ${LEGENDA_ACC}
+    ${secoes||'<p class="sub">Nenhuma verba com esse filtro.</p>'}`;
+}
+
+// ---------------------------------------------------- VERBA CONSOLIDADA ------
+// Pedido da Raíra (29/10): a aba Verbas casa cada verba da IA com UMA linha do PJC (regra de 16/10), mas
+// o PJC fatia a mesma verba (período "até/após", adicional × hora cheia da Súmula 85, 50/75/100% da
+// convenção) e a fatia que sobra vira "só PJC" — a acurácia cai por pareamento (0010011-13: 0% por verba,
+// 99,7% somando). Aqui cada linha do PJC ganha um código e, em cada caso, soma-se tudo o que tem o mesmo
+// código dos dois lados. O código continua separado (além da 8ª × 7ª/8ª × além da 6ª × domingos e
+// feriados × 384 × intervalo): não junta famílias.
+//   · linha de jornada: o código sai do nome (7ª → BT081, 6ª → BT001, 8ª/44ª/semanal → BT089 …);
+//   · hora extra sem tipo no nome ("HORAS EXTRAS 50%"): fica com a hora extra comum que a IA deferiu no
+//     caso, se ela deferiu uma só ("atribuída"); se deferiu 7ª/8ª e além da 8ª, vira "sem tipo no PJC";
+//   · outras verbas: a linha casada fica com o código da verba da IA; a só PJC, com o código do de-para.
+// Reflexo: tipo de reflexo × código da verba-base, pelas mesmas regras.
+const _nrm=s=>String(s||"").normalize("NFKD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/\s+/g," ").trim();
+const _HE_RX=/hora.*extra|extra.*hora|\bh\.? ?e\.?\b|sobrejornada/;
+const _HE_COMUNS=["BT001","BT081","BT089"];
+const CONSOL_NOMES={BT089:"Horas extras além da 8ª",BT081:"Horas extras 7ª e 8ª",BT001:"Horas extras além da 6ª",
+  BT011:"Domingos e feriados",BT003:"Intervalo do art. 384",BT004:"Intervalo interjornada",BT007:"Intervalo intrajornada",
+  BT087:"Horas in itinere",BT002:"Sobreaviso",HE_AMB:"Horas extras somadas (PJC sem tipo, IA com mais de um tipo)"};
+// código de jornada pelo nome; "HE" = hora extra sem tipo; null = não é verba de jornada
+function _codJornada(nome){
+  const n=_nrm(nome);
+  if(/interjornada|entrejornada/.test(n))return "BT004";
+  if(/\b384\b/.test(n))return "BT003";
+  if(/interval|intrajornada/.test(n))return "BT007";
+  if(/itinere/.test(n))return "BT087";
+  if(/sobreaviso/.test(n))return "BT002";
+  if(!_HE_RX.test(n))return null;
+  if(/doming|feriad|repouso trabalhad|em dobro/.test(n))return "BT011";
+  const s7=/\b7a\b|setima/.test(n), s6=/\b6a\b|sexta hora/.test(n), s8=/\b8a\b|oitava|\b4[04] ?(a|h)\b|semanal|\b33 ?h|\b36 ?h/.test(n);
+  if(s7)return "BT081";
+  if(s6&&!s8)return "BT001";
+  if(s8&&!s6)return "BT089";
+  return "HE";
+}
+const _semFatia=s=>_nrm(s).replace(/\(\+\d+ (fatia|linha).*$/,"").replace(/\s+[-–]\s+.*$/,"").trim();
+const _tipoRefl=p=>{const n=_nrm(p);return /^(13|decimo)/.test(n)?"13º Salário":/ferias/.test(n)?"Férias + 1/3"
+  :/aviso/.test(n)?"Aviso Prévio":/fgts/.test(n)?"FGTS":/repouso|\bdsr\b|\brsr\b/.test(n)?"DSR":"Outros reflexos";};
+const _partesRefl=nome=>{const m=/^(.*?) sobre (.*)$/i.exec(nome||"");return m?[m[1],m[2]]:null;};
+let consolGrupo="aptos", consolSec="todas", consolMin=3, consolOrd="med", consolBusca="", consolSemDM=true,
+    consolEstrito=false, consolRefl="proprio";
+function agregaConsol(){
+  const cs=casosFiltrados().filter(comPJC).filter(c=>_noGrupo(c,consolGrupo));
+  const g={};
+  cs.forEach(c=>{
+    const vs=c.verbas||[];
+    // código de cada verba principal da IA; as horas extras comuns que a IA deferiu decidem a linha sem tipo
+    const codIA=v=>{const k=_codVerba(v)||v.codigo; if(k)return k; const j=_codJornada(v.nome_ia); return j&&j!=="HE"?j:null;};
+    const heIA=new Set(vs.filter(v=>!v.is_reflexo&&v.nome_ia&&v.total_ia).map(codIA).filter(k=>_HE_COMUNS.includes(k)));
+    // com um tipo só de hora extra comum na IA, a linha sem tipo é dele (não é dúvida); sem nenhum, vai
+    // para a além da 8ª e fica marcada; com mais de um, a hora extra comum do caso inteiro vira HE_AMB
+    const resolveHE=k=>k!=="HE"?{k,atrib:false}:(heIA.size===1?{k:[...heIA][0],atrib:false}:heIA.size===0?{k:"BT089",atrib:true}:{k:"HE_AMB",atrib:true});
+    const baseIA={}; vs.forEach(v=>{if(!v.is_reflexo&&v.nome_ia)baseIA[v.nome_ia]=v;});
+    const chaveBase=(nomeBase,vb)=>{
+      if(vb){const k=codIA(vb);if(k)return {k,atrib:false};}
+      const j=_codJornada(nomeBase); if(j)return resolveHE(j);
+      return {k:"nome:"+_semFatia(nomeBase),atrib:false};};
+    const acc={};
+    const add=(sec,refl,cod,lado,val,nome,atrib)=>{
+      if(!val)return;
+      const key=sec+"|"+(refl||"")+"|"+cod;
+      const e=acc[key]||(acc[key]={sec,refl,cod,ia:0,pjc:0,lIA:[],lPJ:[],atrib:false,nomes:{}});
+      e[lado==="ia"?"ia":"pjc"]+=val; (lado==="ia"?e.lIA:e.lPJ).push(nome); if(atrib)e.atrib=true;
+      if(lado==="ia")e.nomes[nome]=(e.nomes[nome]||0)+1;};
+    vs.forEach(v=>{
+      if(v.is_reflexo){
+        const pi=_partesRefl(v.nome_ia), pp=_partesRefl(v.nome_pjc);
+        if(pi&&v.total_ia){const b=chaveBase(pi[1],baseIA[pi[1]]);add("reflexo",_tipoRefl(pi[0]),b.k,"ia",v.total_ia,v.nome_ia,b.atrib);}
+        if(pp&&v.total_pjc){
+          // linha casada de verba-base que não é de jornada: segue a base da IA; senão, regras do nome
+          const vb=pi&&!_codJornada(pp[1])?baseIA[pi[1]]:null;
+          const b=chaveBase(pp[1],vb);add("reflexo",_tipoRefl(pp[0]),b.k,"pjc",v.total_pjc,v.nome_pjc,b.atrib);}
+        return;}
+      if(v.nome_ia&&v.total_ia){const k=codIA(v)||"nome:"+_semFatia(v.nome_ia);
+        const r=k==="nome:"+_semFatia(v.nome_ia)&&_codJornada(v.nome_ia)==="HE"?resolveHE("HE"):{k,atrib:false};
+        add("principal",null,r.k,"ia",v.total_ia,v.nome_ia,r.atrib);}
+      if(v.nome_pjc&&v.total_pjc){
+        const j=_codJornada(v.nome_pjc);
+        let r;
+        if(j)r=resolveHE(j);
+        else if(v.status==="coincide"&&v.nome_ia)r={k:codIA(v)||"nome:"+_semFatia(v.nome_ia),atrib:false};
+        else r={k:v.codigo_depara||"nome:"+_semFatia(v.nome_pjc),atrib:false};
+        add("principal",null,r.k,"pjc",v.total_pjc,v.nome_pjc,r.atrib);}
+    });
+    // caso ambíguo (PJC sem tipo, IA com mais de um tipo de hora extra comum): junta os dois lados numa
+    // linha só, em vez de deixar as linhas do PJC sem par e as da IA "só IA"
+    Object.values(acc).filter(e=>e.cod==="HE_AMB").forEach(amb=>{
+      Object.keys(acc).forEach(k=>{const e=acc[k];
+        if(e===amb||e.sec!==amb.sec||e.refl!==amb.refl||!_HE_COMUNS.includes(e.cod))return;
+        amb.ia+=e.ia;amb.pjc+=e.pjc;amb.lIA.push(...e.lIA);amb.lPJ.push(...e.lPJ);
+        Object.entries(e.nomes).forEach(([n,q])=>amb.nomes[n]=(amb.nomes[n]||0)+q);delete acc[k];});});
+    // base consolidada do caso, para o erro próprio do reflexo
+    const baseCons=cod=>acc["principal||"+cod];
+    Object.values(acc).forEach(e=>{
+      if(consolSemDM&&e.cod==="BT052")return;
+      const k=e.sec+"|"+(e.refl||"")+"|"+e.cod;
+      const G=g[k]||(g[k]={sec:e.sec,refl:e.refl,codigo:e.cod,labels:{},casos:[],soIA:[],soPJ:[]});
+      Object.entries(e.nomes).forEach(([n,q])=>G.labels[n]=(G.labels[n]||0)+q);
+      const o={cnj:c.cnj,data:c.data_processamento,c,ia:e.ia,pjc:e.pjc,lIA:e.lIA,lPJ:e.lPJ,atrib:e.atrib};
+      if(!e.ia){G.soPJ.push(o);return;} if(!e.pjc){G.soIA.push(o);return;}
+      o.acuracia=Math.round(1000*(1-Math.abs(e.ia-e.pjc)/Math.abs(e.pjc)))/10;
+      o.proprio=null;
+      if(e.sec==="reflexo"){const b=baseCons(e.cod);
+        if(b&&b.ia&&b.pjc){const rb=b.ia/b.pjc;o.proprio=Math.round(1000*(1-Math.abs((e.ia/e.pjc)/rb-1)))/10;}}
+      o.val=e.sec==="reflexo"&&consolRefl==="proprio"?o.proprio:o.acuracia;
+      if(o.val==null||(consolEstrito&&o.atrib))return;
+      G.casos.push(o);
+    });
+  });
+  return Object.values(g).filter(e=>e.casos.length).map(e=>{
+    const cod=e.codigo, top=Object.entries(e.labels).sort((a,b)=>b[1]-a[1])[0];
+    const nome=CONSOL_NOMES[cod]||(top?top[0]:cod.replace(/^nome:/,""));
+    let label=/^BT\d+$/.test(cod)?cod+" · "+nome:nome; if(e.refl)label=e.refl+" sobre "+label;
+    const s=e.casos.map(o=>o.val).sort((a,b)=>a-b);
+    const mais=e.casos.filter(o=>o.ia>o.pjc&&!prox(o.ia,o.pjc)), menos=e.casos.filter(o=>o.ia<o.pjc&&!prox(o.ia,o.pjc));
+    return {...e,label,fam:_grupoDe(FAM_VERBA,nome,"Outras verbas"),n:s.length,s,
+      med:_quantil(s,.5),p25:_quantil(s,.25),p75:_quantil(s,.75),pct80:Math.round(100*s.filter(x=>x>=80).length/s.length),
+      nAtrib:e.casos.filter(o=>o.atrib).length,nSomado:e.casos.filter(o=>o.lPJ.length>1||o.lIA.length>1).length,
+      nMais:mais.length,nMenos:menos.length,rsMais:mais.reduce((t,o)=>t+o.ia-o.pjc,0),rsMenos:menos.reduce((t,o)=>t+o.pjc-o.ia,0)};
+  });
+}
+function irConsol(){ _modo("consol"); telaConsol(); }
+function telaConsol(){
+  const todas=agregaConsol(), q=_semAcento(consolBusca);
+  const vis=todas.filter(a=>a.n>=consolMin&&(consolSec==="todas"||a.sec===consolSec)&&(!q||_semAcento(a.label).includes(q)));
+  const ORD={med:(a,b)=>b.med-a.med,pior:(a,b)=>a.med-b.med,n:(a,b)=>b.n-a.n,mais:(a,b)=>b.rsMais-a.rsMais};
+  const COLS="minmax(220px,1fr) 52px 300px 62px 60px 190px";
+  const lista=xs=>esc(xs.join(" + "));
+  const linha=(a,cor)=>{
+    const rf=a.sec==="reflexo";
+    const casos=a.casos.slice().sort((x,y)=>y.val-x.val).map(o=>`<tr onclick="trocaCnj('${o.cnj}')" style="cursor:pointer">
+        <td>${o.data||"—"}</td><td style="white-space:nowrap">${o.cnj}</td><td style="text-align:left;font-size:11.5px">${aptidaoCell(o.c)}</td>
+        <td style="text-align:right" title="${lista(o.lIA)}">${brl(o.ia)}${o.lIA.length>1?` <span class="sub">(${o.lIA.length})</span>`:""}</td>
+        <td style="text-align:right" title="${lista(o.lPJ)}">${brl(o.pjc)}${o.lPJ.length>1?` <span class="sub">(${o.lPJ.length})</span>`:""}</td>
+        <td style="text-align:right;${rf?"":"font-weight:700;"}color:${corAcc(o.acuracia)}">${accTxt(o.acuracia)}</td>
+        ${rf?`<td style="text-align:right;font-weight:700;color:${corAcc(o.proprio)}" title="erro próprio: proporção reflexo ÷ base consolidada na IA contra a do PJC">${accTxt(o.proprio)}</td>`:""}
+        <td style="text-align:center">${prox(o.ia,o.pjc)?'<span class="sub">≈</span>':(o.ia>o.pjc?"▲":"▼")}</td>
+        <td style="font-size:11px;max-width:420px" class="sub">${o.atrib?'<b title="hora extra sem tipo no PJC num caso em que a IA não deferiu hora extra comum ou deferiu mais de um tipo">atribuída</b> · ':""}PJC: ${lista(o.lPJ)}</td></tr>`).join("");
+    const so=(a.soIA.length||a.soPJ.length)?`<div class="sub" style="font-size:11.5px;margin:4px 0">Só de um lado (fora da mediana): só IA em ${a.soIA.length} caso(s)${a.soIA.length?" — "+a.soIA.slice(0,8).map(o=>`<a href="#" onclick="trocaCnj('${o.cnj}');return false">${o.cnj}</a>`).join(", "):""}; só PJC em ${a.soPJ.length}${a.soPJ.length?" — "+a.soPJ.slice(0,8).map(o=>`<a href="#" onclick="trocaCnj('${o.cnj}');return false">${o.cnj}</a>`).join(", "):""}.</div>`:"";
+    return `<details style="border-bottom:1px solid var(--linha);padding:3px 0">
+      <summary style="cursor:pointer;list-style:none;display:grid;grid-template-columns:${COLS};gap:12px;align-items:center">
+        <span style="font-size:12.5px">${esc(a.label)}${a.nSomado?` <span class="sub" style="font-size:11px" title="casos com mais de uma linha somada num dos lados">· ${a.nSomado} somado${a.nSomado>1?"s":""}</span>`:""}${a.nAtrib?` <span class="sub" style="font-size:11px" title="casos com linha do PJC atribuída pela hora extra da IA">· ${a.nAtrib} atrib.</span>`:""}</span>
+        <span class="sub" style="text-align:right;font-size:11.5px">${a.n} caso${a.n>1?"s":""}</span>
+        ${_faixaSVG(a,cor)}
+        <b style="text-align:right;color:${corAcc(a.med)}">${accTxt(a.med)}</b>
+        <span class="sub" style="text-align:right;font-size:11.5px" title="casos com acurácia ≥ 80%">${a.pct80}% ≥80</span>
+        <span style="text-align:right;font-size:11.5px;white-space:nowrap">▲ ${a.nMais}${a.rsMais?` <span class="sub">${brlK(a.rsMais)}</span>`:""} · ▼ ${a.nMenos}${a.rsMenos?` <span class="sub">${brlK(a.rsMenos)}</span>`:""}</span>
+      </summary>${so}
+      <div style="margin:6px 0 10px;overflow-x:auto"><table style="font-size:12px"><thead><tr><th>Data</th><th>CNJ</th><th>Aptidão</th><th style="text-align:right">IA · somado</th><th style="text-align:right">Referência · somado</th><th style="text-align:right">${rf?"Como está":"Acurácia"}</th>${rf?'<th style="text-align:right">Próprio</th>':""}<th></th><th style="text-align:left">Linhas do PJC somadas</th></tr></thead><tbody>${casos}</tbody></table></div>
+    </details>`;};
+  const SECS=[["principal","Principais e rescisórias","var(--salmao)"],["reflexo","Reflexos (13º, férias, aviso, DSR)","#C98A00"]];
+  const secoes=SECS.filter(([t])=>consolSec==="todas"||consolSec===t).map(([t,titulo,cor])=>{
+    const vs=vis.filter(a=>a.sec===t).sort(ORD[consolOrd]); if(!vs.length)return "";
+    const pool=vs.reduce((s,a)=>s.concat(a.s),[]).sort((a,b)=>a-b);
+    return `<div style="margin:20px 0 6px;padding:8px 12px;border-left:4px solid ${cor};background:var(--salmao-claro);border-radius:0 9px 9px 0">
+        <b style="font-family:Sora">${titulo}</b> <span class="sub" style="font-size:12px">· ${vs.length} verbas · ${pool.length} comparações · mediana <b style="color:${corAcc(_quantil(pool,.5))}">${accTxt(_quantil(pool,.5))}</b></span>
+        ${t==="reflexo"?`<div class="sub" style="font-size:11.5px;margin-top:3px">${consolRefl==="proprio"
+          ?"<b>Erro próprio do reflexo</b>: proporção do reflexo sobre a verba-base consolidada, na IA contra a do PJC. Fica fora o caso sem a base consolidada dos dois lados."
+          :"<b>Como está</b>: o reflexo somado contra o PJC somado, carregando o erro da verba-base."}</div>`:""}</div>
+      <div style="display:grid;grid-template-columns:${COLS};gap:12px;font-size:10px;color:var(--cinza);text-transform:uppercase;letter-spacing:.05em;padding:2px 0">
+        <span>Verba (código)</span><span style="text-align:right">Casos</span>${_eixoSVG()}<span style="text-align:right">Mediana</span><span style="text-align:right">Na meta</span><span style="text-align:right">Direção</span></div>
+      ${vs.map(a=>linha(a,cor)).join("")}`;}).join("");
+  document.getElementById("main").innerHTML=`<h2>Verba consolidada</h2>
+    ${barraPeriodo()}
+    <div class="sub" style="margin-bottom:10px;max-width:940px">Mesma régua da aba Verbas, mas sem depender de qual linha do PJC casou com qual verba da IA. Em cada caso, cada linha do PJC ganha o código da verba e <b>soma-se tudo o que tem o mesmo código dos dois lados</b> — as fatias de período, o adicional separado da hora cheia e os percentuais da convenção entram juntos. Os códigos continuam separados: além da 8ª, 7ª e 8ª, além da 6ª, domingos e feriados, art. 384 e intervalo não se misturam. Hora extra sem tipo no nome do PJC fica com a hora extra comum que a IA deferiu no caso; quando a IA não deferiu nenhuma, vai para a além da 8ª, e quando deferiu mais de um tipo, as horas extras comuns do caso são somadas numa linha só — nos dois casos a comparação fica marcada como <b>atribuída</b>. Verba só de um lado fica fora da mediana e aparece contada ao abrir a linha.</div>
+    <div style="display:flex;gap:10px;align-items:end;margin:0 0 10px;flex-wrap:wrap">
+      ${_selF("Casos",consolGrupo,GRUPOS_CASO,"consolGrupo=this.value;telaConsol()")}
+      ${_selF("Natureza",consolSec,[["todas","Todas"],["principal","Principais e rescisórias"],["reflexo","Reflexos"]],"consolSec=this.value;telaConsol()")}
+      ${_selF("Reflexos",consolRefl,REFL_MODOS,"consolRefl=this.value;telaConsol()")}
+      ${_selF("Mínimo de casos",String(consolMin),[["1","1"],["3","3"],["5","5"],["10","10"]],"consolMin=+this.value;telaConsol()")}
+      ${_selF("Ordem",consolOrd,[["med","Mediana (melhor primeiro)"],["pior","Mediana (pior primeiro)"],["n","Mais casos primeiro"],["mais","R$ a mais primeiro"]],"consolOrd=this.value;telaConsol()")}
+      <div><div class="sub">Buscar verba (nome ou código)</div><input value="${esc(consolBusca)}" placeholder="ex.: horas extras, BT089…" onchange="consolBusca=this.value;telaConsol()"
+        style="padding:8px 10px;border:1px solid var(--linha);border-radius:8px;min-width:220px;background:var(--surface);color:var(--text)"></div>
+      <label class="sub" style="display:flex;align-items:center;gap:6px;cursor:pointer;padding-bottom:8px">
+        <input type="checkbox" ${consolSemDM?"checked":""} onchange="consolSemDM=this.checked;telaConsol()"> sem dano moral (BT052)</label>
+      <label class="sub" style="display:flex;align-items:center;gap:6px;cursor:pointer;padding-bottom:8px" title="tira da conta as comparações marcadas como atribuídas: hora extra sem tipo no PJC num caso em que a IA não deferiu hora extra comum ou deferiu mais de um tipo">
+        <input type="checkbox" ${consolEstrito?"checked":""} onchange="consolEstrito=this.checked;telaConsol()"> só o que o nome do PJC identifica</label>
+    </div>
+    ${LEGENDA_ACC}
+    ${secoes||'<p class="sub">Nenhuma verba com esse filtro.</p>'}`;
+}
+
+// --------------------------------------------------- VERBAS NÃO CALCULADAS ----
+// Pedido da Raíra (20/10): só os casos que chegaram ao P10 e foram calculados, mas saíram do apto
+// porque uma verba não foi calculada (categoria de inaptidão "Verba não calculada", fora do FT travado).
+// A verba que trava vem dos motivos de inaptidão do caso ("BT028 — PLR (depende de documento)").
+const _ncCodDe=det=>{const m=/^\s*(BT\d+)/.exec(det||"");return m?m[1]:String(det||"").split("—")[0].trim();};
+const _ncNomeDe=det=>String(det||"").replace(/^\s*BT\d+\s*—\s*/,"").replace(/\s*\(depende de documento\)\s*$/,"");
+const _semTag=s=>String(s||"").replace(/<[^>]+>/g,"");
+// por que a IA não calculou esta verba neste caso, pelo registro da própria verba
+function _ncPorque(c,cod){
+  const v=(c.verbas||[]).find(v=>!v.is_reflexo&&(v.codigo_glossario===cod||(v.p4&&v.p4.codigo_glossario)===cod)&&(v.total_ia==null||v.status==="nao_calc"));
+  if(!v)return {tipo:"—",texto:""};
+  if(v.status==="nao_calc")return {tipo:"P9a: não calculável",texto:v.motivo_classificacao||""};
+  if(v.motivo_nao_calc==="documental")return {tipo:"Depende de documento",texto:_semTag(v.obs_texto)};
+  if(v.motivo_nao_calc==="no_pjc")return {tipo:"Deferida, não calculada (o PJC calculou)",texto:(v.p4||{}).contexto||""};
+  return {tipo:"Deferida, não calculada",texto:(v.p4||{}).contexto||_semTag(v.obs_texto)};
+}
+// quanto o PJC calculou nesta verba neste caso (Raíra, 20/10: é a urgência de calcular): soma as linhas
+// da verba sem valor da IA — a do PJC que ficou sem par (só PJC) ou a deferida que casou com o PJC
+const _ncCods=v=>[v.codigo_glossario,v.p4&&v.p4.codigo_glossario,v.codigo_depara].filter(Boolean);
+const _ncPjc=(c,cod)=>(c.verbas||[]).filter(v=>!v.is_reflexo&&!/ sobre /.test(v.nome_ia||"")&&_ncCods(v).includes(cod)
+  &&(v.status==="so_pjc"||v.total_ia==null||v.status==="nao_calc")).reduce((s,v)=>s+(v.total_pjc||0),0);
+let ncBusca="", ncSoUma=false;
+function irNaoCalc(){ _modo("naocalc"); telaNaoCalc(); }
+function telaNaoCalc(){
+  const cs=casosFiltrados().filter(c=>!c.apto&&c.fora_regua!=="nao_calculado"&&c.categoria_inaptidao==="Verba não calculada");
+  const casos=cs.map(c=>{const ms=(c.motivos_inaptidao||[]).filter(m=>m.categoria==="Verba não calculada");
+    const cods=[...new Set(ms.map(m=>_ncCodDe(m.detalhe)))];
+    const nomes={}; ms.forEach(m=>{nomes[_ncCodDe(m.detalhe)]=_ncNomeDe(m.detalhe);});
+    return {c,cods,nomes};});
+  const vis=ncSoUma?casos.filter(o=>o.cods.length===1):casos;
+  const q=_semAcento(ncBusca);
+  const pv={}; vis.forEach(o=>o.cods.forEach(k=>{const e=pv[k]=pv[k]||{cod:k,nome:o.nomes[k],it:[]}; e.it.push(o);}));
+  const verbas=Object.values(pv).filter(e=>!q||_semAcento(e.cod+" "+e.nome).includes(q))
+    .map(e=>({...e,n:e.it.length,so:e.it.filter(o=>o.cods.length===1).length,
+      pjc:e.it.reduce((s,o)=>s+_ncPjc(o.c,e.cod),0),comPjc:e.it.filter(o=>_ncPjc(o.c,e.cod)>0).length}))
+    .sort((a,b)=>b.pjc-a.pjc||b.n-a.n);   // urgência: o que o PJC calculou nessa verba primeiro
+  // detalhe da verba: uma coluna "só esta verba trava" com x (Raíra, 20/10), sem outras leituras
+  // assertividade sem a verba: tira do PJC o que ele calculou nas verbas que a IA não calculou (todas as que travam o caso)
+  const _assertSem=o=>{const q2=o.c.quadro||{}, falta=o.cods.reduce((s,k)=>s+_ncPjc(o.c,k),0), pj=(q2.total_pjc||0)-falta;
+    return (!falta||q2.total_ia==null||pj<=0)?null:Math.round(1000*(1-Math.abs(q2.total_ia-pj)/pj))/10;};
+  const linhaCaso=(o,cod)=>{const q2=o.c.quadro||{}, p=_ncPorque(o.c,cod), a=q2.assertividade, vp=_ncPjc(o.c,cod), as=_assertSem(o);
+    return `<tr style="cursor:pointer" onclick="trocaCnj('${o.c.cnj}')">
+      <td style="white-space:nowrap;text-align:left">${o.c.cnj}</td>
+      <td style="text-align:center;font-weight:700">${o.cods.length===1?"x":""}</td>
+      <td style="text-align:right;font-weight:700">${vp?brl(vp):'<span class="sub">—</span>'}</td>
+      <td style="text-align:right">${brl(q2.total_ia)}</td><td style="text-align:right">${brl(q2.total_pjc)}</td>
+      <td style="text-align:right;font-weight:700;color:${corAcc(a)}">${accTxt(a)}</td>
+      <td style="text-align:right;font-weight:700;color:${corAcc(as)}" title="PJC sem ${o.cods.length>1?"as verbas que travam o caso ("+o.cods.join(", ")+")":"esta verba"}">${accTxt(as)}</td>
+      <td style="text-align:left"><b style="font-size:11px">${esc(p.tipo)}</b><div style="font-size:11px">${esc(String(p.texto).slice(0,300))}</div></td></tr>`;};
+  const COLS="minmax(260px,1fr) 90px 120px 130px";
+  const linhaVerba=e=>`<details style="border-bottom:1px solid var(--linha);padding:5px 0">
+    <summary style="cursor:pointer;list-style:none;display:grid;grid-template-columns:${COLS};gap:12px;align-items:center">
+      <span style="font-size:12.5px"><b>${esc(e.cod)}</b> · ${esc(e.nome||"")}</span>
+      <span style="text-align:right;font-weight:700">${e.n}</span>
+      <span style="text-align:right" title="casos em que esta é a única verba que trava: calculada, o caso volta a ser apto">${e.so}</span>
+      <span style="text-align:right" title="soma do que o PJC calculou nesta verba, nos ${e.comPjc} casos em que ele calculou"><b>${e.pjc?brlK(e.pjc):"—"}</b> <span class="sub" style="font-size:11px">${e.comPjc} de ${e.n}</span></span></summary>
+    <div style="margin:6px 0 10px;overflow-x:auto"><table style="font-size:12px;width:100%;table-layout:fixed">
+      <colgroup><col style="width:190px"><col style="width:80px"><col style="width:115px"><col style="width:115px"><col style="width:115px"><col style="width:70px"><col style="width:80px"><col></colgroup>
+      <thead><tr><th style="text-align:left">CNJ</th><th style="text-align:center">Só esta verba trava</th><th style="text-align:right">PJC · esta verba</th><th style="text-align:right">IA · caso</th><th style="text-align:right">PJC · caso</th>
+        <th style="text-align:right">Assert.</th><th style="text-align:right" title="tirando do PJC o que ele calculou nas verbas que a IA não calculou">Assert. sem a verba</th><th style="text-align:left">Por que a IA não calculou</th></tr></thead>
+      <tbody>${e.it.slice().sort((a,b)=>_ncPjc(b.c,e.cod)-_ncPjc(a.c,e.cod)).map(o=>linhaCaso(o,e.cod)).join("")}</tbody></table></div></details>`;  const so1=casos.filter(o=>o.cods.length===1).length;
+  document.getElementById("main").innerHTML=`<h2>Verbas não calculadas</h2>
+    ${barraPeriodo()}
+    <div class="sub" style="margin-bottom:12px;max-width:940px">Casos que <b>chegaram ao P10 e foram calculados</b>, mas saíram do apto porque <b>uma verba não foi calculada</b>. Abaixo, as verbas que travam esses casos. Clique numa verba para ver os casos e o motivo.</div>
+    <div class="tiles" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px">
+      ${_tile(String(casos.length),"Casos fora do apto por verba não calculada","chegaram ao P10 e têm cálculo",true)}
+      ${_tile(String(so1),"Presos por uma verba só","calculada essa verba, o caso volta a ser apto")}
+      ${_tile(brlK(casos.reduce((s,o)=>s+o.cods.reduce((t,k)=>t+_ncPjc(o.c,k),0),0)),"O que o PJC calculou nessas verbas","é o que falta no cálculo da IA")}
+    </div>
+    <div style="display:flex;gap:14px;align-items:end;margin:0 0 12px;flex-wrap:wrap">
+      <div><div class="sub">Buscar verba (nome ou código)</div><input value="${esc(ncBusca)}" placeholder="ex.: PLR, BT011…" onchange="ncBusca=this.value;telaNaoCalc()"
+        style="padding:8px 10px;border:1px solid var(--linha);border-radius:8px;min-width:220px;background:var(--surface);color:var(--text)"></div>
+      <label class="sub" style="display:flex;align-items:center;gap:6px;cursor:pointer;padding-bottom:8px">
+        <input type="checkbox" ${ncSoUma?"checked":""} onchange="ncSoUma=this.checked;telaNaoCalc()"> só casos presos por uma verba</label>
+    </div>
+    <div style="display:grid;grid-template-columns:${COLS};gap:12px;font-size:10px;color:var(--cinza);text-transform:uppercase;letter-spacing:.05em;padding:2px 0;border-bottom:1px solid var(--linha)">
+      <span>Verba que trava</span><span style="text-align:right">Casos</span><span style="text-align:right" title="só ela trava o caso">Só ela</span><span style="text-align:right" title="soma do que o PJC calculou nesta verba · em quantos casos ele calculou">PJC da verba</span></div>
+    ${verbas.map(linhaVerba).join("")||'<p class="sub">Nenhum caso com esse filtro.</p>'}`;
+}
+
+// ---- JORNADA: cartão de ponto × pré-fixada ---------------------------------
+// Duas perguntas distintas, e a divergência entre elas é o achado:
+//   tipo de decisão = o que a sentença manda (apurar pelos cartões × jornada
+//                     arbitrada na própria decisão);
+//   fonte de apuração = o que o cálculo REALMENTE usou (batidas na memória do P9b).
+// Com cartão deferido, "2h extras por dia" é TETO a apurar dia a dia; com jornada
+// arbitrada, é regra fixa. Confundir os dois é o eixo sistêmico de hora extra.
+const JORN={
+  cartao:["Cartão de ponto","var(--azul)","a apuração vem das batidas reais, dia a dia"],
+  fixa:["Jornada pré-fixada","var(--cinza)","a jornada foi arbitrada na decisão; não há apuração por cartão"],
+  mista:["Cartão + jornada fixada","#C98A00","períodos com cartão e períodos com jornada arbitrada"],
+};
+// ---- SCORE DE CONFIANÇA (src/confianca.py) --------------------------------
+// Lê só o lado LIFT, então existe também nos casos sem referência: é a nota que
+// o cálculo levaria em produção. Não é acurácia, por isso não usa a escala de
+// cor: o selo é neutro e só a faixa baixa ganha o âmbar de alerta.
+const CONF_FAIXAS=[
+  ["alta","Alta","●●●","nenhum fator de risco nem trava"],
+  ["media","Média","●●○","um fator de risco"],
+  ["baixa","Baixa","●○○","uma trava, ou dois ou mais fatores de risco"],
+];
+const _confRot=f=>(CONF_FAIXAS.find(x=>x[0]===f)||[])[1]||"—";
+function chipConfianca(c){
+  const s=c&&c.confianca; if(!s)return '<span class="sub" title="o LIFT não calculou nenhuma verba neste caso">—</span>';
+  const [k,rot,pts,desc]=CONF_FAIXAS.find(x=>x[0]===s.faixa);
+  const cor=k==="baixa"?"var(--acc-perto)":"var(--text)";
+  const tit=(s.componentes.length?s.componentes.map(x=>`${x.tipo==="trava"?"TRAVA":"risco +"+x.pontos}: ${x.rotulo} (${x.detalhe})`).join("\n"):"nenhum componente acionado")+`\n— ${desc}`;
+  return `<span style="font-size:10.5px;font-family:Sora;color:${cor};border:1px solid ${k==="baixa"?cor:"var(--linha)"};border-radius:5px;padding:1px 6px;white-space:nowrap" title="${esc(tit)}"><span style="letter-spacing:-1px">${pts}</span> ${rot}</span>`;
+}
+function blocoConfianca(c){
+  const s=c.confianca; if(!s)return "";
+  const itens=s.componentes.map(x=>`<li><b>${x.tipo==="trava"?"Trava":"Risco (+"+x.pontos+")"}</b> · ${esc(x.rotulo)} <span class="sub">— ${esc(x.detalhe)}</span></li>`).join("");
+  return `<div class="panel" style="margin:0 0 14px;max-width:940px"><h3 style="display:flex;gap:10px;align-items:center">Confiança do cálculo ${chipConfianca(c)}</h3>
+    <div class="ph">Nota calculada <b>só com o lado LIFT</b>, sem olhar a referência — é a que o caso levaria em produção. ${(CONF_FAIXAS.find(x=>x[0]===s.faixa)||[])[3]?"Faixa "+_confRot(s.faixa).toLowerCase()+": "+CONF_FAIXAS.find(x=>x[0]===s.faixa)[3]+".":""}</div>
+    ${itens?`<ul style="margin:6px 0 0 18px;padding:0">${itens}</ul>`:'<div class="sub">Nenhum componente acionado.</div>'}</div>`;
+}
+// ---- DIAGNÓSTICO DO AGENTE (análise caso a caso) ----------------------------
+// Vem de agente/agente_por_caso.json (ft_arvore_divergencias/ferramentas/agente_para_painel.py).
+// Cada problema tem a CATEGORIA (de quem é a diferença) e a SITUAÇÃO frente aos ajustes: um ajuste que
+// rodou depois da execução analisada deve corrigir o problema; decidido = ainda não implementado.
+const AG_CAT={erro_ia:["Erro da IA","#b5484f"],premissa:["Premissa não endereçada","#a8741a"],gabarito:["Gabarito questionável","#7a6fb0"],
+  regra:["Decisão de negócio","#2a6b44"],documento:["Documento fora do alcance","#5b8bb0"],medicao:["Diferença de medição","#8a8284"],investigar:["Em investigação","#a59c9d"]};
+const AG_SIT={corrigido_depois:["Ajuste entrou em homologação depois desta análise","var(--ok)"],decidido:["Decidido, ainda não implementado","var(--acc-perto)"],aberto:["Em aberto","var(--cinza)"]};
+const _agTag=(k,peq)=>{const [r,cor]=AG_CAT[k]||[k,"var(--cinza)"];return `<span style="display:inline-block;font-size:${peq?10:11}px;font-weight:600;white-space:nowrap;border:1px solid ${cor};color:${cor};border-radius:999px;padding:0 7px">${r}</span>`;};
+function _agSitTag(p){const [r,cor]=AG_SIT[p.sit]||AG_SIT.aberto;
+  const tit=[p.tema?"Tema: "+p.tema:"",p.onde?"Onde: "+p.onde:"",p.quando?"Entrou em homologação em "+p.quando.split("-").reverse().join("/"):"",p.nota||""].filter(Boolean).join("\n");
+  return `<span title="${esc(tit)}" style="font-size:10.5px;font-weight:600;color:${cor};white-space:nowrap">${p.sit==="aberto"&&!p.tema?"Em aberto":r}</span>${p.onde&&p.sit==="corrigido_depois"?`<div class="sub" style="font-size:10.5px">${esc(p.onde)}</div>`:""}`;}
+function _agResumo(a){const g={};(a.problemas||[]).forEach(p=>{const x=g[p.cat]=g[p.cat]||{n:0,mais:0,menos:0};x.n++;x[p.mais?"mais":"menos"]+=p.rs;});return g;}
+function blocoAgente(c){
+  const a=c.agente; if(!a)return "";
+  const g=_agResumo(a), ps=a.problemas||[];
+  const nCorr=ps.filter(p=>p.sit==="corrigido_depois").length;
+  const linhasRes=Object.keys(AG_CAT).filter(k=>g[k]).map(k=>`<tr><td style="text-align:left">${_agTag(k)}</td><td style="text-align:right">${g[k].n}</td><td style="text-align:right">${brl(g[k].mais)}</td><td style="text-align:right">${brl(g[k].menos)}</td></tr>`).join("");
+  // problemas agrupados por tipo (na ordem de AG_CAT), do maior para o menor valor; cada um com rótulos fixos
+  const _lin=(r,v)=>v?`<div class="ag-l"><span>${r}</span>${esc(v)}</div>`:"";
+  const _prob=p=>{
+    const corpo=p.cat==="gabarito"
+      ?`<div class="ag-gab"><div class="ag-gab-t">O que é questionável no gabarito</div>${_lin("Calculista",p.calculista)}${_lin("IA",p.ia)}${_lin("Por quê",p.porque||p.regra)}</div>`
+      :`${_lin("O que aconteceu",p.oque)}${_lin("Por quê",p.porque)}${p.porque?"":_lin("Regra citada",p.regra)}`;
+    return `<tr><td class="ag-p"><b>${esc(p.titulo||p.verba||"")}</b>${corpo}</td>
+      <td class="ag-v">${p.mais?"▲ a mais":"▼ a menos"}<br><b>${brl(p.rs)}</b></td>
+      <td class="ag-s">${_agSitTag(p)}</td></tr>`;};
+  const linhas=Object.keys(AG_CAT).filter(k=>ps.some(p=>p.cat===k)).map(k=>{
+    const gp=ps.filter(p=>p.cat===k).sort((a,b)=>b.rs-a.rs);
+    return `<tr class="ag-grupo"><td colspan="3">${_agTag(k)} <span class="sub">${gp.length} problema(s) · a mais ${brl(g[k].mais)} · a menos ${brl(g[k].menos)}</span></td></tr>`+gp.map(_prob).join("");}).join("");
+  const _dA=(a.data_processamento||"?").split("-").reverse().join("/"), _dC=(c.data_processamento||"?").split("-").reverse().join("/");
+  const aviso=a.mesma_execucao?"":`<div class="warn" style="margin:6px 0 8px"><b>Análise de uma execução anterior.</b> ${_dA===_dC
+    ?`O agente analisou uma execução de ${_dA}${a.total_ia!=null?` (IA ${brl(a.total_ia)})`:""}, e o processo rodou de novo no mesmo dia.`
+    :`O agente analisou a execução de ${_dA}; o caso foi recalculado em ${_dC}.`} O diagnóstico abaixo não vale para os valores da tela.</div>`;
+  return `<div class="panel" style="margin:0 0 14px;max-width:1100px"><h3 style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">Diagnóstico do agente <span class="sub" style="font-weight:400">${esc(a.rodada||"")}</span></h3>
+    ${aviso}${a.resumo?`<div class="ph" style="max-width:940px">${esc(a.resumo)}</div>`:""}
+    <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;margin:8px 0 10px">
+      <table style="font-size:12px;width:auto"><thead><tr><th style="text-align:left">Tipo</th><th style="text-align:right">Problemas</th><th style="text-align:right">A mais</th><th style="text-align:right">A menos</th></tr></thead><tbody>${linhasRes}</tbody></table>
+      ${nCorr?`<div class="sub" style="max-width:300px;margin-top:4px"><b style="color:var(--ok)">${nCorr} problema(s)</b> com ajuste que entrou em homologação depois desta análise: devem sair quando o ajuste chegar a produção.</div>`:""}</div>
+    <details${ps.length<=8?" open":""}><summary style="cursor:pointer;font-weight:600;margin:4px 0">Problemas (${ps.length})</summary>
+      <div style="overflow-x:auto"><table style="font-size:12px;margin-top:6px"><thead><tr><th style="text-align:left">Problema</th><th style="text-align:right">Efeito</th><th style="text-align:left">Situação</th></tr></thead><tbody>${linhas}</tbody></table></div></details></div>`;
+}
+function chipAgente(c){
+  const a=c&&c.agente; if(!a)return '<span class="sub">—</span>';
+  const g=_agResumo(a);
+  const t=Object.keys(AG_CAT).filter(k=>g[k]).map(k=>`${AG_CAT[k][0]}: ${g[k].n} (a mais ${brl(g[k].mais)}, a menos ${brl(g[k].menos)})`).join("\n");
+  const ia=(g.erro_ia||{}).n||0, pr=(g.premissa||{}).n||0, gb=(g.gabarito||{}).n||0;
+  return `<span title="${esc(t+(a.mesma_execucao?"":"\n(análise de execução anterior)"))}" style="font-size:11px;white-space:nowrap">`
+    +`<b style="color:${AG_CAT.erro_ia[1]}">${ia}</b> IA · <b style="color:${AG_CAT.premissa[1]}">${pr}</b> prem · <b style="color:${AG_CAT.gabarito[1]}">${gb}</b> gab${a.mesma_execucao?"":" ↺"}</span>`;
+}
+let listaAgente="";
+const _agSel=c=>!listaAgente||(listaAgente==="com"?!!c.agente:listaAgente==="sem"?!c.agente:!!(c.agente&&(c.agente.problemas||[]).some(p=>p.cat===listaAgente)));
+// Composição do acerto por faixa de confiança: cada barra é 100% dos casos da
+// faixa, fatiada nas quatro faixas de acurácia do painel (mesmas cores, então a
+// cor continua significando acurácia). Responde a pergunta de decisão — "se só a
+// alta seguir automática, quanto dela bate?" — melhor que uma média, que não tem
+// piso e é decidida por um único caso de −19.900%. À direita, o dinheiro errado
+// em cada faixa, sobrecálculo primeiro.
+const brlK=v=>v==null?"—":"R$ "+(Math.abs(v)>=1e6?(v/1e6).toLocaleString("pt-BR",{maximumFractionDigits:2})+" mi":Math.abs(v)>=1e3?Math.round(v/1e3).toLocaleString("pt-BR")+" mil":Math.round(v).toLocaleString("pt-BR"));
+function _anConf(gr){
+  if(!gr.some(g=>g.n))return '<div class="sub">Sem casos no recorte.</div>';
+  const W=720,rowH=52,pt=26,pb=8,pl=64,pr=230,H=pt+pb+rowH*gr.length, bw=W-pl-pr;
+  const ROT=["≥ 95% · bate","80–95% · na meta","50–80% · abaixo da meta","< 50% · não bate"];
+  let g=`<text x="${pl}" y="12" font-size="10" fill="var(--cinza)">% dos casos da faixa em cada nível de ② assertividade</text>
+    <text x="${W-pr+16}" y="12" font-size="10" fill="var(--cinza)">R$ calculados a mais · a menos</text>`;
+  gr.forEach((e,i)=>{const yc=pt+i*rowH+rowH/2, bh=22, y=yc-bh/2;
+    g+=`<text x="${pl-10}" y="${yc-2}" text-anchor="end" font-size="12.5" font-weight="700" font-family="Sora" fill="var(--text)">${e.rot}</text>
+      <text x="${pl-10}" y="${yc+12}" text-anchor="end" font-size="10.5" fill="var(--cinza)">${e.n} casos</text>`;
+    if(!e.n){g+=`<text x="${pl}" y="${yc+4}" font-size="11" fill="var(--cinza)">sem casos</text>`;return;}
+    let x=pl;
+    e.fx.forEach((k,j)=>{if(!k)return; const w=bw*k/e.n, p=Math.round(100*k/e.n);
+      // 2px de respiro entre fatias
+      g+=`<rect x="${x}" y="${y}" width="${Math.max(w-2,1)}" height="${bh}" rx="3" fill="${FAIXAS_ACC[j][1]}"><title>${e.rot} · ${ROT[j]}: ${k} de ${e.n} casos (${p}%)</title></rect>`;
+      if(w>=34)g+=`<text x="${x+w/2-1}" y="${yc+4}" text-anchor="middle" font-size="11" font-weight="700" font-family="Sora" fill="#fff" pointer-events="none">${p}%</text>`;
+      x+=w;});
+    g+=`<text x="${W-pr+16}" y="${yc-2}" font-size="11.5" fill="var(--text)"><tspan font-weight="700">▲ ${brlK(e.sobre)}</tspan> · ▼ ${brlK(e.sub)}</text>
+      <text x="${W-pr+16}" y="${yc+12}" font-size="10.5" fill="var(--cinza)">mediana ${accTxt(e.mediana)} · na meta ${e.pct80}%</text>`;});
+  return `<div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px" role="img" aria-label="Composição do acerto por faixa de confiança">${g}</svg></div>`;
+}
+function chipJornada(c,curto){
+  const j=c&&c.jornada; if(!j||!j.tipo_decisao)return '<span class="sub" title="o P9a não trouxe definições de jornada neste caso (normalmente caso sem verba de hora)">—</span>';
+  const [rot,cor,desc]=JORN[j.tipo_decisao]||["?","var(--cinza)",""];
+  const alerta=j.cartao_nao_usado
+    ? ` <span style="color:var(--acc-perto)" title="A decisão manda apurar pelos cartões e a memória do cálculo não tem batidas: a apuração presumiu jornada. Com cartão deferido, 2h/dia é TETO a apurar dia a dia, não regra fixa.">⚠ não usou o cartão</span>`:"";
+  return `<span style="font-size:10.5px;font-family:Sora;color:${cor};border:1px solid ${cor};border-radius:5px;padding:1px 6px;white-space:nowrap" title="${esc(desc)}">${curto?rot.split(" ")[0]:rot}</span>${alerta}`;
+}
+function telaJornada(){
+  const c=caso(), j=c.jornada||{};
+  const [rot,cor,desc]=JORN[j.tipo_decisao]||["Sem jornada no P9a","var(--cinza)","o P9a não trouxe definições de jornada — normalmente caso sem verba de hora"];
+  const ct=j.cartao;
+  // ---- cartão: competência a competência, com as batidas do dia --------------
+  const linhasCartao=!ct?"":ct.competencias.map(m=>{
+    const dias=m.dias.map(d=>{
+      const [data,...hs]=d;
+      const pares=[]; for(let i=0;i<hs.length;i+=2)pares.push(hs[i]+" – "+(hs[i+1]||"?"));
+      const dow=["dom","seg","ter","qua","qui","sex","sáb"][new Date(data+"T12:00:00Z").getUTCDay()];
+      return `<tr><td style="white-space:nowrap">${data.split("-").reverse().join("/")} <span class="sub">${dow}</span></td>
+        <td style="text-align:left">${pares.join(" · ")}</td></tr>`;}).join("");
+    return `<details style="border:1px solid var(--linha);border-radius:9px;padding:8px 12px;margin-bottom:6px">
+      <summary style="cursor:pointer;list-style:none;display:flex;gap:14px;align-items:baseline;flex-wrap:wrap">
+        <b style="font-family:Sora;min-width:80px">${mes(m.competencia)}</b>
+        <span class="sub">${m.n_dias} dia${m.n_dias!==1?"s":""} com registro</span>
+        <span style="margin-left:auto;font-family:Sora;font-weight:700">${m.horas!=null?numf(m.horas)+"h":"—"}</span>
+      </summary>
+      <table style="font-size:11.5px;margin-top:6px;max-width:420px"><thead><tr><th style="text-align:left">Dia</th><th style="text-align:left">Batidas</th></tr></thead><tbody>${dias}</tbody></table>
+    </details>`;}).join("");
+  // ---- jornada pré-fixada: regimes do P9a + texto vinculante do P4 -----------
+  // "Todo o período imprescrito" (e variações) é frase do P4/P9a, não data: mostra
+  // a frase e, ao lado, as datas do imprescrito que o P1 calculou (cadastro).
+  const _linJ=k=>((c.cadastro||{}).linhas||[]).find(l=>l.chave===k);
+  const _datasImp=()=>{const i=_linJ("periodo_ini"),f=_linJ("periodo_fim");const a=i&&i.lift,b=f&&f.lift;
+    return a&&b?`${a} a ${b}`:(a?`a partir de ${a}`:((c.cadastro||{}).data_prescricao?`a partir de ${(c.cadastro||{}).data_prescricao}`:null));};
+  const _perTxt=p=>{const s=String(p||"").trim();if(!s)return "—";
+    if(/imprescrit|periodo_global|per[ií]odo (global|todo|integral)|todo o (per[ií]odo|contrato)/i.test(s)){const d=_datasImp();
+      return d?`${esc(s==="periodo_global"?"Período imprescrito":s)} <span class="sub">(${esc(d)})</span>`:esc(s);}
+    return esc(s);};
+  // padrão de horário e lógica de composição chegam como objeto: escrever legível
+  const _DIA={segunda:"seg","terça":"ter",terca:"ter",quarta:"qua",quinta:"qui",sexta:"sex","sábado":"sáb",sabado:"sáb",domingo:"dom"};
+  const _padTxt=p=>{if(p==null)return "—";if(typeof p!=="object")return esc(p);
+    const dias=(p.dias_semana||[]).map(d=>_DIA[String(d).toLowerCase()]||d).join(", ");
+    const hor=(p.horario_inicio||p.horario_fim)?`${p.horario_inicio||"?"}–${p.horario_fim||"?"}`:"";
+    const iv=p.intervalo_intrajornada_minutos!=null?`intervalo ${p.intervalo_intrajornada_minutos} min`:"";
+    const resto=Object.entries(p).filter(([k])=>!["dias_semana","horario_inicio","horario_fim","intervalo_intrajornada_minutos"].includes(k)&&p[k]!=null)
+      .map(([k,v])=>`${k.replace(/_/g," ")}: ${typeof v==="object"?JSON.stringify(v):v}`).join(" · ");
+    return esc([dias,hor,iv,resto].filter(Boolean).join(" · ")||JSON.stringify(p));};
+  const _logTxt=l=>{if(l==null)return "";if(typeof l!=="object")return esc(l);
+    const rg=(l.regras||[]).map(r=>`${r.prioridade!=null?r.prioridade+". ":""}${r.condicao||""}${r.regime_id?` → ${r.regime_id}`:""}`).join("; ");
+    return esc([l.tipo,l.descricao,rg&&("regras: "+rg)].filter(Boolean).join(" — "));};
+  const regimes=(j.jornadas||[]).map(x=>{
+    const rs=(x.regimes||[]).map(r=>`<tr><td>${esc(r.tipo||"—")}${r.id?` <span class="sub">${esc(r.id)}</span>`:""}</td><td style="text-align:left">${_padTxt(r.padrao)}</td><td style="text-align:left">${_perTxt(r.periodo)}</td></tr>`).join("");
+    return `<div style="border:1px solid var(--linha);border-radius:10px;padding:12px 14px;margin-bottom:8px">
+      <div style="display:flex;gap:12px;align-items:baseline;flex-wrap:wrap">
+        <b style="font-family:Sora">${esc(x.id||"jornada")}</b>
+        <span class="tag">${esc(x.tipo||"?")}</span>
+        ${x.divisor!=null?`<span class="sub">divisor <b>${x.divisor}</b></span>`:""}
+        ${x.origem?`<span class="sub">origem: ${esc(x.origem)}</span>`:""}
+        ${x.fonte_documento?`<span class="sub">fonte: ${esc(x.fonte_documento)}</span>`:""}
+        ${x.global?'<span class="sub">vale para o caso todo</span>':""}
+        ${x.premissa?'<span style="color:var(--acc-perto);font-size:11.5px" title="a jornada não veio da decisão: foi uma premissa adotada pela IA">premissa adotada</span>':""}
+      </div>
+      ${x.descricao?`<div style="margin-top:7px;font-size:13.5px;line-height:1.5">${esc(x.descricao)}</div>`:""}
+      ${x.logica?`<div class="sub" style="margin-top:5px">Lógica de composição: ${_logTxt(x.logica)}</div>`:""}
+      ${x.observacoes?`<div class="sub" style="margin-top:5px;border-left:2px solid var(--linha);padding-left:9px">${esc(x.observacoes)}</div>`:""}
+      ${rs?`<table style="font-size:11.5px;margin-top:8px"><thead><tr><th style="text-align:left">Regime</th><th style="text-align:left">Padrão de horário</th><th style="text-align:left">Período</th></tr></thead><tbody>${rs}</tbody></table>`:""}
+    </div>`;}).join("");
+  // A global também pode trazer o ponteiro no lugar do valor ("periodo_global"
+  // apontando para ela mesma). Quando a decisão não delimita, o período que vale
+  // é o IMPRESCRITO, que o P1 calcula e o `cadastro` já guarda nas duas pontas
+  // (`periodo_ini` é a prescrição quinquenal contada do ajuizamento). É essa a
+  // resposta certa — e não o `processo.periodo_calculo`, que vem do cabeçalho da
+  // REFERÊNCIA e é nulo em boa parte dos casos.
+  const _lin=k=>((c.cadastro||{}).linhas||[]).find(l=>l.chave===k);
+  const _periodoImprescrito=()=>{
+    const i=_lin("periodo_ini"), f=_lin("periodo_fim");
+    const a=i&&i.lift, b=f&&f.lift;
+    if(a&&b)return `de ${esc(a)} a ${esc(b)}`;
+    if(a)return `a partir de ${esc(a)}`;
+    const dp=(c.cadastro||{}).data_prescricao;
+    return dp?`a partir de ${esc(dp)}`:null;
+  };
+  const _perGlobal=x=>{
+    const p=String(x.periodo||"").trim();
+    if(!p)return null;
+    if(p!=="periodo_global")return _perTxt(p);
+    const imp=_periodoImprescrito();
+    return imp
+      ? `${imp} <span class="sub">(período imprescrito — a decisão não delimitou)</span>`
+      : `<span style="color:var(--acc-perto)">período não especificado, e o P1 não trouxe o imprescrito</span>`;
+  };
+  const p4g=(j.p4_global||[]).map(x=>`<div style="margin-bottom:8px">
+      <div class="sub">${[x.fonte&&("fonte: "+esc(x.fonte)),_perGlobal(x),x.divisor!=null&&("divisor "+x.divisor)].filter(Boolean).join(" · ")}</div>
+      <div style="font-size:13.5px;line-height:1.5;margin-top:3px">${esc(x.descricao||"—")}</div></div>`).join("");
+  // O P4 usa PONTEIROS: a verba que segue a jornada do caso traz o texto
+  // literal "jornada_global", e o período dela, "periodo_global". Imprimir o
+  // ponteiro mostra o nome da variável em vez da regra — e era o que acontecia
+  // em 1.192 verbas. Aqui a referência é resolvida contra o `p4_global`, e fica
+  // dito de onde veio, para não parecer que a verba tem regra própria.
+  const _g0=(j.p4_global||[])[0]||null;
+  const _PONT={jornada_global:"descricao",periodo_global:"periodo",divisor_global:"divisor"};
+  function _resolve(txt){
+    const t=String(txt||"").trim();
+    const campo=_PONT[t];
+    if(!campo)return {texto:txt||"",herdado:false};
+    if(!_g0||_g0[campo]==null)
+      return {texto:`(a verba aponta para "${t}", e a jornada global do caso não traz esse campo)`,
+              herdado:true,orfao:true};
+    return {texto:String(_g0[campo]),herdado:true};
+  }
+  const p4e=(j.p4_especifica||[]).map(x=>{
+    const r=_resolve(x.texto);
+    // o período que a verba herda é o da global — e se a global também apontar
+    // para si mesma, o imprescrito do P1, pela mesma regra do `_perGlobal`
+    const _pg=_g0&&String(_g0.periodo||"").trim();
+    const per=!_pg?null:(_pg==="periodo_global"?_periodoImprescrito():_perTxt(_pg));
+    return `<details style="margin-bottom:6px">
+      <summary style="cursor:pointer;font-weight:600">${x.codigo?`<b style="font-family:Sora;color:var(--salmao)">${esc(x.codigo)}</b> · `:""}${esc(x.nome||"verba")}
+        ${r.herdado?`<span class="sub" style="font-weight:400"> · ${r.orfao?'<span style="color:var(--acc-perto)">referência não resolvida</span>':"segue a jornada global"}</span>`:""}</summary>
+      ${r.herdado&&!r.orfao?`<div class="sub" style="margin:6px 0 0">Esta verba não tem regra própria: vale a <b>jornada global</b> do caso${
+        per?`, no período <b>${per}</b>`:""}${_g0.divisor!=null?` · divisor ${_g0.divisor}`:""}.</div>`:""}
+      <pre style="white-space:pre-wrap;word-break:break-word;font-size:11.5px;background:var(--card);border:1px solid var(--linha);border-radius:7px;padding:9px;margin:6px 0 0;max-height:320px;overflow:auto">${esc(r.texto)}</pre></details>`;}).join("");
+  const par=j.parametros||{};
+  const parRows=Object.entries(par).map(([k,v])=>`<tr><td style="text-align:left">${esc(k.replace(/_/g," "))}</td><td style="text-align:left">${esc(typeof v==="object"?JSON.stringify(v):v)}</td></tr>`).join("");
+  document.getElementById("main").innerHTML=`<h2>Jornada e cartão de ponto</h2>
+    <div class="sub" style="margin-bottom:14px">${CNJ} · ${c.processo.periodo_calculo||""}</div>
+    ${bannerSemPjc()}
+    <div class="panel" style="margin-top:0;border-left:4px solid ${cor}">
+      <div style="display:flex;gap:16px;align-items:baseline;flex-wrap:wrap">
+        <b style="font-family:Sora;font-size:15px;color:${cor}">${rot}</b>
+        <span class="sub">${esc(desc)}</span>
+      </div>
+      <div class="an-grid2b" style="margin-top:12px">
+        <div><div class="kpi"><span class="kn">${j.tipo_decisao?(JORN[j.tipo_decisao]||[])[0]:"—"}</span><span class="kl">o que a <b>decisão</b> manda (P9a · definições de jornada)</span></div></div>
+        <div><div class="kpi"><span class="kn" style="color:${j.fonte_apuracao==="cartao"?"var(--azul)":"var(--text)"}">${j.fonte_apuracao==="cartao"?"Batidas do cartão":(j.fonte_apuracao==="fixa"?"Jornada presumida":"—")}</span><span class="kl">o que o <b>cálculo usou</b> (memória do P9b)</span></div></div>
+      </div>
+      ${j.cartao_nao_usado?`<div class="warn" style="margin:10px 0 0"><b>A decisão manda apurar pelos cartões e o cálculo não usou batidas.</b>
+        A memória do P9b não tem registro de ponto, ou seja a apuração presumiu a jornada. Com cartão deferido, <b>2h extras por dia é teto a apurar dia a dia</b>, não regra fixa: presumir infla nos meses de pouca hora e some com a variação real.</div>`:""}
+      ${(!ct&&j.tipo_decisao==="fixa")?`<div class="sub" style="margin-top:10px">Coerente: jornada arbitrada na decisão, apuração pela regra fixa. Não há cartão a exibir.</div>`:""}
+    </div>
+    ${ct?`<div class="seccab"><h3>Cartão de ponto</h3><span class="q">o que foi apurado, mês a mês</span></div><div class="sechr"></div>
+      <div class="tiles" style="grid-template-columns:repeat(4,1fr)">
+        ${_tile(String(ct.n_comp),"Competências com cartão","meses com batidas na memória",true)}
+        ${_tile(String(ct.n_dias),"Dias com registro","somados em todas as competências")}
+        ${_tile(numf(ct.horas)+"h","Horas apuradas do cartão","soma das competências")}
+        ${_tile(String((ct.verbas||[]).length),"Verbas apuradas assim",(ct.verbas||[]).map(v=>v.codigo||v.id_verba).join(" · "))}
+      </div>
+      <div class="sub" style="margin:12px 0 10px;max-width:940px">Cada linha é uma competência: abra para ver <b>dia a dia as batidas</b> que o cálculo usou, do jeito que estão na memória do P9b. É por aqui que se confere se o cartão foi lido certo antes de discutir o valor da verba.</div>
+      <div style="max-width:640px">${linhasCartao}</div>`:""}
+    <div class="seccab"><h3>Jornada definida${ct?" (contexto)":""}</h3><span class="q">como o P9a entendeu a jornada do caso</span></div><div class="sechr"></div>
+    ${regimes||'<p class="sub">O P9a não trouxe definições de jornada neste caso.</p>'}
+    ${parRows?`<div class="sub" style="margin-top:10px">Parâmetros globais de apuração:</div>
+      <table style="font-size:12px;max-width:640px;margin-top:4px"><tbody>${parRows}</tbody></table>`:""}
+    ${(p4g||p4e)?`<div class="seccab"><h3>Jornada na decisão (P4)</h3><span class="q">o texto vinculante, sem edição do app</span></div><div class="sechr"></div>
+      ${p4g?`<div class="p4">${p4g}</div>`:""}
+      ${p4e?`<div style="margin-top:10px"><div class="sub" style="margin-bottom:6px">Jornada específica citada por verba:</div>${p4e}</div>`:""}`:""}`;
+}
+
+// ---- LISTA DE CASOS: o mestre do drill-down --------------------------------
+// Responde a pergunta de rotina — "rodou um caso esta semana, qual foi e como
+// ele saiu?" — numa tabela única, plana, ordenável, com TODAS as categorias
+// juntas. A visão agrupada por categoria de aptidão continua na Elegibilidade,
+// porque lá a pergunta é outra (quem é apto e por que caiu).
+// Padrão (Raíra, 15/10): aptos validáveis, melhor assertividade primeiro e, na primeira abertura, score alta:
+// o conjunto candidato a produção, o mesmo da apresentação. Tudo continua mudável nos filtros.
+// Cópia, 18/10: quatro filtros (grupo, direção, confiança, agente) mais a busca; a ordem fica no clique
+// da coluna. Saíram jornada, verbas c/ par, a coluna Ref., os cards e os textos de explicação.
+let listaFiltro="aptos", listaOrdem="assert", listaDir="desc", listaBusca="", listaDirecao="", listaConf="", _listaIni=false;
+const _DIR1={data:"desc",lift:"desc",ref:"desc",assert:"asc",dir:"desc",cnj:"asc",apto:"asc",conf:"desc",agente:"desc"};
+function listaOrd(k){
+  listaDir = (listaOrdem===k) ? (listaDir==="asc"?"desc":"asc") : (_DIR1[k]||"asc");
+  listaOrdem = k;
+  telaLista();
+}
+const AG_FILTROS=[["","Todos"],["erro_ia","Com erro da IA"],["gabarito","Com gabarito questionável"],["com","Com análise do agente"],["sem","Sem análise do agente"]];
+function _listaSel(c){
+  return _noGrupo(c,listaFiltro)
+    &&(!listaDirecao||_dirCaso(c)===listaDirecao)
+    &&(!listaConf||(c.confianca||{}).faixa===listaConf);
+}
+// "recente" é ancorado na data mais nova da BASE (não em hoje): o painel é
+// gerado de um recorte, e usar o relógio faria tudo parecer velho.
+const _maxData=()=>{const ds=D.cnjs.map(c=>D.casos[c]).filter(Boolean).map(c=>c.data_processamento).filter(Boolean).sort();
+  return ds.length?ds[ds.length-1]:null;};
+// cabeçalho clicável: mostra a seta só na coluna ativa, e o title diz o que o
+// clique faz — sem isso a tabela parece ordenável e não avisa como
+function _th(k,rot,align,dica){
+  const on=listaOrdem===k;
+  const seta=on?(listaDir==="asc"?" ▲":" ▼"):"";
+  const t=(dica?dica+" · ":"")+(on?"clique para inverter":"clique para ordenar por esta coluna");
+  return `<th style="text-align:${align};cursor:pointer;white-space:nowrap;${on?"color:var(--salmao)":""}"
+    title="${esc(t)}" onclick="listaOrd('${k}')">${rot}<span style="font-size:10px">${seta}</span></th>`;
+}
+const _listaCasos=()=>{const q=String(listaBusca||"").replace(/\D/g,"");
+  return casosFiltrados().filter(_listaSel).filter(_agSel).filter(c=>!q||c.cnj.replace(/\D/g,"").includes(q));};
+// as setas ‹ › do caso andam na lista como ela está filtrada e ordenada (período inclusive);
+// caso aberto fora dela (por outra tela) anda na base inteira
+let _navCnjs=null;
+const _navLista=()=>(_navCnjs&&_navCnjs.includes(CNJ))?_navCnjs:D.cnjs;
+// diferença relativa do total (IA − referência) ÷ referência
+const _difRel=c=>{const q=c.quadro||{};return (q.total_ia!=null&&q.total_pjc)?(q.total_ia-q.total_pjc)/q.total_pjc:null;};
+function telaLista(){
+  // padrão da primeira abertura (Raíra, 15/10): aptos, melhor assertividade primeiro, score alta
+  if(!_listaIni){_listaIni=true; listaConf="alta";}
+  const anchor=_maxData(), corte=anchor?_anShift(anchor,7):null;
+  const cs=_listaCasos();
+  const _a=c=>(c.quadro&&c.quadro.assertividade!=null)?c.quadro.assertividade:null;
+  // valor nulo vai sempre para o FIM, nas duas direções: caso sem referência não é "o pior", é "sem medida"
+  const _txt=v=>String(v==null?"":v);
+  const CHAVES={
+    data:  c=>c.data_processamento||null,
+    cnj:   c=>c.cnj,
+    apto:  c=>c.apto?(aptoValor(c)?"0 apto valor":"1 apto"):"2 "+(c.categoria_inaptidao||"inapto"),
+    // pior primeiro na direção inicial: baixa=2, média=1, alta=0
+    conf:  c=>c.confianca?CONF_FAIXAS.findIndex(x=>x[0]===c.confianca.faixa):null,
+    agente:c=>c.agente?(c.agente.problemas||[]).filter(p=>p.cat==="erro_ia").reduce((s,p)=>s+p.rs,0):null,
+    assert:c=>_a(c),
+    dir:   c=>_difRel(c),
+    lift:  c=>(c.quadro||{}).total_ia,
+    ref:   c=>(c.quadro||{}).total_pjc,
+  };
+  const f=CHAVES[listaOrdem]||CHAVES.data;
+  const ord=cs.slice().sort((x,y)=>{const a=f(x), b=f(y);
+    if(a==null&&b==null)return 0; if(a==null)return 1; if(b==null)return -1;
+    const d=(typeof a==="number"&&typeof b==="number")?a-b:_txt(a).localeCompare(_txt(b),"pt-BR");
+    return listaDir==="asc"?d:-d;});
+  _navCnjs=ord.map(c=>c.cnj);
+  // verba com total negativo (IA ou PJC): o painel não zera, só avisa que a assertividade não é confiável
+  const negFlag=c=>{const n=c.verbas_negativas||[];if(!n.length)return"";
+    const t=n.map(x=>`${x.lado}: ${x.verba} ${brl(x.total)}`).join("\n");
+    return ` <span style="color:var(--acc-perto);cursor:help" title="Assertividade não confiável: ${n.length} verba(s) com total negativo\n${esc(t)}">⚠ neg.</span>`;};
+  const dirCell=c=>{const r=_difRel(c); if(r==null)return '<span class="sub">—</span>';
+    const p=Math.round(100*Math.abs(r)); return Math.abs(r)<=0.05?`<span class="sub">± ${p}%</span>`:`${r>0?"▲":"▼"} ${p.toLocaleString("pt-BR")}%`;};
+  const linhas=ord.map(c=>{
+    const a=_a(c);
+    const novo=c.data_processamento&&corte&&c.data_processamento>=corte;
+    const zer=(c.quadro&&c.quadro.total_ia!=null&&c.quadro.total_ia<=0);
+    return `<tr style="cursor:pointer" onclick="trocaCnj('${c.cnj}')">
+      <td style="white-space:nowrap">${c.data_processamento||"—"}${novo?' <span class="tag" style="background:var(--salmao);color:#fff">novo</span>':""}</td>
+      <td style="font-variant-numeric:tabular-nums;white-space:nowrap">${c.cnj}${c.gabarito_pdf_dif?` <b style="color:var(--acc-perto);cursor:help" title="* PJC e PDF de cálculos diferentes (.pjc ${c.gabarito_pdf_dif.id_pjc} × PDF ${c.gabarito_pdf_dif.id_pdf}); a comparação usa o .pjc">*</b>`:""}</td>
+      <td style="text-align:left;font-size:11.5px">${aptidaoCell(c)}</td>
+      <td style="text-align:left">${chipConfianca(c)}</td>
+      <td style="text-align:right;font-weight:700;color:${corAcc(a)}" title="${rotAcc(a)}">${accTxt(a)}${negFlag(c)}</td>
+      <td style="text-align:right;white-space:nowrap">${dirCell(c)}</td>
+      <td style="text-align:right${zer?";color:var(--ruim);font-weight:600":""}">${brl((c.quadro||{}).total_ia)}</td>
+      <td style="text-align:right">${brl((c.quadro||{}).total_pjc)}</td>
+      <td style="text-align:left">${chipAgente(c)}</td></tr>`;}).join("");
+  document.getElementById("main").innerHTML=`<h2>Lista de casos</h2>
+    ${barraPeriodo()}
+    <div style="display:flex;gap:10px;align-items:end;margin:0 0 10px;flex-wrap:wrap">
+      ${_selF("Casos",listaFiltro,GRUPOS_CASO,"listaFiltro=this.value;telaLista()")}
+      ${_selF("Direção",listaDirecao,DIRECOES,"listaDirecao=this.value;telaLista()")}
+      ${_selF("Confiança",listaConf,[["","Todas"],...CONF_FAIXAS.map(([k,rot])=>[k,rot])],"listaConf=this.value;telaLista()")}
+      ${_selF("Agente",listaAgente,AG_FILTROS,"listaAgente=this.value;telaLista()")}
+      <div><div class="sub">Buscar CNJ</div><input value="${esc(listaBusca||"")}" placeholder="dígitos do CNJ…" oninput="listaBusca=this.value;telaLista()"
+        style="padding:8px 10px;border:1px solid var(--linha);border-radius:8px;min-width:200px;background:var(--surface);color:var(--text)"></div>
+      <button class="btn-dl" style="margin:0" onclick="baixarLista()">baixar CSV</button>
+    </div>
+    <div class="sub" style="margin-bottom:10px"><b>${cs.length}</b> casos no filtro · ${cs.filter(c=>c.apto).length} aptos · clique no cabeçalho para ordenar, numa linha para abrir o caso</div>
+    <div style="overflow-x:auto"><table style="font-size:12px"><thead><tr>
+      ${_th("data","Data","left","")}
+      ${_th("cnj","CNJ","left","")}
+      ${_th("apto","Aptidão","left","")}
+      ${_th("conf","Confiança","left","Score de confiança, só com o lado LIFT. Passe o mouse no selo para ver o que foi acionado.")}
+      ${_th("assert","② Assertividade","right","a soma final do LIFT bate com a da referência")}
+      ${_th("dir","Direção","right","total do LIFT acima (▲) ou abaixo (▼) da referência, em % da referência")}
+      ${_th("lift","LIFT","right","")}
+      ${_th("ref","Referência","right","")}
+      ${_th("agente","Agente","left","problemas achados pelo agente; ordena pelo R$ de erro da IA")}</tr></thead><tbody>${linhas}</tbody></table></div>
+    ${cs.length?"":'<p class="sub">Nenhum caso com esse filtro.</p>'}`;
+}
+function baixarLista(){
+  const cs=_listaCasos();
+  const head=["Data","CNJ","Apto","Categoria de inaptidão","Tipo de cálculo","Jornada (decisão)","Apuração usada","Cartão: meses","Cartão: dias","Acurácia global","Assertividade","Índice de compensação",
+              "Verbas c/ par (s/ reflexo)","Verbas do caso (s/ reflexo)","Reflexos c/ par","Reflexos",
+              "Total LIFT","Total referência","Referência lida","Confiança","Pontos de risco","Componentes do score"];
+  const rows=cs.map(c=>{const cm=c.camadas||{},p=cm.principal||{},r=cm.rescisoria||{},x=cm.reflexo||{};
+    const j=c.jornada||{}, ct=j.cartao||{};
+    return [c.data_processamento,c.cnj,c.apto?"sim":"não",c.apto?"":(c.categoria_inaptidao||""),c.tipo_calculo||"",
+      j.tipo_decisao||"",(j.cartao_nao_usado?"presumida (manda cartão!)":(j.fonte_apuracao||"")),ct.n_comp||"",ct.n_dias||"",
+      (c.quadro||{}).acuracia_global,(c.quadro||{}).assertividade,(c.quadro||{}).indice_compensacao,
+      (p.n_par||0)+(r.n_par||0),(p.n||0)+(r.n||0),x.n_par||0,x.n||0,
+      (c.quadro||{}).total_ia,(c.quadro||{}).total_pjc,
+      c.sem_pjc?"não carregada":(c.extracao_confiavel?"sim":"não confiável"),
+      c.confianca?_confRot(c.confianca.faixa):"",c.confianca?c.confianca.pontos:"",
+      c.confianca?c.confianca.componentes.map(x=>(x.tipo==="trava"?"TRAVA ":"")+x.rotulo).join(" | "):""];});
+  baixarCSV("casos_validacao.csv",[head,...rows]);
+}
+
+// ---- Analytics (painel) ----
+var anPeriodo="Tudo";
+function _anPct(v){return v==null?"—":(Math.round(v*10)/10).toString().replace(".",",")+"%";}
+function _anParse(d){const p=d.split("-");return new Date(Date.UTC(+p[0],+p[1]-1,+p[2]));}
+function _anShift(d,days){const t=_anParse(d);t.setUTCDate(t.getUTCDate()-days);return t.toISOString().slice(0,10);}
+function _anWeek(d){const t=_anParse(d);const k=(t.getUTCDay()+6)%7;t.setUTCDate(t.getUTCDate()-k);return t.toISOString().slice(0,10);}
+function _anDM(d){return d.slice(8,10)+"/"+d.slice(5,7);}
+function anSetPeriodo(n,label){
+  const ds=D.cnjs.map(c=>D.casos[c]).filter(Boolean).map(c=>c.data_processamento).filter(Boolean).sort();
+  const anchor=ds.length?ds[ds.length-1]:null;
+  if(!n||!anchor){fDe="";fAte="";}else{fDe=_anShift(anchor,n);fAte="";}
+  anPeriodo=label; _render();
+}
+// `ref` = o valor do período inteiro (o número do card). Sem ele, a ponta da
+// linha vira "o nível de hoje" — e uma semana de 1 caso mostrava 75% ao lado de
+// um card de 24%, os dois certos. A linha de referência e os pontos vazados em
+// semana com menos de 3 casos existem para impedir essa leitura.
+function aplicaTema(t){document.documentElement.classList.toggle("dark",t==="dark");
+  const b=document.getElementById("themebtn"); if(b)b.textContent=t==="dark"?"☀️":"🌙";}
+function toggleTema(){const t=document.documentElement.classList.contains("dark")?"light":"dark";
+  try{localStorage.setItem("tema",t);}catch(e){} aplicaTema(t);}
+function temaInicial(){try{const s=localStorage.getItem("tema"); if(s)return s;
+  if(window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)return "dark";}catch(e){} return "light";}
+try{aplicaTema(temaInicial());}catch(e){}
+topo();irPlacar();
+</script>
+</body>
+</html>

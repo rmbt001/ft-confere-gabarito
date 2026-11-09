@@ -46,9 +46,14 @@ O resultado fica em `saidas/<rótulo>/`:
 | `verbas.csv` | uma linha por verba de cada processo: nome na IA, nome no PJC, código, totais e acurácia |
 | `comparacao.json` | tudo o que a página mostra, para análise em Python |
 
+A página usa o layout do painel dos parciais (Rodada, Problemas do agente, Premissas do manual), de
+`codigo/src/template_telas_parciais.html`, cópia do template de `ft_paineis_parciais/desde_2026-10-14`. O score de
+confiança é o que o motor calcula; o score com Jev e auditor que o painel dos parciais aplica depois não roda aqui.
+
 ### Opções
 
 - `--rotulo <nome>`: nome da pasta de saída. Sem ele, usa o CNJ (um processo) ou `lote_<n>`.
+- `--so-pagina saidas/<rótulo>`: só remonta a página de uma saída já gerada (depois de trocar o template).
 - `--sem-nekt`: não baixa de novo os processos que já têm recorte em `.cache` (útil para rodar a comparação de novo
   depois de trocar um PDF).
 - `--pjc-gabarito`: usa também o `.pjc` da pasta como gabarito. **Sem essa opção, todo `.pjc` é ignorado**, porque

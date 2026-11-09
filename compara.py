@@ -66,8 +66,29 @@ def _brl(v):
     return "—" if v is None else f"R$ {v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 
+def monta_pagina(arq_json, arq_html):
+    """Página no layout do painel dos parciais (template da cópia desde_2026-10-14), não no de produção que o
+    gerar_telas usa. Mesmos dados; a aba Premissas lê a situação de cada premissa na esteira."""
+    html = (AQUI / "codigo/src/template_telas_parciais.html").read_text(encoding="utf-8")
+    prem_arq = AQUI / "contexto/premissas/premissas_situacao_esteira.json"
+    prem = [{k: x.get(k) for k in ("id", "secao", "regra", "situacao", "falta")}
+            for x in json.loads(prem_arq.read_text(encoding="utf-8"))] if prem_arq.exists() else []
+    html = html.replace("/*__PREMISSAS_ESTEIRA__*/[]", json.dumps(prem, ensure_ascii=False))
+    antes, depois = html.split("/*__DADOS__*/", 1)
+    dados = json.loads(Path(arq_json).read_text(encoding="utf-8"))
+    with open(arq_html, "w", encoding="utf-8") as f:
+        f.write(antes)
+        json.dump(dados, f, ensure_ascii=False)
+        f.write(depois)
+
+
 def main():
     sys.stdout.reconfigure(encoding="utf-8")
+    if "--so-pagina" in sys.argv:  # remonta a página de uma saída já gerada: compara.py --so-pagina saidas/<rótulo>
+        for p in [a for a in sys.argv[1:] if not a.startswith("--")]:
+            monta_pagina(Path(p) / "comparacao.json", Path(p) / "comparacao.html")
+            print("página:", Path(p) / "comparacao.html")
+        return
     args = [a for i, a in enumerate(sys.argv[1:], 1) if not a.startswith("--") and sys.argv[i - 1] != "--rotulo"]
     if not args:
         sys.exit(__doc__)
@@ -121,8 +142,8 @@ def main():
     r = subprocess.run([sys.executable, "codigo/pipeline/gerar_telas.py", f"@{lista}"], cwd=AQUI)
     if r.returncode:
         sys.exit("o motor de comparação falhou (veja a mensagem acima)")
-    for ext in ("html", "json"):
-        shutil.copy2(AQUI / "saidas" / f"validacao_calculos.{ext}", saida / f"comparacao.{ext}")
+    shutil.copy2(AQUI / "saidas" / "validacao_calculos.json", saida / "comparacao.json")
+    monta_pagina(saida / "comparacao.json", saida / "comparacao.html")
     casos = json.loads((saida / "comparacao.json").read_text(encoding="utf-8"))["casos"]
 
     # 5. resumo e verba a verba
