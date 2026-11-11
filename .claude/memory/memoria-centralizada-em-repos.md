@@ -17,6 +17,11 @@ Não criar `.claude/memory` dentro de subpastas.
 que caçar contexto em várias pastas. O `Repos/.claude/settings.local.json` já
 fixa isso com `autoMemoryDirectory` apontando para essa pasta.
 
+**Nesta máquina (07/11/2026):** trabalhando em `C:\ft\ft_confere_gabarito`, a pasta `Repos` não existe. Toda
+memória gerada aqui vai para `C:\ft\ft_confere_gabarito\.claude\memory\` (pedido da Raíra), indexada no `MEMORY.md`
+dessa pasta. O `.claude/settings.local.json` do repo fixa isso com `autoMemoryDirectory`. Nada de memória no perfil
+do usuário (`~/.claude/projects/...`).
+
 **How to apply:** ao aprender algo em qualquer repositório abaixo de `Repos/`,
 escrever o arquivo na pasta central e indexar no `MEMORY.md` da raiz. Se um
 subprojeto tiver documentação própria (README, `docs/`), a memória aponta para

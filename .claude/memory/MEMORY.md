@@ -1,8 +1,11 @@
-- [Memória centralizada em Repos](memoria-centralizada-em-repos.md) — toda memória vai para `Repos/.claude/memory`, nunca por subprojeto
+- [Memória centralizada em Repos](memoria-centralizada-em-repos.md) — toda memória vai para `Repos/.claude/memory`; em C:\ft\ft_confere_gabarito vai para `.claude/memory` do repo
+- [Cálculos da íntegra como gabarito (07–09/11)](calculos-da-integra-s3.md) — 2.621 CNJs insalub./peric.; íntegras de 1º grau → 442 aptos, 38% c/ 80%+; Jev nos 480: alta 55%; + auditor na alta: 117 casos, 61%
+- [S3 de produção: íntegras e recortes](s3-prod-integras-recortes.md) — perfil prod-s3 (SSO), só leitura; ged-files (CNJ pontuado) × recortes por peça (CNJ só dígitos)
 - [PAUSA score/agente (29/10)](pausa-score-agente-2910.md) — com sem_score.flag: só PJC + assertividade; pós-rodada não lança agente/Jev/score/auditor
 - [Raíra — BT Créditos](usuario-raira-bt-creditos.md) — conduz o Fast Track (LIFT); português, Windows/PowerShell, docs em prosa explicativa
 - [Projeto Fast Track (ft)](projeto-fast-track-ft.md) — o que mede o acerto do cálculo trabalhista e as amarrações que quebram em silêncio
 - [Docs do Fast Track](docs-do-fast-track.md) — qual arquivo ler para cada pergunta, antes de varrer código
+- [Artefatos detalhados (07/11)](artefatos-detalhados.md) — não encurtar; explicar como para quem vê o problema pela 1ª vez
 - [Visual Guide LIFT](visual-guide-lift.md) — estilo dos docs da Raíra (manual_calculistas_lift.html): Onest/Sora, salmão #e26970, cover preta
 - [Investigação PJC × IA caso a caso](investigacao-divergencias-pjc-ia.md) — padrões de erro de prompt achados no 525 e furos do painel
 - [Ajustes de prompt: foco único e enxutos](ajustes-prompt-foco-unico-enxuto.md) — um problema por card; menor mudança; sem campo novo que nenhuma etapa lê
@@ -10,7 +13,7 @@
 - [Correções do painel em 08/10](painel-correcoes-0810.md) — fora do principal, zerar negativo, teto BT050/BT040, honorários fora, HE somadas; mediana 69,7→78,8%
 - [Relatório de rodada linear](relatorio-de-rodada-linear.md) — fizemos → resultado → diagnóstico → foco no que não funcionou (era × ficou × por quê × ajuste); regressão primeiro
 - [Homol 09→10/10: veredito das famílias](homol-0910-familias-veredito.md) — o que entrou, o que quebrou; prioridade T23 + T07 (reflexos)
-- [Sobrecálculo primeiro](sobrecalculo-primeiro.md) — IA a mais pesa mais que IA a menos; separar e ordenar por isso
+- [Sobrecálculo primeiro](sobrecalculo-primeiro.md) — IA a mais pesa mais que IA a menos; entre duas contas defensáveis, sempre a mais conservadora
 - [Peças lidas e teste focado](esteira-pecas-lidas-e-teste-focado.md) — sem norma coletiva; teste mede só o campo que o passo muda
 - [Premissas de Cálculo BT](premissas-de-calculo-bt.md) — manual oficial é regra da casa; prescrição 5 anos é premissa; evitar overfitting; peças no TARS
 - [Lote 09/09 e a regressão de hora extra](lote-0909-regressao-hora-extra.md) — o lote subiu a distribuição e derrubou casos quase certos; hipótese cartão × jornada em aberto
@@ -57,4 +60,6 @@
 - [Lote 05–06/11: regressões](lote-0611-regressoes.md) — alta apto valor 82→75%; BT081, abatimento de diferença, mista; pensão→BT059 é esperado
 - [Auditor oscila (07/11)](auditor-oscila.md) — 12 de 20 "alto" não se repetem em 3 rodadas; deixar como está; opções guardadas; US$ 254 de 300
 - [Pareamento por família (07/11)](pareamento-familia-0711.md) — vetos novos no gerar_telas, não commitado; SOBREAVISO não é reflexo
+- [Não perguntar o óbvio (08/11)](nao-perguntar-o-obvio.md) — passo seguinte óbvio e só leitura: disparar e avisar; parar custou 3h
 - [Repo confere gabarito](confere-gabarito-repo.md) — github rmbt001/ft-confere-gabarito; IA × PDF em lote na VM; .pjc da pasta é o da esteira
+- [Rodar em lotes de 500](rodar-em-lotes-de-500.md) — rodada longa em lotes com saída por lote; conferir processos vivos antes de estimar (gerar_telas de 17 h perdido em 10/11)

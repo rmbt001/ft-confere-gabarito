@@ -15,5 +15,10 @@ subcálculo menor conta como melhora; um passo que cria sobrecálculo novo, mesm
 **Why:** o crédito é comprado com base no cálculo; sobrecálculo vira prejuízo. A Raíra já tinha dito (08/10) que a
 preocupação maior é com o que superestima, e reforçou em 10/10 ao ver o veredito da Família 1.
 
+**Regra geral (10/11/2026, Raíra: "aqui vamos sempre na decisão mais conservadora"):** quando houver duas contas
+defensáveis (premissa × prática do calculista, duas leituras da decisão), recomendar a que dá o crédito menor, sem
+perguntar, e registrar a escolha na página. Primeiro caso: DSR fora da base da periculosidade do horista, embora a
+premissa 3.0 mande somar.
+
 **How to apply:** tabelas de veredito com coluna "IA a mais" e "IA a menos"; "na dúvida, crédito menor" também vale para as
 regras propostas. Ver [[premissas-de-calculo-bt]] e [[relatorio-de-rodada-linear]].
