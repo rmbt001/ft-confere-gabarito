@@ -1290,7 +1290,8 @@ function telaPlacar(){
     return {k,rot,n:A.length,fx:fxC,mediana:_mediana(A),nMeta:fxC[0]+fxC[1],
             pct80:A.length?Math.round(100*(fxC[0]+fxC[1])/A.length):0,
             sobre:dif.filter(d=>d>0).reduce((s,d)=>s+d,0),sub:-dif.filter(d=>d<0).reduce((s,d)=>s+d,0)};});
-  const cAlta=confGr[0], cTot=confGr.reduce((s,e)=>({n:s.n+e.n,nMeta:s.nMeta+e.nMeta,sobre:s.sobre+e.sobre}),{n:0,nMeta:0,sobre:0});
+  // sem nenhum apto na alta (ou sem score), confGr[0] não é a alta ou não existe: a tela inteira quebrava
+  const cAlta=confGr.find(x=>x.k==="alta")||{n:0,nMeta:0,sobre:0,pct80:0}, cTot=confGr.reduce((s,e)=>({n:s.n+e.n,nMeta:s.nMeta+e.nMeta,sobre:s.sobre+e.sobre}),{n:0,nMeta:0,sobre:0});
   const pctTot=cTot.n?Math.round(100*cTot.nMeta/cTot.n):0;
   const sobreFora=cTot.sobre?Math.round(100*(cTot.sobre-cAlta.sobre)/cTot.sobre):0;
   // ---- não aptos por motivo --------------------------------------------------
@@ -1851,6 +1852,7 @@ const CONF_FAIXAS=[
   ["alta","Alta","●●●","nenhum fator de risco nem trava"],
   ["media","Média","●●○","um fator de risco"],
   ["baixa","Baixa","●○○","uma trava, ou dois ou mais fatores de risco"],
+  ["restrita","Restrita","○○○","restrição do manual (Premissas de Cálculo): vai para o calculista"],
 ];
 const _confRot=f=>(CONF_FAIXAS.find(x=>x[0]===f)||[])[1]||"—";
 function chipConfianca(c){

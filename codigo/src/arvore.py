@@ -44,7 +44,9 @@ from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
 
-SAIDA_PADRAO = Path(__file__).resolve().parents[5] / "ft_arvore_divergencias"
+_PAIS = Path(__file__).resolve().parents
+# no Repos fica 5 níveis acima; no confere gabarito (pasta mais rasa) fica em saidas/
+SAIDA_PADRAO = (_PAIS[5] if len(_PAIS) > 5 else _PAIS[2] / "saidas") / "ft_arvore_divergencias"
 JSON_PAINEL = Path("saidas/validacao_calculos.json")
 MIN_RS = 50.0  # achado abaixo disso é ruído de arredondamento
 

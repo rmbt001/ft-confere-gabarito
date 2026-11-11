@@ -659,7 +659,6 @@ function telaResumo(){
       ${(_c.jornada&&_c.jornada.cartao)?`<span class="sub" style="font-size:11.5px">${_c.jornada.cartao.n_comp} meses · ${_c.jornada.cartao.n_dias} dias de batida</span>`:""}
       <a href="javascript:ir('jornada')" style="color:var(--salmao);font-size:11.5px">abrir jornada / cartão ↗</a></div>
     ${bannerAptidao(_c)}
-    ${blocoConfianca(_c)}
     ${blocoAgente(_c)}
     ${bannerSemPjc()}
     ${bannerFonte()}
@@ -1371,9 +1370,8 @@ function barraPeriodo(){
     <input type="date" id="fDe" value="${fDe}" onchange="aplicaFiltro()">
     <span class="sub" style="font-size:11.5px">até</span>
     <input type="date" id="fAte" value="${fAte}" onchange="aplicaFiltro()">
-    <button class="btn-dl" style="margin:0" onclick="limpaFiltro()">limpar</button>
-    <label class="rg-score"><span class="fl">Score</span><select onchange="setScore(this.value)">
-      <option value="">todos</option>${CONF_FAIXAS.map(([k,rot])=>`<option value="${k}"${fScore===k?" selected":""}>${rot}</option>`).join("")}</select></label></div>`;
+    <button class="btn-dl" style="margin:0" onclick="limpaFiltro()">limpar</button></div>`;
+  // confere gabarito: sem seletor de score (o score de confiança daqui era a versão de 14/10, não o atual)
 }
 // população do PLACAR e do ONDE O ERRO NASCE: aptos, referência lida e abaixo do
 // teto do FT. As duas telas partilham isto de propósito — a segunda é a primeira
@@ -1576,10 +1574,9 @@ function telaPlacar(){
     <div class="rg-per">${perTxt}</div>
     <div class="rg-grid">
       <div class="rg-bloco"><h4>Assertividade por recorte</h4>${rgTab}</div>
-      <div class="rg-bloco"><h4>Aptos por faixa do score de confiança</h4>${rgScore}</div>
     </div>
     <div class="rg-nota"><b>Na meta</b> = casos com assertividade de 80% ou mais, isto é, a IA no máximo 20% acima ou abaixo do real (assertividade = 1 − |IA − real| ÷ real).
-      <b>Mediana</b> = o caso do meio da fila, do pior para o melhor. O score usa só o lado da IA, como em produção.</div>
+      <b>Mediana</b> = o caso do meio da fila, do pior para o melhor.</div>
     <div class="sub" style="margin-top:10px;font-size:11.5px">Escala de cor usada em todo o painel:</div>
     ${LEGENDA_ACC}
     <div class="sub" style="margin:14px 0 10px;max-width:940px;border-left:2px solid var(--salmao);padding-left:10px">
@@ -1605,21 +1602,6 @@ function telaPlacar(){
           ${fx[3]>=arrA.length/2?" A maior parte dos casos está na faixa mais baixa: mover a mediana depende de causa sistêmica, não de caso a caso.":""}</div>
         </div>
       </div></div>
-    ${_cab("Score de confiança","a nota dada antes do gabarito prevê o acerto?")}
-    <div class="sub" style="margin-bottom:10px;max-width:940px">Cada caso recebe uma nota calculada <b>só com o lado LIFT</b> — a mesma que ele teria em produção, sem referência.
-      <b>Travas</b> (derrubam para baixa sozinhas): verba sem código no glossário, reflexo acima do teto possível (13º &gt; 1/12, férias + 1/3 &gt; 1/9 da base), hora extra duplicada.
-      <b>Fatores de risco</b> (+1 cada): gratificação de função, comissões, Súmula 340, competências sem salário (≥ 10%; ≥ 50% conta +2), ficha de registro sem férias em 12+ meses calculados (com hora extra ou intervalo), afastamento integral em 6+ meses.
-      <b>Alta</b> = nada acionado · <b>média</b> = 1 ponto · <b>baixa</b> = trava ou 2+ pontos. Os mesmos ${ft.length} casos do placar.</div>
-    <div class="tiles" style="margin-bottom:12px">
-      ${_tile(cTot.n?Math.round(100*cAlta.n/cTot.n)+"%":"—","Casos que seguiriam automáticos","só a faixa <b>alta</b>: "+cAlta.n+" de "+cTot.n,true)}
-      ${_tile(cAlta.n?cAlta.pct80+"%":"—","Na meta (≥ 80%) dentro da alta","contra <b>"+pctTot+"%</b> em todos os "+cTot.n+" casos",true)}
-      ${_tile(cTot.sobre?sobreFora+"%":"—","Do sobrecálculo que fica fora","média + baixa vão para o calculista: "+brlK(cTot.sobre-cAlta.sobre)+" de "+brlK(cTot.sobre)+" calculados a mais",true)}
-    </div>
-    <div class="panel" style="margin-top:0">${_anConf(confGr)}
-      ${LEGENDA_ACC}
-      <div class="an-note">Cada barra é <b>100% dos casos da faixa</b>, separados pelo nível de ② (mesma escala de cor do painel). Quanto mais verde a <b>alta</b> e mais vermelha a <b>baixa</b>, melhor o score separa; o vermelho que sobra na alta é o erro que o score ainda não enxerga. À direita, quanto a IA calculou <b>a mais</b> (▲) e <b>a menos</b> (▼) que a referência, somado na faixa.
-      Os três números acima são a decisão que o score sustenta: mandar <b>só a alta</b> para o automático e o resto para revisão. <b>N pequeno</b> em cada faixa: os pesos são provisórios até juntar mais rodadas.
-      ${nConfFila.length?`<br><br>Aptos do período <b>aguardando referência</b>: ${confFila} — é aqui que a nota decide alguma coisa.`:""}</div></div>
     ${_cab("Cartão de ponto × jornada pré-fixada","a origem da jornada muda o acerto?")}
     <div class="sub" style="margin-bottom:10px;max-width:940px">Os mesmos casos do placar, separados por <b>de onde vem a jornada</b>. Cartão é apuração dia a dia sobre batidas reais; pré-fixada é regra arbitrada na decisão. A medida em destaque é a <b>②</b>, que não depende do pareamento verba a verba. <b>N pequeno em cada grupo</b>, então leia como indício e confira o n de cada linha antes de concluir.</div>
     ${tabJornada}
@@ -2321,7 +2303,8 @@ function telaJornada(){
 // porque lá a pergunta é outra (quem é apto e por que caiu).
 // Padrão (Raíra, 15/10): aptos validáveis, melhor assertividade primeiro e, na primeira abertura, score alta:
 // o conjunto candidato a produção, o mesmo da apresentação. Tudo continua mudável nos filtros.
-let listaFiltro="apto_ok", listaOrdem="assert", listaDir="desc", listaBusca="", _listaIni=false;
+// confere gabarito: abre com todos (o lote é pequeno e o que interessa é ver cada caso, apto ou não)
+let listaFiltro="todos", listaOrdem="assert", listaDir="desc", listaBusca="", _listaIni=false;
 // Clique no cabeçalho ordena por aquela coluna; clicar de novo inverte. A
 // primeira direção é a ÚTIL de cada coluna: data e dinheiro começam do maior,
 // assertividade começa do pior, texto começa de A.
@@ -2341,8 +2324,7 @@ const LISTA_FILTROS=[["todos","Todos"],["apto_ok","Aptos validáveis (referênci
   ["fora_regua","Fora da régua (não calculado / gabarito a corrigir)"],
   ["cartao","Jornada: apurada por cartão de ponto"],
   ["fixa","Jornada: pré-fixada na decisão"],
-  ["cartao_nao_usado","Jornada: manda cartão e não usou ⚠"],
-  ...CONF_FAIXAS.map(([k,rot])=>["conf_"+k,"Confiança: "+rot.toLowerCase()])];
+  ["cartao_nao_usado","Jornada: manda cartão e não usou ⚠"]];
 function _listaSel(c){
   const j=c.jornada||{};
   if(listaFiltro==="apto_ok")return c.apto&&comPJC(c);
@@ -2381,7 +2363,7 @@ function _th(k,rot,align,dica){
     title="${esc(t)}" onclick="listaOrd('${k}')">${rot}<span style="font-size:10px">${seta}</span></th>`;
 }
 function telaLista(){
-  if(!_listaIni){_listaIni=true; if(!fScore)fScore="alta";}
+  if(!_listaIni){_listaIni=true;}  // painel liga score "alta" aqui; no confere gabarito não
   const anchor=_maxData(), corte=anchor?_anShift(anchor,7):null;
   const todos=casosFiltrados();
   const q=String(listaBusca||"").replace(/\D/g,"");
@@ -2448,7 +2430,6 @@ function telaLista(){
       <td style="font-variant-numeric:tabular-nums">${c.cnj}</td>
       <td style="text-align:left;font-size:11.5px">${aptidaoCell(c)}</td>
       <td style="text-align:left">${chipJornada(c)}</td>
-      <td style="text-align:left">${chipConfianca(c)}</td>
       <td style="text-align:right;font-weight:700;color:${corAcc(a)}" title="${rotAcc(a)}">${accTxt(a)}${negFlag(c)}</td>
       <td style="text-align:right" title="verbas que casaram com a referência / total de verbas do caso">${par(c)}</td>
       <td style="text-align:right${zer?";color:var(--ruim);font-weight:600":""}">${brl((c.quadro||{}).total_ia)}</td>
@@ -2496,7 +2477,7 @@ function telaLista(){
              ["assert|asc","② Assertividade (pior primeiro)"],["assert|desc","② Assertividade (melhor primeiro)"],
              ["par|asc","Verbas c/ par (menos pareado primeiro)"],
              ["lift|desc","Valor calculado (maior primeiro)"],["ref|desc","Referência (maior primeiro)"],
-             ["cnj|asc","CNJ"],["apto|asc","Aptidão"],["jornada|asc","Jornada"],["conf|desc","Confiança (baixa primeiro)"],["agente|desc","Erro da IA no agente (maior primeiro)"]]
+             ["cnj|asc","CNJ"],["apto|asc","Aptidão"],["jornada|asc","Jornada"],["agente|desc","Erro da IA no agente (maior primeiro)"]]
             .map(([v,l])=>`<option value="${v}"${listaOrdem+"|"+listaDir===v?" selected":""}>${l}</option>`).join("")}
         </select></div>
       <div><div class="sub">Buscar CNJ</div><input value="${esc(listaBusca||"")}" placeholder="dígitos do CNJ…" oninput="listaBusca=this.value;telaLista()"
@@ -2508,7 +2489,6 @@ function telaLista(){
       ${_th("cnj","CNJ","left","")}
       ${_th("apto","Aptidão","left","")}
       ${_th("jornada","Jornada","left","O que a decisão manda para a jornada: apurar pelos cartões de ponto ou jornada arbitrada na decisão. ⚠ = manda cartão e o cálculo não usou batidas.")}
-      ${_th("conf","Confiança","left","Score de confiança, calculado só com o lado LIFT (vale também sem referência). Passe o mouse no selo para ver o que foi acionado. A conferência contra a referência está no Placar.")}
       ${_th("assert","② Assertividade","right","② Assertividade: a soma final do LIFT bate com a da referência. Não depende do pareamento verba a verba, por isso é a medida desta lista.")}
       ${_th("par",'Verbas c/ par <span class="sub" style="font-size:9px">s/ reflexo</span>',"right","verbas principais e rescisórias que casaram com a referência, sobre o total delas no caso. Reflexos ficam fora: são derivados da verba-base e um principal sem par arrasta os reflexos dele junto. Passe o mouse na célula para ver a decomposição.")}
       ${_th("lift","LIFT","right","")}
@@ -2521,7 +2501,7 @@ function baixarLista(){
   const cs=casosFiltrados().filter(_listaSel).filter(c=>!q||c.cnj.replace(/\D/g,"").includes(q));
   const head=["Data","CNJ","Apto","Categoria de inaptidão","Tipo de cálculo","Jornada (decisão)","Apuração usada","Cartão: meses","Cartão: dias","Acurácia global","Assertividade","Índice de compensação",
               "Verbas c/ par (s/ reflexo)","Verbas do caso (s/ reflexo)","Reflexos c/ par","Reflexos",
-              "Total LIFT","Total referência","Referência lida","Confiança","Pontos de risco","Componentes do score"];
+              "Total LIFT","Total referência","Referência lida"];
   const rows=cs.map(c=>{const cm=c.camadas||{},p=cm.principal||{},r=cm.rescisoria||{},x=cm.reflexo||{};
     const j=c.jornada||{}, ct=j.cartao||{};
     return [c.data_processamento,c.cnj,c.apto?"sim":"não",c.apto?"":(c.categoria_inaptidao||""),c.tipo_calculo||"",
@@ -2529,9 +2509,7 @@ function baixarLista(){
       (c.quadro||{}).acuracia_global,(c.quadro||{}).assertividade,(c.quadro||{}).indice_compensacao,
       (p.n_par||0)+(r.n_par||0),(p.n||0)+(r.n||0),x.n_par||0,x.n||0,
       (c.quadro||{}).total_ia,(c.quadro||{}).total_pjc,
-      c.sem_pjc?"não carregada":(c.extracao_confiavel?"sim":"não confiável"),
-      c.confianca?_confRot(c.confianca.faixa):"",c.confianca?c.confianca.pontos:"",
-      c.confianca?c.confianca.componentes.map(x=>(x.tipo==="trava"?"TRAVA ":"")+x.rotulo).join(" | "):""];});
+      c.sem_pjc?"não carregada":(c.extracao_confiavel?"sim":"não confiável")];});
   baixarCSV("casos_validacao.csv",[head,...rows]);
 }
 

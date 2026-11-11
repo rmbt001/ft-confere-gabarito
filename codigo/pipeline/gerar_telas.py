@@ -25,7 +25,6 @@ from parse_pjc_xml import parse_pjc_xml   # noqa: E402
 # JSON regerado sai byte-a-byte igual ao de antes. A troca das contas vem no
 # commit seguinte, isolada, para que um numero diferente tenha uma causa so.
 from medidas import assertividade, acuracia_global, acuracia_verba, compensacao  # noqa: E402,F401
-from confianca import score_confianca  # noqa: E402
 
 _norm = normaliza
 _toks_mod = lambda n: {t for t in normaliza(n).split() if len(t) >= 4}
@@ -811,7 +810,13 @@ _ROTULOS_AGREGADOS = (
     "VERBAS TRIBUTAVEIS", "VERBAS NAO TRIBUTAVEIS", "CONTRIBUICAO SOCIAL",
     "PEDIDOS IMPROCEDENTES", "TOTAL GERAL", "TOTAL DA CONDENACAO", "SUBTOTAL",
     "TOTAL BRUTO", "TOTAL LIQUIDO", "VALOR DA CONDENACAO",
+    # gabarito de linha única com o líquido final já corrigido (atualização da execução): o analista achou 5 no lote
+    # de insalubridade/periculosidade (0010178-09.2021.5.15.0073: "LÍQUIDO DEVIDO AO RECLAMANTE", fator ~1,45 sobre o
+    # nominal da IA). Não é verba, é o total atualizado (09/11/2026)
+    "LIQUIDO DEVIDO",
 )
+# rótulo que só é agregado quando é a linha INTEIRA ("PRINCIPAL" sozinho; "Aviso prévio (principal)" é verba)
+_ROTULOS_AGREGADOS_EXATOS = {"PRINCIPAL", "LIQUIDO", "TOTAL"}
 
 
 def _norm_rotulo(s):
@@ -829,7 +834,7 @@ def _so_agregados(verbas_pjc):
     nomes = [_norm_rotulo(v.get("nome")) for v in verbas_pjc]
     if not nomes:
         return False
-    return all(any(rot in n for rot in _ROTULOS_AGREGADOS) for n in nomes)
+    return all(n in _ROTULOS_AGREGADOS_EXATOS or any(rot in n for rot in _ROTULOS_AGREGADOS) for n in nomes)
 
 
 def _num_col(v):
@@ -843,6 +848,8 @@ def _num_col(v):
 # Honorários, custas e perícia: o PJe-Calc não os traz como verba e não são
 # crédito do reclamante. Ficam fora da lista, dos totais e das medidas.
 RX_NAO_VERBA = re.compile(r"honor[aá]r|custas|perit|per[ií]cia", re.I)
+# "FGTS ... SOBRE <verba>": incidência do FGTS em outra verba (não "MULTA 40% SOBRE FGTS", que é a multa rescisória)
+RX_FGTS_INCIDENCIA = re.compile(r"\bFGTS\b.*\bSOBRE\b", re.I)
 
 
 def _verbas_rodada(cell, camada):
@@ -2477,6 +2484,12 @@ def montar_caso(cnj):
     for v in verbas_out:
         if RX_NAO_VERBA.search(v.get("nome_ia") or v.get("nome_pjc") or ""):
             v["fora_comparacao"] = True
+        # FGTS que INCIDE sobre outra verba ("FGTS + 40% sobre estabilidade", "FGTS sobre horas extras"), só no
+        # gabarito: a esteira não apura essa incidência (só a diferença de FGTS como verba principal, BT043, Premissas
+        # 6.2), e somar a linha ao total do PJC punha a IA "a menos" sem erro dela (0100853-15.2019.5.01.0061:
+        # R$ 3.480). Se a IA calculou a mesma linha (casou), continua na comparação (09/11/2026).
+        elif v.get("status") == "so_pjc" and RX_FGTS_INCIDENCIA.search(v.get("nome_pjc") or ""):
+            v["fora_comparacao"] = True
     verbas_cmp = [v for v in verbas_out if not v.get("fora_comparacao")]
 
     # ---- quadro-resumo + assertividade
@@ -3289,8 +3302,8 @@ for cnj in CNJS:
 # propósito, então as camadas corrigido/pós-juros das rodadas antigas não existem.
 for _cnj, _c in casos.items():
     _c["rodadas"] = _rodadas("".join(ch for ch in _cnj if ch.isdigit()))
-    # só lado LIFT: o score tem que existir antes do gabarito (ver src/confianca.py)
-    _c["confianca"] = score_confianca(_c)
+    # confere gabarito: sem score de confiança. O src/confianca.py é a versão de 14–15/10 e não o score atual
+    # (restrições, Jev, auditor, holerite), então a faixa que ele dava não valia como score.
 
 # Diagnóstico do agente (análise caso a caso), quando existir: agente/agente_por_caso.json, gravado por
 # ft_arvore_divergencias/ferramentas/agente_para_painel.py. Vale a análise da MESMA execução que o caso mostra;

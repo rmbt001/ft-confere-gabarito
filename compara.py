@@ -53,11 +53,16 @@ def _cnj_do_pdf(pdf):
         return None
 
 
+RX_CNJ_NOME = re.compile(r"(?<!\d)\d{7}-?\d{2}\.?\d{4}\.?\d\.?\d{2}\.?\d{4}(?!\d)")
+
+
 def _cnj(arquivo):
-    for nome in (arquivo.name, arquivo.parent.name):  # nome do arquivo ou da subpasta
-        d = _digitos(nome)
-        if len(d) >= 20:
-            return _formata(d[:20])
+    # o CNJ inteiro (pontuado ou 20 dígitos seguidos) no nome do arquivo ou da subpasta; juntar todos os dígitos do
+    # nome erra quando há outros números antes (ex.: "40-184-RELATORIO_PROCESSO_<CNJ>_...pdf" dos recortes do S3)
+    for nome in (arquivo.name, arquivo.parent.name):
+        m = RX_CNJ_NOME.search(nome)
+        if m:
+            return _formata(_digitos(m.group(0)))
     c = _cnj_do_pdf(arquivo) if arquivo.suffix.lower() == ".pdf" else None
     return _formata(_digitos(c)) if c else None
 
@@ -76,6 +81,14 @@ def monta_pagina(arq_json, arq_html):
     html = html.replace("/*__PREMISSAS_ESTEIRA__*/[]", json.dumps(prem, ensure_ascii=False))
     antes, depois = html.split("/*__DADOS__*/", 1)
     dados = json.loads(Path(arq_json).read_text(encoding="utf-8"))
+    # score de confiança com o Jev (score_confianca pontuar), se estiver na pasta da saída: o motor daqui não calcula
+    # score e, sem faixa, a página não tem o filtro nem a tabela por faixa
+    arq_conf = Path(arq_json).parent / "confianca_jev.json"
+    if arq_conf.exists():
+        conf = json.loads(arq_conf.read_text(encoding="utf-8"))
+        for cnj, caso in dados.get("casos", {}).items():
+            if conf.get(cnj):
+                caso["confianca"] = conf[cnj]
     with open(arq_html, "w", encoding="utf-8") as f:
         f.write(antes)
         json.dump(dados, f, ensure_ascii=False)
