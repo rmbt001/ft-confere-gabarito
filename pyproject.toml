@@ -10,6 +10,7 @@ dependencies = [
     "pyarrow>=17",
     "deltalake>=0.24",
     "nekt-sdk",
+    "boto3>=1.40",
 ]
 
 [tool.uv]

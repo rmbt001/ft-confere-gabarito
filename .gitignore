@@ -7,3 +7,6 @@ saidas/
 __pycache__/
 *.pyc
 *-EC2AMAZ-*
+pecas_s3/
+agente/
+.claude/settings.local.json
