@@ -1,5 +1,8 @@
 # Afastamento fora do calendário
 
+> **Decisão de 18/11/2026: não seguir.** Nem a regra pelo Jev nem o auditor v2 entram no score. A pasta fica como
+> registro da investigação. Resumo do que foi medido está no fim deste arquivo.
+
 Simula uma checagem nova para o score de confiança: a IA paga adicional de periculosidade ou de insalubridade em
 meses de afastamento (INSS, lay-off, suspensão da pandemia) porque o afastamento não chegou ao calendário (P8).
 
@@ -156,3 +159,20 @@ Custo: cerca de US$ 0,17 por caso e por versão. Caso já respondido não é ped
 Na tela: as contagens de alto, médio e baixo de cada versão; a alta sem auditor, com o anterior e com o v2 (casos, %
 com 80% ou mais e quantos calculam a mais no total); e cada caso que mudou, com a assertividade, se o adicional sai a
 mais e se tem sinal no holerite.
+
+## Teste do auditor v2 em 18 casos com o sinal no holerite (painel de 23/10) e decisão
+
+Os 18 aptos com adicional e 2 ou mais meses seguidos de contribuição zerada ou baixa, rodados com o v2 e com a
+instrução original (controle). O v2 marcou alto em 10 casos, contra 7 na original; nos dois, 3 calculam a mais no total.
+Mudaram para alto só com o v2:
+
+- 0000786-02.2022.5.23.0004 (91% no total; adicional a mais): citou o acórdão que exclui o adicional nos períodos de
+  benefício previdenciário e a contribuição ausente de 02/2020 a 09/2021;
+- 1000329-14.2022.5.02.0302 (99%; adicional a mais): citou o critério que torna indevido o adicional no auxílio-doença
+  e a contribuição zerada de 06 a 08/2020;
+- 0000882-51.2024.5.09.0678 (95%; adicional sem erro relevante): marcou sem a decisão, pela regra geral de descontar
+  ausências.
+
+Dos 11 casos com 80% ou mais, a original tira 2 da alta e o v2 tira 5. O erro que o v2 acha é real, mas pequeno perto
+do total do processo: os acertos têm 91% e 99% de assertividade. Pesando perda de casos bons contra o ganho, o ajuste
+não seguiu. Gasto do teste: US$ 7,71.
