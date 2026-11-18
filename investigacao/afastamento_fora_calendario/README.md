@@ -98,3 +98,61 @@ Casos sintéticos, sem Jev nem Nekt: cada parte da regra e uma rodada ponta a po
 - Hora extra quase não aparece: no mês de holerite zerado, a base da hora extra também zera e a IA não paga.
 - A correção de fato é na esteira: montar o calendário com o holerite e a decisão como segunda fonte quando faltar
   a ficha.
+
+## Resultado da regra pelo Jev (rodada de 16/11) e por que ela saiu
+
+Pelo Jev, a regra marcou 29 dos 317 aptos com adicional, e só 4 tinham o adicional a mais. A alta caiu de 64% para 61%
+com 80% ou mais. A frase da decisão é quase sempre condicional ("eventuais afastamentos", "comprovados nos autos"):
+quando ela aparece e o calendário não tem afastamento, a IA paga a mais em 17% das verbas, a mesma taxa de qualquer
+adicional (16%). Na maior parte das vezes, simplesmente não houve afastamento.
+
+## Auditor v2 (pasta `auditor_v2/`)
+
+O auditor de sobrecálculo já lê a decisão, o calendário e o holerite, e via esse padrão, mas dava "médio". O v2 é a
+instrução de hoje (`instrucoes/auditor_sobrecalculo.md` do pacote do score) com um parágrafo a mais: marca **alto**
+quando (1) a decisão manda excluir afastamento do adicional, (2) o P7 mostra 2 ou mais meses seguidos de salário de
+contribuição zerado ou abaixo de metade e (3) a IA pagou o adicional nesses meses sem afastamento no calendário.
+
+Teste de 18/11 nos 9 casos da alta de 09/11 (`saidas\insalub_peric_total`) com sinal no holerite e que não eram "alto":
+mudou só o 0000789-64.2021.5.13.0005 (médio → alto nas duas rodadas do v2; médio na instrução original). O
+0000024-65.2020.5.10.0861 ficou médio porque a decisão dele não manda excluir. Os outros dois "alto"
+(0001004-33.2017.5.08.0130 e 0024802-62.2018.5.24.0091) deram alto também na instrução original: oscilação, não a regra.
+
+### Rodar
+
+O código do auditor (chamada, limpeza do arquivo do caso, manual) vem do pacote do score; daqui só muda a instrução.
+A chave do OpenRouter vai no `.env` da raiz deste repositório (fora do Git), como `OPENROUTER_API_KEY=<chave>`.
+
+```powershell
+git pull
+$env:UV_LINK_MODE = "copy"
+$s = "<pasta da rodada>"   # por exemplo saidas\insalub_peric_total
+
+# 1) sem custo: o tamanho do lote e o custo estimado
+uv run --no-project --with python-dotenv python investigacao\afastamento_fora_calendario\auditor_v2\roda_auditor_v2.py `
+  --comparacao "$s\comparacao.json" --faixas "$s\confianca_jev_sem_auditor.json" --base-auditor "$s\auditor_alta" --seco
+
+# 2) a alta inteira com o v2, comparando com o auditor anterior da rodada
+uv run --no-project --with python-dotenv python investigacao\afastamento_fora_calendario\auditor_v2\roda_auditor_v2.py `
+  --comparacao "$s\comparacao.json" --faixas "$s\confianca_jev_sem_auditor.json" --base-auditor "$s\auditor_alta"
+```
+
+Opções:
+
+- `--faixas`: as faixas **sem** o auditor; o lote é a alta desse arquivo;
+- `--base-auditor <pasta>`: o auditor anterior da rodada (um `<cnj>.json` por caso), para listar o que mudou;
+- `--so-sinal`: só os casos com adicional e 2 ou mais meses de contribuição zerada (os únicos em que o parágrafo novo
+  pode agir; cerca de 1 em 10 da alta);
+- `--controle`: roda também a instrução original nos mesmos casos, para separar o efeito da regra da oscilação do
+  auditor (dobra o custo);
+- `--cnjs <arquivo>`, `--limite N`;
+- `--pacote <pasta>`: onde está o pacote do score (padrão `C:\ft\bt-prod-apps\ft\score_confianca` ou
+  `SCORE_CONFIANCA_DIR`);
+- `--saida <pasta>`: padrão `investigacao\afastamento_fora_calendario\saidas\auditor_v2_<pasta da rodada>`, fora do Git.
+
+Custo: cerca de US$ 0,17 por caso e por versão. Caso já respondido não é pedido de novo (um arquivo por caso em
+`<saida>\v2` e `<saida>\original`): se cair no meio, é só rodar o mesmo comando.
+
+Na tela: as contagens de alto, médio e baixo de cada versão; a alta sem auditor, com o anterior e com o v2 (casos, %
+com 80% ou mais e quantos calculam a mais no total); e cada caso que mudou, com a assertividade, se o adicional sai a
+mais e se tem sinal no holerite.
