@@ -1,7 +1,8 @@
 # Afastamento fora do calendário
 
-> **Decisão de 18/11/2026: não seguir.** Nem a regra pelo Jev nem o auditor v2 entram no score. A pasta fica como
-> registro da investigação. Resumo do que foi medido está no fim deste arquivo.
+> **Decisão de 18/11/2026:** a regra pelo Jev **não** entra no score. O **auditor v2, na versão apertada** (só marca
+> alto por afastamento citando o trecho da decisão que manda excluir), **entra**: o parágrafo foi levado à instrução do
+> auditor do score. Resumo do que foi medido está no fim deste arquivo.
 
 Simula uma checagem nova para o score de confiança: a IA paga adicional de periculosidade ou de insalubridade em
 meses de afastamento (INSS, lay-off, suspensão da pandemia) porque o afastamento não chegou ao calendário (P8).
@@ -174,5 +175,10 @@ Mudaram para alto só com o v2:
   ausências.
 
 Dos 11 casos com 80% ou mais, a original tira 2 da alta e o v2 tira 5. O erro que o v2 acha é real, mas pequeno perto
-do total do processo: os acertos têm 91% e 99% de assertividade. Pesando perda de casos bons contra o ganho, o ajuste
-não seguiu. Gasto do teste: US$ 7,71.
+do total do processo: os acertos têm 91% e 99% de assertividade. Gasto do teste: US$ 7,71.
+
+**Versão apertada (a que entrou):** o parágrafo passou a exigir que o auditor cite o trecho da decisão ou do critério
+que manda excluir o afastamento; sem ele, holerite e calendário sozinhos não bastam. Rodada de novo nos três casos:
+0000786-02.2022.5.23.0004 e 1000329-14.2022.5.02.0302 seguem alto, com o trecho citado; 0000882-51.2024.5.09.0678
+volta para médio. Somando a medição da VM (9 casos da alta de 09/11, só 0000789-64.2021.5.13.0005 mudou, sem falso
+positivo), o v2 apertado acertou os 3 casos que mudou e não marcou nenhum sem a decisão. Gasto: US$ 0,64.

@@ -34,11 +34,13 @@ Ignore tudo o que levaria o valor para baixo: não relate verba faltando nem con
 Só marque **alto** com evidência que você consiga citar. Na dúvida entre alto e médio, escolha médio.
 
 **Afastamento fora do calendário (adicional de insalubridade ou periculosidade)**: marque **alto** quando as três
-coisas aparecem juntas no arquivo: (1) a decisão manda excluir ou descontar do adicional os períodos de afastamento,
-licença, auxílio-doença ou suspensão do contrato; (2) o histórico P7 mostra 2 ou mais meses seguidos com salário de
-contribuição zerado ou abaixo de metade do salário-base; (3) nesses meses a IA pagou o adicional e o calendário
-(`cal_p8`) não marca afastamento. O calendário sem afastamento não afasta o risco: a ficha pode não ter trazido o
-afastamento. Se faltar qualquer uma das três, siga a regra geral acima.
+coisas aparecem juntas no arquivo: (1) a decisão ou o critério da verba manda excluir ou descontar do adicional os
+períodos de afastamento, licença, auxílio-doença ou suspensão do contrato, e **você cita esse trecho** em `evidencia`;
+(2) o histórico P7 mostra 2 ou mais meses seguidos com salário de contribuição zerado ou abaixo de metade do
+salário-base; (3) nesses meses a IA pagou o adicional e o calendário (`cal_p8`) não marca afastamento. O calendário sem
+afastamento não afasta o risco: a ficha pode não ter trazido o afastamento. **Sem o trecho da decisão citado, este
+parágrafo não se aplica**: holerite ou calendário sozinhos não bastam para marcar alto por afastamento; siga a regra
+geral acima.
 
 ## Saída
 Responda com **um JSON**, exatamente neste formato:
